@@ -1,0 +1,67 @@
+.bracket-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 20px;
+  overflow-x: auto;
+  min-height: 100vh;
+}
+
+.bracket-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 200px;
+}
+
+.combat-card-wrapper {
+  position: relative;
+}
+
+.combat-card {
+  border-radius: 8px;
+  padding: 10px;
+  color: #fff;
+  min-width: 180px;
+  position: relative;
+  transition: 0.2s;
+}
+
+.combat-card.rouge {
+  background-color: #ff5050;
+}
+
+.combat-card.bleu {
+  background-color: #5080ff;
+}
+
+.etape-badge {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.participant {
+  font-weight: bold;
+  font-size: 14px;
+}
+.versus {
+  font-size: 12px;
+  margin-top: 3px;
+}
+.info {
+  font-size: 11px;
+  margin-top: 5px;
+  color: #eee;
+}
+
+.combat-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  z-index: 1;
+}
