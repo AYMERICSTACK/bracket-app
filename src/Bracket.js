@@ -1,153 +1,159 @@
 import React, { useState, useEffect } from "react";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { db } from "./firebase";
 import "./Bracket.css";
 
 const ETAPES = ["16ème", "8ème", "Quart", "Demi", "Finale"];
 
 const Bracket = () => {
   const [columns, setColumns] = useState([]);
-  const [editMode, setEditMode] = useState(false); // ✅ mode édition activé ou non
+  const [editingCard, setEditingCard] = useState(null); // { participant, num }
 
-  // Charger le JSON
+  // Charger les données depuis Firestore
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/brackets.json`)
-      .then((res) => res.json())
-      .then((data) => {
-        const cols = ETAPES.map((etape) => {
-          const combats = [];
-          for (const key in data) {
-            const participantCombats = data[key];
-            participantCombats.forEach((c) => {
-              if (c.etape === etape) {
-                combats.push({ ...c });
-              }
-            });
-          }
-          return combats;
-        });
-        setColumns(cols);
-      })
-      .catch((err) => console.error("Erreur chargement JSON:", err));
+    const fetchData = async () => {
+      const bracketCol = collection(db, "brackets");
+      const snapshot = await getDocs(bracketCol);
+      const data = {};
+      snapshot.forEach((docSnap) => {
+        data[docSnap.id] = docSnap.data().combats;
+      });
+
+      const cols = ETAPES.map((etape) => {
+        const combats = [];
+        for (const key in data) {
+          data[key].forEach((c) => {
+            if (c.etape === etape) combats.push(c);
+          });
+        }
+        return combats;
+      });
+
+      setColumns(cols);
+    };
+    fetchData();
   }, []);
 
-  // Mise à jour locale d'un champ
-  const handleChange = (colIdx, combatIdx, field, value) => {
-    setColumns((prev) => {
-      const updated = [...prev];
-      updated[colIdx][combatIdx][field] = value;
-      return updated;
-    });
-  };
+  // Sauvegarder modification dans Firestore
+  const handleSave = async (participantId, num, field, value) => {
+    const newColumns = columns.map((combats) =>
+      combats.map((c) => {
+        if (c.participant === participantId && c.num === num) {
+          return { ...c, [field]: value };
+        }
+        return c;
+      })
+    );
+    setColumns(newColumns);
 
-  // ✅ Fonction pour basculer mode édition
-  const toggleEditMode = () => setEditMode((prev) => !prev);
+    const docRef = doc(db, "brackets", participantId);
+    const participantCombats = newColumns.flat().filter(c => c.participant === participantId);
+    await updateDoc(docRef, { combats: participantCombats });
+
+    setEditingCard(null);
+  };
 
   return (
     <div className="bracket-container">
-      {/* ✅ Bouton Modifier / Valider */}
-      <div className="edit-bar">
-        <button className="edit-toggle" onClick={toggleEditMode}>
-          {editMode ? "💾 Valider les modifications" : "✏️ Modifier"}
-        </button>
-      </div>
-
       {columns.map((combats, colIdx) => (
         <div className="bracket-column" key={colIdx}>
           <h3>{ETAPES[colIdx]}</h3>
-          {combats.map((combat, idx) => (
-            <div className="combat-card-wrapper" key={idx}>
-              <div
-                className={`combat-card ${
-                  combat.couleur?.toLowerCase() === "rouge"
-                    ? "rouge"
-                    : "bleu"
-                } etape-${ETAPES[colIdx]
-                  .toLowerCase()
-                  .replace("è", "e")}`}
-              >
-                {editMode ? (
-                  <>
-                    {/* ✅ Mode édition */}
-                    <input
-                      type="text"
-                      value={combat.num || ""}
-                      onChange={(e) =>
-                        handleChange(colIdx, idx, "num", e.target.value)
-                      }
-                      className="combat-num"
-                    />
-                    <input
-                      type="text"
-                      value={combat.participant}
-                      onChange={(e) =>
-                        handleChange(colIdx, idx, "participant", e.target.value)
-                      }
-                      className="participant-input"
-                    />
-                    <div className="versus">
-                      vs{" "}
+          {combats.map((combat, idx) => {
+            const isEditing =
+              editingCard &&
+              editingCard.participant === combat.participant &&
+              editingCard.num === combat.num;
+
+            return (
+              <div className="combat-card-wrapper" key={idx}>
+                <div
+                  className={`combat-card ${
+                    combat.couleur.toLowerCase() === "rouge"
+                      ? "rouge"
+                      : "bleu"
+                  } etape-${ETAPES[colIdx]
+                    .toLowerCase()
+                    .replace("è", "e")}`}
+                >
+                  {/* Badge étape */}
+                  <div className="combat-step-badge">{ETAPES[colIdx]}</div>
+
+                  {isEditing ? (
+                    <div className="editing-fields">
+                      <input
+                        type="text"
+                        value={combat.participant}
+                        onChange={(e) =>
+                          setColumns(prev => prev.map(col => col.map(c => c.participant === combat.participant && c.num === combat.num ? {...c, participant: e.target.value} : c)))
+                        }
+                        placeholder="Nom"
+                      />
                       <input
                         type="text"
                         value={combat.adversaire}
                         onChange={(e) =>
-                          handleChange(
-                            colIdx,
-                            idx,
-                            "adversaire",
-                            e.target.value
-                          )
+                          setColumns(prev => prev.map(col => col.map(c => c.participant === combat.participant && c.num === combat.num ? {...c, adversaire: e.target.value} : c)))
                         }
-                        className="adversaire-input"
+                        placeholder="Adversaire"
                       />
-                    </div>
-                    <div className="info">
                       <input
-                        type="time"
-                        value={combat.heure || ""}
+                        type="text"
+                        value={combat.num}
                         onChange={(e) =>
-                          handleChange(colIdx, idx, "heure", e.target.value)
+                          setColumns(prev => prev.map(col => col.map(c => c.participant === combat.participant && c.num === combat.num ? {...c, num: e.target.value} : c)))
                         }
+                        placeholder="Numéro"
                       />
-                      <label className="aire-label">
-                        Aire{" "}
-                        <input
-                          type="number"
-                          min="1"
-                          value={combat.aire || ""}
-                          onChange={(e) =>
-                            handleChange(colIdx, idx, "aire", e.target.value)
+                      <input
+                        type="text"
+                        value={combat.heure}
+                        onChange={(e) =>
+                          setColumns(prev => prev.map(col => col.map(c => c.participant === combat.participant && c.num === combat.num ? {...c, heure: e.target.value} : c)))
+                        }
+                        placeholder="Heure"
+                      />
+                      <input
+                        type="text"
+                        value={combat.aire}
+                        onChange={(e) =>
+                          setColumns(prev => prev.map(col => col.map(c => c.participant === combat.participant && c.num === combat.num ? {...c, aire: e.target.value} : c)))
+                        }
+                        placeholder="Aire"
+                      />
+                      <div className="editing-btns">
+                        <button
+                          onClick={() =>
+                            handleSave(combat.participant, combat.num, "participant", combat.participant)
                           }
-                        />
-                      </label>
+                        >
+                          Valider
+                        </button>
+                        <button onClick={() => setEditingCard(null)}>Annuler</button>
+                      </div>
                     </div>
-                  </>
-                ) : (
-                  <>
-                    {/* ✅ Mode lecture seule */}
-                    <div className="combat-num">#{combat.num}</div>
-                    <div className="participant">{combat.participant}</div>
-                    <div className="versus">
-                      vs <strong>{combat.adversaire}</strong>
-                    </div>
-                    <div className="info">
-                      <span>{combat.heure}</span> ·{" "}
-                      <span>Aire {combat.aire}</span>
-                    </div>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <div className="participant">{combat.participant}</div>
+                      <div className="versus">vs {combat.adversaire}</div>
+                      <div className="combat-info">
+                        #{combat.num} - {combat.heure} - Aire {combat.aire}
+                      </div>
+                      <button
+                        className="edit-btn"
+                        onClick={() =>
+                          setEditingCard({ participant: combat.participant, num: combat.num })
+                        }
+                      >
+                        Modifier
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ))}
-
-      {/* ✅ Légende */}
-      <div className="bracket-legend">
-        <h4>Légende des couleurs :</h4>
-        <p>
-          <strong style={{ color: "#ff5050" }}>Rouge</strong> = combattant en rouge ·{" "}
-          <strong style={{ color: "#5080ff" }}>Bleu</strong> = combattant en bleu
-        </p>
-      </div>
     </div>
   );
 };

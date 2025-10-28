@@ -1,195 +1,135 @@
-/* Conteneur principal : colonnes horizontalement, scroll horizontal si besoin */
 .bracket-container {
-  display: flex;               /* ligne d'étapes */
-  flex-direction: row;         /* important : colonnes côte à côte */
+  display: flex;
   align-items: flex-start;
   gap: 40px;
   padding: 20px;
-  overflow-x: auto;            /* scroll horizontal si large */
+  overflow-x: auto;
   background-color: #f9f9f9;
   min-height: 100vh;
-  position: relative;
-  box-sizing: border-box;
 }
 
-/* zone SVG (si un jour tu remets des liaisons) */
-.bracket-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Chaque colonne (une étape) */
 .bracket-column {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 220px;    /* largeur minimale pour chaque colonne */
-  position: relative;
-  z-index: 1;
-  box-sizing: border-box;
+  min-width: 200px;
 }
 
-/* Titre d'étape */
-.bracket-column > h3 {
-  margin: 0;
-  padding: 6px 8px;
-  text-align: center;
-  font-size: 16px;
-  color: #222;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-}
-
-/* Wrapper d'une carte */
 .combat-card-wrapper {
   position: relative;
 }
 
-/* Carte */
 .combat-card {
   border-radius: 8px;
-  padding: 12px;
+  padding: 10px;
   color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
-  position: relative;
-  transition: transform .15s ease, box-shadow .15s ease;
-  min-width: 200px;
-  box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  min-width: 180px;
+  position: relative; /* pour le badge étape */
+  transition: 0.2s;
 }
 
-/* Couleurs principales */
-.combat-card.rouge { background-color: #ff5050; }
-.combat-card.bleu  { background-color: #5080ff; }
-
-/* Numéro du combat */
-.combat-num {
-  font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  opacity: 0.95;
+/* Couleurs rouge/bleu */
+.combat-card.rouge {
+  background-color: #ff5050;
+}
+.combat-card.bleu {
+  background-color: #5080ff;
 }
 
-/* Input participant */
-.participant-input {
-  font-weight: 700;
-  font-size: 15px;
-  width: 100%;
-  border: none;
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  outline: none;
-  padding: 4px 6px;
+/* Badge étape */
+.combat-step-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #ddd;
+  color: #333;
+  padding: 2px 6px;
   border-radius: 4px;
-  box-sizing: border-box;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 2;
 }
 
-/* vs */
+/* Bordure colorée selon étape */
+.combat-card.etape-16eme {
+  border-left: 5px solid #ffcc00;
+}
+.combat-card.etape-8eme {
+  border-left: 5px solid #00ccff;
+}
+.combat-card.etape-quart {
+  border-left: 5px solid #ff80ff;
+}
+.combat-card.etape-demi {
+  border-left: 5px solid #00ff80;
+}
+.combat-card.etape-finale {
+  border-left: 5px solid #ff5050;
+}
+
+/* Texte */
+.participant {
+  font-weight: bold;
+  font-size: 14px;
+}
 .versus {
   font-size: 12px;
-  margin-top: 6px;
-  opacity: 0.95;
+  margin-top: 3px;
+}
+.combat-info {
+  font-size: 11px;
+  margin-top: 5px;
+  color: #eee;
 }
 
-/* info ligne (heure + aire) */
-.info {
-  font-size: 12px;
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/* champs internes */
-.info input[type="time"] {
-  border: none;
-  border-radius: 4px;
-  padding: 6px 8px;
-  font-size: 12px;
-  background: rgba(255,255,255,0.12);
+/* Bouton Modifier */
+.edit-btn {
+  margin-top: 5px;
+  background-color: #333;
   color: #fff;
-  outline: none;
-}
-
-.aire-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.06);
+  border: none;
   padding: 4px 8px;
-  border-radius: 6px;
-}
-
-/* l'input aire plus compact */
-.aire-label input[type="number"] {
-  width: 48px;
-  border: none;
   border-radius: 4px;
-  padding: 4px 6px;
-  font-size: 12px;
-  outline: none;
-  background: transparent;
-  color: #fff;
-  text-align: center;
-}
-
-/* hover */
-.combat-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-  z-index: 5;
-}
-
-/* Légende placée sous les colonnes, centrée */
-.bracket-legend {
-  width: 100%;
-  max-width: calc(100% - 40px);
-  margin-top: 30px;
-  background: #fff;
-  color: #222;
-  border-radius: 8px;
-  padding: 12px 16px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-  align-self: center;
-  box-sizing: border-box;
-}
-
-/* texte de la légende */
-.bracket-legend h4 { margin: 0 0 6px 0; font-size: 14px; }
-.bracket-legend p  { margin: 0; font-size: 13px; color: #444; }
-
-/* Responsive small screens: colonnes prennent moins de largeur */
-@media (max-width: 900px) {
-  .bracket-column { min-width: 180px; gap: 14px; }
-  .combat-card { min-width: 160px; padding: 10px; }
-  .participant-input { font-size: 14px; }
-  .bracket-container { gap: 20px; padding: 12px; }
-  .bracket-legend { padding: 10px; font-size: 13px; }
-}
-
-/* Si tu veux garder la légende toujours visible en bas (option) :
-.bracket-legend { position: fixed; bottom: 12px; left: 12px; right: 12px; max-width: none; z-index: 100; }
-*/
-.edit-bar {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.edit-toggle {
-  background: #333;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
 }
 
-.edit-toggle:hover {
-  background: #555;
+/* Editing fields */
+.editing-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.editing-fields input {
+  padding: 4px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.editing-btns {
+  display: flex;
+  gap: 5px;
+}
+.editing-btns button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+.editing-btns button:first-child {
+  background-color: #4caf50;
+  color: #fff;
+}
+.editing-btns button:last-child {
+  background-color: #f44336;
+  color: #fff;
+}
+
+/* Hover */
+.combat-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  z-index: 1;
 }
