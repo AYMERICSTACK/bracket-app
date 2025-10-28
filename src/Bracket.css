@@ -58,6 +58,51 @@
   background: rgba(255,255,255,1);
 }
 
+/* 🔹 Bouton Réinitialiser à droite */
+.reset-btn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background-color: #ffb84d;
+  color: #222;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s;
+}
+
+.reset-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+}
+
+.reset-btn:active {
+  transform: translateY(0);
+}
+
+.reset-btn[disabled] {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ✅ Responsive */
+@media (max-width: 760px) {
+  .controls {
+    flex-wrap: wrap;
+  }
+  .reset-btn {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .bracket-container {
   display: flex;
   align-items: flex-start;
@@ -125,6 +170,16 @@
 .versus { font-size: 12px; margin-top: 3px; }
 .combat-info { font-size: 11px; margin-top: 5px; color: #eee; }
 
+.coach-label {
+  font-size: 12px;
+  margin-top: 6px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 5px;
+  padding: 2px 6px;
+  font-weight: 500;
+  color: #fff;
+}
+
 .status-buttons {
   display: flex;
   justify-content: space-between;
@@ -182,15 +237,9 @@
   border: 1px solid #ccc;
   font-size: 12px;
 }
-.coach-badge {
-  position: absolute;
-  bottom: 5px;          /* en bas de la carte */
-  right: 10px;          /* aligné à droite */
-  background: rgba(0,0,0,0.6); 
-  color: #fff;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: bold;
-}
 
+.edit-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}

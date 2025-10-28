@@ -81,7 +81,7 @@ export default function Bracket() {
     }
   };
 
-  // 🔹 Réinitialiser les statuts
+  // 🔹 Réinitialiser tous les statuts
   const handleResetStatuses = async () => {
     if (!window.confirm("Réinitialiser tous les statuts ?")) return;
 
@@ -89,6 +89,7 @@ export default function Bracket() {
     try {
       const bracketCol = collection(db, "brackets");
       const snapshot = await getDocs(bracketCol);
+
       const updates = [];
       snapshot.forEach((docSnap) => {
         const combats = (docSnap.data().combats || []).map((c) => ({
@@ -122,6 +123,7 @@ export default function Bracket() {
     return false;
   };
 
+  // 🔹 Filtres combinés
   const getVisibleColumns = () => {
     const term = (searchTerm || "").trim().toLowerCase();
     return columns.map((col) =>
@@ -150,6 +152,7 @@ export default function Bracket() {
   return (
     <>
       <div className="controls">
+        {/* Filtres couleur */}
         <div className="color-filters">
           <div
             className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`}
@@ -171,6 +174,7 @@ export default function Bracket() {
           </div>
         </div>
 
+        {/* Filtre étape */}
         <div className="filter-wrapper">
           <FaFilter className="icon" />
           <select
@@ -187,6 +191,7 @@ export default function Bracket() {
           </select>
         </div>
 
+        {/* Recherche */}
         <div className="search-wrapper">
           <FaSearch className="icon" />
           <input
@@ -198,6 +203,7 @@ export default function Bracket() {
           />
         </div>
 
+        {/* 🔹 Bouton reset à droite */}
         <button
           className="reset-btn"
           onClick={handleResetStatuses}
@@ -213,6 +219,7 @@ export default function Bracket() {
           (stepFilter === "Tous" || stepFilter === ETAPES[colIdx]) ? (
             <div className="bracket-column" key={colIdx}>
               <h3>{ETAPES[colIdx]}</h3>
+
               {col.map((combat, idx) => {
                 const isEditing =
                   editingCard &&
@@ -238,7 +245,6 @@ export default function Bracket() {
                           : ""}
                       </div>
                       <div className="etape-badge">{combat.etape}</div>
-                      {!isEditing && <div className="coach-badge">Coach : {combat.coach}</div>}
 
                       {isEditing ? (
                         <div className="editing-fields">
@@ -251,42 +257,27 @@ export default function Bracket() {
                           />
                           <input
                             defaultValue={combat.num}
-                            onChange={(e) =>
-                              setEditValues((s) => ({ ...s, num: e.target.value }))
-                            }
+                            onChange={(e) => setEditValues((s) => ({ ...s, num: e.target.value }))}
                           />
                           <input
                             defaultValue={combat.heure}
-                            onChange={(e) =>
-                              setEditValues((s) => ({ ...s, heure: e.target.value }))
-                            }
+                            onChange={(e) => setEditValues((s) => ({ ...s, heure: e.target.value }))}
                           />
                           <input
                             defaultValue={combat.aire}
-                            onChange={(e) =>
-                              setEditValues((s) => ({ ...s, aire: e.target.value }))
-                            }
+                            onChange={(e) => setEditValues((s) => ({ ...s, aire: e.target.value }))}
                           />
                           <select
                             defaultValue={combat.couleur}
-                            onChange={(e) =>
-                              setEditValues((s) => ({ ...s, couleur: e.target.value }))
-                            }
+                            onChange={(e) => setEditValues((s) => ({ ...s, couleur: e.target.value }))}
                           >
                             <option value="Rouge">Rouge</option>
                             <option value="Bleu">Bleu</option>
                           </select>
-                          <select
+                          <input
                             defaultValue={combat.coach}
-                            onChange={(e) =>
-                              setEditValues((s) => ({ ...s, coach: e.target.value }))
-                            }
-                          >
-                            <option value="Mélanie">Mélanie</option>
-                            <option value="Nadège">Nadège</option>
-                            <option value="Christophe">Christophe</option>
-                            <option value="Guillaume">Guillaume</option>
-                          </select>
+                            onChange={(e) => setEditValues((s) => ({ ...s, coach: e.target.value }))}
+                          />
 
                           <div className="edit-buttons">
                             <button onClick={() => handleSave(combat.participant, combat.num)}>
@@ -309,6 +300,7 @@ export default function Bracket() {
                           <div className="combat-info">
                             #{combat.num} - {combat.heure} - Aire {combat.aire}
                           </div>
+                          <div className="coach-label">🎯 Coach : {combat.coach}</div>
 
                           <div className="status-buttons">
                             <button
@@ -325,25 +317,24 @@ export default function Bracket() {
                             </button>
                           </div>
 
-                          <button
-                            className="edit-btn"
-                            onClick={() => {
-                              setEditingCard({
-                                participant: combat.participant,
-                                num: combat.num,
-                              });
-                              setEditValues({
-                                adversaire: combat.adversaire,
-                                num: combat.num,
-                                heure: combat.heure,
-                                aire: combat.aire,
-                                couleur: combat.couleur,
-                                coach: combat.coach,
-                              });
-                            }}
-                          >
-                            Modifier
-                          </button>
+                          {!isEditing && (
+                            <button
+                              className="edit-btn"
+                              onClick={() => {
+                                setEditingCard({ participant: combat.participant, num: combat.num });
+                                setEditValues({
+                                  adversaire: combat.adversaire,
+                                  num: combat.num,
+                                  heure: combat.heure,
+                                  aire: combat.aire,
+                                  couleur: combat.couleur,
+                                  coach: combat.coach,
+                                });
+                              }}
+                            >
+                              Modifier
+                            </button>
+                          )}
                         </>
                       )}
                     </div>
