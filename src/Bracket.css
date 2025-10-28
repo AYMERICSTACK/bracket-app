@@ -1,67 +1,195 @@
+/* Conteneur principal : colonnes horizontalement, scroll horizontal si besoin */
 .bracket-container {
-  display: flex;
+  display: flex;               /* ligne d'étapes */
+  flex-direction: row;         /* important : colonnes côte à côte */
   align-items: flex-start;
   gap: 40px;
   padding: 20px;
-  overflow-x: auto;
+  overflow-x: auto;            /* scroll horizontal si large */
+  background-color: #f9f9f9;
   min-height: 100vh;
+  position: relative;
+  box-sizing: border-box;
 }
 
+/* zone SVG (si un jour tu remets des liaisons) */
+.bracket-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Chaque colonne (une étape) */
 .bracket-column {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 200px;
+  min-width: 220px;    /* largeur minimale pour chaque colonne */
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
 }
 
+/* Titre d'étape */
+.bracket-column > h3 {
+  margin: 0;
+  padding: 6px 8px;
+  text-align: center;
+  font-size: 16px;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* Wrapper d'une carte */
 .combat-card-wrapper {
   position: relative;
 }
 
+/* Carte */
 .combat-card {
   border-radius: 8px;
-  padding: 10px;
+  padding: 12px;
   color: #fff;
-  min-width: 180px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
   position: relative;
-  transition: 0.2s;
+  transition: transform .15s ease, box-shadow .15s ease;
+  min-width: 200px;
+  box-sizing: border-box;
 }
 
-.combat-card.rouge {
-  background-color: #ff5050;
+/* Couleurs principales */
+.combat-card.rouge { background-color: #ff5050; }
+.combat-card.bleu  { background-color: #5080ff; }
+
+/* Numéro du combat */
+.combat-num {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  opacity: 0.95;
 }
 
-.combat-card.bleu {
-  background-color: #5080ff;
-}
-
-.etape-badge {
-  position: absolute;
-  top: -10px;
-  right: 10px;
-  background: rgba(0,0,0,0.7);
+/* Input participant */
+.participant-input {
+  font-weight: 700;
+  font-size: 15px;
+  width: 100%;
+  border: none;
+  background: rgba(255,255,255,0.06);
   color: #fff;
-  font-size: 10px;
-  padding: 2px 6px;
+  outline: none;
+  padding: 4px 6px;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
-.participant {
-  font-weight: bold;
-  font-size: 14px;
-}
+/* vs */
 .versus {
   font-size: 12px;
-  margin-top: 3px;
-}
-.info {
-  font-size: 11px;
-  margin-top: 5px;
-  color: #eee;
+  margin-top: 6px;
+  opacity: 0.95;
 }
 
+/* info ligne (heure + aire) */
+.info {
+  font-size: 12px;
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* champs internes */
+.info input[type="time"] {
+  border: none;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 12px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  outline: none;
+}
+
+.aire-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.06);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* l'input aire plus compact */
+.aire-label input[type="number"] {
+  width: 48px;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 12px;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  text-align: center;
+}
+
+/* hover */
 .combat-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-  z-index: 1;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  z-index: 5;
+}
+
+/* Légende placée sous les colonnes, centrée */
+.bracket-legend {
+  width: 100%;
+  max-width: calc(100% - 40px);
+  margin-top: 30px;
+  background: #fff;
+  color: #222;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  align-self: center;
+  box-sizing: border-box;
+}
+
+/* texte de la légende */
+.bracket-legend h4 { margin: 0 0 6px 0; font-size: 14px; }
+.bracket-legend p  { margin: 0; font-size: 13px; color: #444; }
+
+/* Responsive small screens: colonnes prennent moins de largeur */
+@media (max-width: 900px) {
+  .bracket-column { min-width: 180px; gap: 14px; }
+  .combat-card { min-width: 160px; padding: 10px; }
+  .participant-input { font-size: 14px; }
+  .bracket-container { gap: 20px; padding: 12px; }
+  .bracket-legend { padding: 10px; font-size: 13px; }
+}
+
+/* Si tu veux garder la légende toujours visible en bas (option) :
+.bracket-legend { position: fixed; bottom: 12px; left: 12px; right: 12px; max-width: none; z-index: 100; }
+*/
+.edit-bar {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.edit-toggle {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.edit-toggle:hover {
+  background: #555;
 }
