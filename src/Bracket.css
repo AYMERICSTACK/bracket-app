@@ -78,13 +78,16 @@
 
 .bracket-container {
   display: flex;
-  align-items: flex-start;
+  flex-direction: row;        /* horizontal par défaut */
+  justify-content: center;    /* centre les colonnes horizontalement */
+  align-items: flex-start;    /* alignement vertical au top */
   gap: 40px;
   padding: 20px;
   overflow-x: auto;
   background-color: #f9f9f9;
   min-height: 100vh;
 }
+
 .bracket-container.horizontal { flex-direction: row; }
 .bracket-container.vertical { flex-direction: column; }
 
@@ -215,16 +218,33 @@
   gap: 8px;
   margin-top: 8px;
 }
+/* ✅ Centrage automatique sur mobile */
+/* Centrage des colonnes sur mobile (vertical) */
 @media (max-width: 768px) {
+  /* Container vertical full screen */
   .bracket-container.vertical {
-    width: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;  /* importante pour que les colonnes prennent toute la largeur */
+    gap: 20px;
+    padding: 0;            /* enlever padding pour remplir l’écran */
+    width: 100vw;          /* largeur totale du viewport */
+    box-sizing: border-box;
   }
 
   .bracket-column {
-    width: 100%; /* chaque colonne prend toute la largeur */
+    width: 100%;           /* prend toute la largeur du container */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;  /* cartes prennent toute la largeur de la colonne */
+    gap: 15px;
+    box-sizing: border-box;
   }
 
   .combat-card {
-    width: 100%; /* chaque carte s'étend sur toute la colonne */
+    width: 100%;           /* prend toute la largeur de la colonne */
+    box-sizing: border-box;
+    border-radius: 8px;
+    padding: 10px;
   }
 }

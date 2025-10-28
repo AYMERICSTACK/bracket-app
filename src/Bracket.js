@@ -15,18 +15,15 @@ export default function Bracket() {
   const [colorFilter, setColorFilter] = useState(COLOR_ALL);
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingReset, setLoadingReset] = useState(false);
-  const [isVertical, setIsVertical] = useState(window.innerWidth < 768); // vertical si mobile
+  const [isVertical, setIsVertical] = useState(window.innerWidth < 768);
 
-// Mettre à jour si la fenêtre change de taille
-useEffect(() => {
-  const handleResize = () => {
-    if (window.innerWidth >= 768) setIsVertical(false); // horizontal par défaut desktop
-    else setIsVertical(true); // vertical mobile
-  };
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-
+  useEffect(() => {
+    const handleResize = () => {
+      setIsVertical(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,9 +51,7 @@ useEffect(() => {
 
   const handleSave = async (participantId, num) => {
     const newCols = columns.map((col) =>
-      col.map((c) =>
-        c.participant === participantId && c.num === num ? { ...c, ...editValues } : c
-      )
+      col.map((c) => (c.participant === participantId && c.num === num ? { ...c, ...editValues } : c))
     );
     setColumns(newCols);
     setEditingCard(null);
@@ -73,11 +68,7 @@ useEffect(() => {
 
   const handleStatusChange = async (combat, statutValue) => {
     const newCols = columns.map((col) =>
-      col.map((c) =>
-        c.participant === combat.participant && c.num === combat.num
-          ? { ...c, statut: statutValue }
-          : c
-      )
+      col.map((c) => (c.participant === combat.participant && c.num === combat.num ? { ...c, statut: statutValue } : c))
     );
     setColumns(newCols);
 
@@ -100,10 +91,7 @@ useEffect(() => {
 
       const updates = [];
       snapshot.forEach((docSnap) => {
-        const combats = (docSnap.data().combats || []).map((c) => ({
-          ...c,
-          statut: "non_joué",
-        }));
+        const combats = (docSnap.data().combats || []).map((c) => ({ ...c, statut: "non_joué" }));
         updates.push(updateDoc(doc(db, "brackets", docSnap.id), { combats }));
       });
       await Promise.all(updates);
@@ -137,9 +125,7 @@ useEffect(() => {
     return columns.map((col) =>
       col.filter((c) => {
         if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
-        if (colorFilter !== COLOR_ALL) {
-          if ((c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
-        }
+        if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
         if (term) {
           const p = (c.participant || "").toLowerCase();
           const a = (c.adversaire || "").toLowerCase();
@@ -160,14 +146,12 @@ useEffect(() => {
   return (
     <>
       <div className="controls">
-        {/* Toggle mobile vertical/horizontal */}
         <div className="toggle-orientation">
           <button onClick={() => setIsVertical(!isVertical)}>
             {isVertical ? <FaArrowsAltH /> : <FaArrowsAltV />}
           </button>
         </div>
 
-        {/* Filtres couleur */}
         <div className="color-filters">
           <div
             className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`}
@@ -189,14 +173,9 @@ useEffect(() => {
           </div>
         </div>
 
-        {/* Filtre étape */}
         <div className="filter-wrapper">
           <FaFilter className="icon" />
-          <select
-            className="step-filter"
-            value={stepFilter}
-            onChange={(e) => setStepFilter(e.target.value)}
-          >
+          <select className="step-filter" value={stepFilter} onChange={(e) => setStepFilter(e.target.value)}>
             <option value="Tous">Toutes les étapes</option>
             {ETAPES.map((etape) => (
               <option key={etape} value={etape}>
@@ -206,7 +185,6 @@ useEffect(() => {
           </select>
         </div>
 
-        {/* Recherche */}
         <div className="search-wrapper">
           <FaSearch className="icon" />
           <input
@@ -218,7 +196,6 @@ useEffect(() => {
           />
         </div>
 
-        {/* Bouton reset */}
         <button className="reset-btn" onClick={handleResetStatuses} disabled={loadingReset}>
           <FaRedo style={{ marginRight: 6 }} />
           {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
@@ -226,11 +203,13 @@ useEffect(() => {
       </div>
 
       <div className={`bracket-container ${isVertical ? "vertical" : "horizontal"}`}>
-        {visibleColumns.map((col, colIdx) =>
-          (stepFilter === "Tous" || stepFilter === ETAPES[colIdx]) ? (
+        {visibleColumns.map((col, colIdx) => {
+          if (!col || col.length === 0) return null;
+          if (stepFilter !== "Tous" && stepFilter !== ETAPES[colIdx]) return null;
+
+          return (
             <div className="bracket-column" key={colIdx}>
               <h3>{ETAPES[colIdx]}</h3>
-
               {col.map((combat, idx) => {
                 const isEditing =
                   editingCard &&
@@ -239,65 +218,32 @@ useEffect(() => {
                 const statutLower = (combat.statut || "").toLowerCase();
 
                 return (
-                  <div
-                    className={`combat-card-wrapper ${statutLower === "perdu" ? "dimmed" : ""}`}
-                    key={`${combat.participant}-${combat.num}-${idx}`}
-                  >
-                    <div
-                      className={`combat-card ${
-                        (combat.couleur || "").toLowerCase() === "rouge" ? "rouge" : "bleu"
-                      }`}
-                    >
+                  <div className={`combat-card-wrapper ${statutLower === "perdu" ? "dimmed" : ""}`} key={`${combat.participant}-${combat.num}-${idx}`}>
+                    <div className={`combat-card ${(combat.couleur || "").toLowerCase() === "rouge" ? "rouge" : "bleu"}`}>
                       <div className={`status-badge ${statutLower}`}>
-                        {statutLower === "gagné"
-                          ? "✅ Gagné"
-                          : statutLower === "perdu"
-                          ? "❌ Perdu"
-                          : ""}
+                        {statutLower === "gagné" ? "✅ Gagné" : statutLower === "perdu" ? "❌ Perdu" : ""}
                       </div>
-                      <div className="etape-badge">{combat.etape}</div>
 
-                      {/* Coach badge centré */}
-                      <div className="coach-badge">🎯 Coach: {combat.coach}</div>
+                      <div className="etape-badge">{combat.etape}</div>
+                      <div className="coach-badge">🎯 Coach : {combat.coach}</div>
 
                       {isEditing ? (
                         <div className="editing-fields">
                           <input defaultValue={combat.participant} disabled />
-                          <input
-                            defaultValue={combat.adversaire}
-                            onChange={(e) =>
-                              setEditValues((s) => ({ ...s, adversaire: e.target.value }))
-                            }
-                          />
-                          <input
-                            defaultValue={combat.num}
-                            onChange={(e) => setEditValues((s) => ({ ...s, num: e.target.value }))}
-                          />
-                          <input
-                            defaultValue={combat.heure}
-                            onChange={(e) => setEditValues((s) => ({ ...s, heure: e.target.value }))}
-                          />
-                          <input
-                            defaultValue={combat.aire}
-                            onChange={(e) => setEditValues((s) => ({ ...s, aire: e.target.value }))}
-                          />
-                          <select
-                            defaultValue={combat.couleur}
-                            onChange={(e) => setEditValues((s) => ({ ...s, couleur: e.target.value }))}
-                          >
+                          <input defaultValue={combat.adversaire} onChange={(e) => setEditValues((s) => ({ ...s, adversaire: e.target.value }))} />
+                          <input defaultValue={combat.num} onChange={(e) => setEditValues((s) => ({ ...s, num: e.target.value }))} />
+                          <input defaultValue={combat.heure} onChange={(e) => setEditValues((s) => ({ ...s, heure: e.target.value }))} />
+                          <input defaultValue={combat.aire} onChange={(e) => setEditValues((s) => ({ ...s, aire: e.target.value }))} />
+                          <select defaultValue={combat.couleur} onChange={(e) => setEditValues((s) => ({ ...s, couleur: e.target.value }))}>
                             <option value="Rouge">Rouge</option>
                             <option value="Bleu">Bleu</option>
                           </select>
-                          <select
-                            defaultValue={combat.coach}
-                            onChange={(e) => setEditValues((s) => ({ ...s, coach: e.target.value }))}
-                          >
+                          <select defaultValue={combat.coach} onChange={(e) => setEditValues((s) => ({ ...s, coach: e.target.value }))}>
                             <option value="Mélanie">Mélanie</option>
                             <option value="Nadège">Nadège</option>
                             <option value="Christophe">Christophe</option>
                             <option value="Guillaume">Guillaume</option>
                           </select>
-
                           <div className="edit-buttons">
                             <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
                             <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
@@ -307,41 +253,22 @@ useEffect(() => {
                         <>
                           <div className="participant">{combat.participant}</div>
                           <div className="versus">vs {combat.adversaire}</div>
-                          <div className="combat-info">
-                            #{combat.num} - {combat.heure} - Aire {combat.aire}
-                          </div>
-
+                          <div className="combat-info">#{combat.num} - {combat.heure} - Aire {combat.aire}</div>
                           <div className="status-buttons">
-                            <button
-                              className={`btn-win ${statutLower === "gagné" ? "active" : ""}`}
-                              onClick={() => handleStatusChange(combat, "gagné")}
-                            >
-                              Gagné
-                            </button>
-                            <button
-                              className={`btn-lose ${statutLower === "perdu" ? "active" : ""}`}
-                              onClick={() => handleStatusChange(combat, "perdu")}
-                            >
-                              Perdu
-                            </button>
+                            <button className={`btn-win ${statutLower === "gagné" ? "active" : ""}`} onClick={() => handleStatusChange(combat, "gagné")}>Gagné</button>
+                            <button className={`btn-lose ${statutLower === "perdu" ? "active" : ""}`} onClick={() => handleStatusChange(combat, "perdu")}>Perdu</button>
                           </div>
-
-                          <button
-                            className="edit-btn"
-                            onClick={() => {
-                              setEditingCard({ participant: combat.participant, num: combat.num });
-                              setEditValues({
-                                adversaire: combat.adversaire,
-                                num: combat.num,
-                                heure: combat.heure,
-                                aire: combat.aire,
-                                couleur: combat.couleur,
-                                coach: combat.coach,
-                              });
-                            }}
-                          >
-                            Modifier
-                          </button>
+                          <button className="edit-btn" onClick={() => {
+                            setEditingCard({ participant: combat.participant, num: combat.num });
+                            setEditValues({
+                              adversaire: combat.adversaire,
+                              num: combat.num,
+                              heure: combat.heure,
+                              aire: combat.aire,
+                              couleur: combat.couleur,
+                              coach: combat.coach,
+                            });
+                          }}>Modifier</button>
                         </>
                       )}
                     </div>
@@ -349,8 +276,8 @@ useEffect(() => {
                 );
               })}
             </div>
-          ) : null
-        )}
+          );
+        })}
       </div>
     </>
   );
