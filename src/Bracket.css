@@ -1,3 +1,63 @@
+.controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.color-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.color-box {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.color-box.rouge { background: #ff5050; }
+.color-box.bleu { background: #5080ff; }
+.color-box.tous { background: #999; }
+
+.color-box.active {
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  transform: scale(1.05);
+}
+
+.filter-wrapper, .search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  left: 10px;
+  color: #555;
+  pointer-events: none;
+}
+
+.step-filter, .search-input {
+  padding: 8px 12px 8px 30px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.2s;
+}
+
+.step-filter:hover, .search-input:focus {
+  border-color: #888;
+  background: rgba(255,255,255,1);
+}
+
 .bracket-container {
   display: flex;
   align-items: flex-start;
@@ -19,117 +79,118 @@
   position: relative;
 }
 
+.combat-card-wrapper.dimmed {
+  opacity: 0.5;
+  filter: grayscale(0.8);
+}
+
 .combat-card {
   border-radius: 8px;
   padding: 10px;
   color: #fff;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   min-width: 180px;
-  position: relative; /* pour le badge étape */
+  position: relative;
   transition: 0.2s;
 }
 
-/* Couleurs rouge/bleu */
-.combat-card.rouge {
-  background-color: #ff5050;
-}
-.combat-card.bleu {
-  background-color: #5080ff;
-}
+.combat-card.rouge { background-color: #ff5050; }
+.combat-card.bleu { background-color: #5080ff; }
 
-/* Badge étape */
-.combat-step-badge {
+.etape-badge {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: #ddd;
-  color: #333;
+  top: -10px;
+  right: 10px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 10px;
   padding: 2px 6px;
   border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: center;
-  z-index: 2;
 }
 
-/* Bordure colorée selon étape */
-.combat-card.etape-16eme {
-  border-left: 5px solid #ffcc00;
-}
-.combat-card.etape-8eme {
-  border-left: 5px solid #00ccff;
-}
-.combat-card.etape-quart {
-  border-left: 5px solid #ff80ff;
-}
-.combat-card.etape-demi {
-  border-left: 5px solid #00ff80;
-}
-.combat-card.etape-finale {
-  border-left: 5px solid #ff5050;
+.status-badge {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
-/* Texte */
-.participant {
-  font-weight: bold;
-  font-size: 14px;
-}
-.versus {
-  font-size: 12px;
-  margin-top: 3px;
-}
-.combat-info {
-  font-size: 11px;
+.status-badge.gagné { background: #4caf50; }
+.status-badge.perdu { background: #b71c1c; }
+
+.participant { font-weight: bold; font-size: 14px; }
+.versus { font-size: 12px; margin-top: 3px; }
+.combat-info { font-size: 11px; margin-top: 5px; color: #eee; }
+
+.status-buttons {
+  display: flex;
+  justify-content: space-between;
   margin-top: 5px;
-  color: #eee;
 }
 
-/* Bouton Modifier */
+.btn-win, .btn-lose {
+  flex: 1;
+  padding: 4px 6px;
+  margin: 2px;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-win { background: rgba(76, 175, 80, 0.7); color: #fff; }
+.btn-lose { background: rgba(244, 67, 54, 0.7); color: #fff; }
+
+.btn-win.active, .btn-lose.active {
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+}
+
 .edit-btn {
   margin-top: 5px;
-  background-color: #333;
-  color: #fff;
+  padding: 3px 6px;
   border: none;
-  padding: 4px 8px;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 12px;
+  background-color: rgba(255,255,255,0.3);
+  color: #fff;
+  transition: 0.2s;
 }
 
-/* Editing fields */
-.editing-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.editing-fields input {
-  padding: 4px;
-  font-size: 12px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-.editing-btns {
-  display: flex;
-  gap: 5px;
-}
-.editing-btns button {
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-}
-.editing-btns button:first-child {
-  background-color: #4caf50;
-  color: #fff;
-}
-.editing-btns button:last-child {
-  background-color: #f44336;
-  color: #fff;
+.edit-btn:hover {
+  background-color: rgba(255,255,255,0.5);
 }
 
-/* Hover */
 .combat-card:hover {
-  transform: scale(1.02);
+  transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(0,0,0,0.4);
   z-index: 1;
 }
+
+.editing-fields input {
+  display: block;
+  margin: 5px 0;
+  width: 100%;
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+}
+.coach-badge {
+  position: absolute;
+  bottom: 5px;          /* en bas de la carte */
+  right: 10px;          /* aligné à droite */
+  background: rgba(0,0,0,0.6); 
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+

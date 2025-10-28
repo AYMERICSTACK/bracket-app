@@ -1,1 +1,82 @@
-{"Nadège": [{"etape": "Quart","num": "c25","adversaire": "Sophie","heure": "13:00","couleur": "Rouge","aire": "1","participant": "Nadège"},{"etape": "Demi","num": "c36","adversaire": "Sophie","heure": "14:00","couleur": "Bleu","aire": "1","participant": "Nadège"},{"etape": "Finale","num": "c45","adversaire": "Sophie","heure": "15:00","couleur": "Rouge","aire": "1","participant": "Nadège"}],"Léony": [{"etape": "Quart","num": "c17","adversaire": "Sophie","heure": "14:00","couleur": "Bleu","aire": "1","participant": "Léony"},{"etape": "Demi","num": "c29","adversaire": "Sophie","heure": "15:00","couleur": "Bleu","aire": "2","participant": "Léony"},{"etape": "Finale","num": "c36","adversaire": "Sophie","heure": "16:00","couleur": "Rouge","aire": "2","participant": "Léony"}],"Pierre": [{"etape": "Quart","num": "c25","adversaire": "Sophie","heure": "13:00","couleur": "Rouge","aire": "1","participant": "Pierre"},{"etape": "Demi","num": "c36","adversaire": "Sophie","heure": "14:00","couleur": "Bleu","aire": "1","participant": "Pierre"},{"etape": "Finale","num": "c45","adversaire": "Sophie","heure": "15:00","couleur": "Rouge","aire": "1","participant": "Pierre"}],"Paul": [{"etape": "Quart","num": "c25","adversaire": "Sophie","heure": "13:00","couleur": "Rouge","aire": "1","participant": "Paul"},{"etape": "Demi","num": "c36","adversaire": "Sophie","heure": "14:00","couleur": "Bleu","aire": "1","participant": "Paul"},{"etape": "Finale","num": "c45","adversaire": "Sophie","heure": "15:00","couleur": "Rouge","aire": "1","participant": "Paul"}],"dupond": [{"etape": "Quart","num": "c25","adversaire": "Sophie","heure": "13:00","couleur": "Rouge","aire": "1","participant": "dupond"},{"etape": "Demi","num": "c36","adversaire": "Sophie","heure": "14:00","couleur": "Bleu","aire": "1","participant": "dupond"},{"etape": "Finale","num": "c45","adversaire": "Sophie","heure": "15:00","couleur": "Rouge","aire": "1","participant": "dupond"}],"Jacques": [{"etape": "8ème","num": "c90","adversaire": "Sophie","heure": "10:00","couleur": "Rouge","aire": "5","participant": "Jacques"},{"etape": "Quart","num": "c100","adversaire": "Sophie","heure": "11:00","couleur": "Bleu","aire": "5","participant": "Jacques"},{"etape": "Demi","num": "c132","adversaire": "Sophie","heure": "18:00","couleur": "Rouge","aire": "5","participant": "Jacques"},{"etape": "Finale","num": "c100","adversaire": "Sophie","heure": "11:00","couleur": "Bleu","aire": "5","participant": "Jacques"}]}
+{
+  "Mélanie": [
+    {"etape":"Quart","num":"c1","adversaire":"Cécile","heure":"10:00","couleur":"Rouge","aire":"1","participant":"Mélanie","coach":"Mélanie","statut":"En attente"},
+    {"etape":"Demi","num":"c2","adversaire":"Cécile","heure":"11:00","couleur":"Bleu","aire":"1","participant":"Mélanie","coach":"Mélanie","statut":"En attente"},
+    {"etape":"Finale","num":"c3","adversaire":"Cécile","heure":"12:00","couleur":"Rouge","aire":"1","participant":"Mélanie","coach":"Mélanie","statut":"En attente"}
+  ],
+  "Cécile": [
+    {"etape":"Quart","num":"c1","adversaire":"Mélanie","heure":"10:00","couleur":"Bleu","aire":"1","participant":"Cécile","coach":"Nadège","statut":"En attente"},
+    {"etape":"Demi","num":"c2","adversaire":"Mélanie","heure":"11:00","couleur":"Rouge","aire":"1","participant":"Cécile","coach":"Nadège","statut":"En attente"},
+    {"etape":"Finale","num":"c3","adversaire":"Mélanie","heure":"12:00","couleur":"Bleu","aire":"1","participant":"Cécile","coach":"Nadège","statut":"En attente"}
+  ],
+  "Iona": [
+    {"etape":"Quart","num":"c4","adversaire":"Chloé","heure":"10:30","couleur":"Bleu","aire":"2","participant":"Iona","coach":"Christophe","statut":"En attente"},
+    {"etape":"Demi","num":"c5","adversaire":"Chloé","heure":"11:30","couleur":"Rouge","aire":"2","participant":"Iona","coach":"Christophe","statut":"En attente"},
+    {"etape":"Finale","num":"c6","adversaire":"Chloé","heure":"12:30","couleur":"Bleu","aire":"2","participant":"Iona","coach":"Christophe","statut":"En attente"}
+  ],
+  "Chloé": [
+    {"etape":"Quart","num":"c4","adversaire":"Iona","heure":"10:30","couleur":"Rouge","aire":"2","participant":"Chloé","coach":"Guillaume","statut":"En attente"},
+    {"etape":"Demi","num":"c5","adversaire":"Iona","heure":"11:30","couleur":"Bleu","aire":"2","participant":"Chloé","coach":"Guillaume","statut":"En attente"},
+    {"etape":"Finale","num":"c6","adversaire":"Iona","heure":"12:30","couleur":"Rouge","aire":"2","participant":"Chloé","coach":"Guillaume","statut":"En attente"}
+  ],
+  "Samira": [
+    {"etape":"Quart","num":"c7","adversaire":"Alicia","heure":"13:00","couleur":"Rouge","aire":"3","participant":"Samira","coach":"Mélanie","statut":"En attente"},
+    {"etape":"Demi","num":"c8","adversaire":"Alicia","heure":"14:00","couleur":"Bleu","aire":"3","participant":"Samira","coach":"Mélanie","statut":"En attente"},
+    {"etape":"Finale","num":"c9","adversaire":"Alicia","heure":"15:00","couleur":"Rouge","aire":"3","participant":"Samira","coach":"Mélanie","statut":"En attente"}
+  ],
+  "Alicia": [
+    {"etape":"Quart","num":"c7","adversaire":"Samira","heure":"13:00","couleur":"Bleu","aire":"3","participant":"Alicia","coach":"Nadège","statut":"En attente"},
+    {"etape":"Demi","num":"c8","adversaire":"Samira","heure":"14:00","couleur":"Rouge","aire":"3","participant":"Alicia","coach":"Nadège","statut":"En attente"},
+    {"etape":"Finale","num":"c9","adversaire":"Samira","heure":"15:00","couleur":"Bleu","aire":"3","participant":"Alicia","coach":"Nadège","statut":"En attente"}
+  ],
+  "Valentin": [
+    {"etape":"Quart","num":"c10","adversaire":"Arthur","heure":"10:00","couleur":"Rouge","aire":"1","participant":"Valentin","coach":"Christophe","statut":"En attente"},
+    {"etape":"Demi","num":"c11","adversaire":"Arthur","heure":"11:00","couleur":"Bleu","aire":"1","participant":"Valentin","coach":"Christophe","statut":"En attente"},
+    {"etape":"Finale","num":"c12","adversaire":"Arthur","heure":"12:00","couleur":"Rouge","aire":"1","participant":"Valentin","coach":"Christophe","statut":"En attente"}
+  ],
+  "Arthur": [
+    {"etape":"Quart","num":"c10","adversaire":"Valentin","heure":"10:00","couleur":"Bleu","aire":"1","participant":"Arthur","coach":"Guillaume","statut":"En attente"},
+    {"etape":"Demi","num":"c11","adversaire":"Valentin","heure":"11:00","couleur":"Rouge","aire":"1","participant":"Arthur","coach":"Guillaume","statut":"En attente"},
+    {"etape":"Finale","num":"c12","adversaire":"Valentin","heure":"12:00","couleur":"Bleu","aire":"1","participant":"Arthur","coach":"Guillaume","statut":"En attente"}
+  ],
+  "Alban": [
+    {"etape":"Quart","num":"c13","adversaire":"Mathis","heure":"10:30","couleur":"Bleu","aire":"2","participant":"Alban","coach":"Mélanie","statut":"En attente"},
+    {"etape":"Demi","num":"c14","adversaire":"Mathis","heure":"11:30","couleur":"Rouge","aire":"2","participant":"Alban","coach":"Mélanie","statut":"En attente"},
+    {"etape":"Finale","num":"c15","adversaire":"Mathis","heure":"12:30","couleur":"Bleu","aire":"2","participant":"Alban","coach":"Mélanie","statut":"En attente"}
+  ],
+  "Mathis": [
+    {"etape":"Quart","num":"c13","adversaire":"Alban","heure":"10:30","couleur":"Rouge","aire":"2","participant":"Mathis","coach":"Nadège","statut":"En attente"},
+    {"etape":"Demi","num":"c14","adversaire":"Alban","heure":"11:30","couleur":"Bleu","aire":"2","participant":"Mathis","coach":"Nadège","statut":"En attente"},
+    {"etape":"Finale","num":"c15","adversaire":"Alban","heure":"12:30","couleur":"Rouge","aire":"2","participant":"Mathis","coach":"Nadège","statut":"En attente"}
+  ],
+  "Joris": [
+    {"etape":"Quart","num":"c16","adversaire":"Rémy","heure":"13:00","couleur":"Rouge","aire":"3","participant":"Joris","coach":"Christophe","statut":"En attente"},
+    {"etape":"Demi","num":"c17","adversaire":"Rémy","heure":"14:00","couleur":"Bleu","aire":"3","participant":"Joris","coach":"Christophe","statut":"En attente"},
+    {"etape":"Finale","num":"c18","adversaire":"Rémy","heure":"15:00","couleur":"Rouge","aire":"3","participant":"Joris","coach":"Christophe","statut":"En attente"}
+  ],
+  "Rémy": [
+    {"etape":"Quart","num":"c16","adversaire":"Joris","heure":"13:00","couleur":"Bleu","aire":"3","participant":"Rémy","coach":"Guillaume","statut":"En attente"},
+    {"etape":"Demi","num":"c17","adversaire":"Joris","heure":"14:00","couleur":"Rouge","aire":"3","participant":"Rémy","coach":"Guillaume","statut":"En attente"},
+    {"etape":"Finale","num":"c18","adversaire":"Joris","heure":"15:00","couleur":"Bleu","aire":"3","participant":"Rémy","coach":"Guillaume","statut":"En attente"}
+  ],
+  "Julien": [
+    {"etape":"Quart","num":"c19","adversaire":"Sacha","heure":"10:00","couleur":"Rouge","aire":"1","participant":"Julien","coach":"Mélanie","statut":"En attente"},
+    {"etape":"Demi","num":"c20","adversaire":"Sacha","heure":"11:00","couleur":"Bleu","aire":"1","participant":"Julien","coach":"Mélanie","statut":"En attente"},
+    {"etape":"Finale","num":"c21","adversaire":"Sacha","heure":"12:00","couleur":"Rouge","aire":"1","participant":"Julien","coach":"Mélanie","statut":"En attente"}
+  ],
+  "Sacha": [
+    {"etape":"Quart","num":"c19","adversaire":"Julien","heure":"10:00","couleur":"Bleu","aire":"1","participant":"Sacha","coach":"Nadège","statut":"En attente"},
+    {"etape":"Demi","num":"c20","adversaire":"Julien","heure":"11:00","couleur":"Rouge","aire":"1","participant":"Sacha","coach":"Nadège","statut":"En attente"},
+    {"etape":"Finale","num":"c21","adversaire":"Julien","heure":"12:00","couleur":"Bleu","aire":"1","participant":"Sacha","coach":"Nadège","statut":"En attente"}
+  ],
+  "Samir": [
+    {"etape":"Quart","num":"c22","adversaire":"Zakaria","heure":"10:30","couleur":"Bleu","aire":"2","participant":"Samir","coach":"Christophe","statut":"En attente"},
+    {"etape":"Demi","num":"c23","adversaire":"Zakaria","heure":"11:30","couleur":"Rouge","aire":"2","participant":"Samir","coach":"Christophe","statut":"En attente"},
+    {"etape":"Finale","num":"c24","adversaire":"Zakaria","heure":"12:30","couleur":"Bleu","aire":"2","participant":"Samir","coach":"Christophe","statut":"En attente"}
+  ],
+  "Zakaria": [
+    {"etape":"Quart","num":"c22","adversaire":"Samir","heure":"10:30","couleur":"Rouge","aire":"2","participant":"Zakaria","coach":"Guillaume","statut":"En attente"},
+    {"etape":"Demi","num":"c23","adversaire":"Samir","heure":"11:30","couleur":"Bleu","aire":"2","participant":"Zakaria","coach":"Guillaume","statut":"En attente"},
+    {"etape":"Finale","num":"c24","adversaire":"Samir","heure":"12:30","couleur":"Rouge","aire":"2","participant":"Zakaria","coach":"Guillaume","statut":"En attente"}
+  ]
+}
