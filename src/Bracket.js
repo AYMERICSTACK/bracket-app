@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
-import { FaSearch, FaFilter, FaRedo } from "react-icons/fa";
+import { FaSearch, FaFilter, FaRedo, FaArrowsAltV, FaArrowsAltH } from "react-icons/fa";
 import "./Bracket.css";
 
 const ETAPES = ["16ème", "8ème", "Quart", "Demi", "Finale"];
@@ -15,8 +15,19 @@ export default function Bracket() {
   const [colorFilter, setColorFilter] = useState(COLOR_ALL);
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingReset, setLoadingReset] = useState(false);
+  const [isVertical, setIsVertical] = useState(window.innerWidth < 768); // vertical si mobile
 
-  // 🔹 Charger Firestore
+// Mettre à jour si la fenêtre change de taille
+useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth >= 768) setIsVertical(false); // horizontal par défaut desktop
+    else setIsVertical(true); // vertical mobile
+  };
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
+
   useEffect(() => {
     const fetchData = async () => {
       const bracketCol = collection(db, "brackets");
@@ -41,7 +52,6 @@ export default function Bracket() {
     fetchData();
   }, []);
 
-  // 🔹 Sauvegarder édition
   const handleSave = async (participantId, num) => {
     const newCols = columns.map((col) =>
       col.map((c) =>
@@ -61,7 +71,6 @@ export default function Bracket() {
     }
   };
 
-  // 🔹 Modifier statut gagné/perdu
   const handleStatusChange = async (combat, statutValue) => {
     const newCols = columns.map((col) =>
       col.map((c) =>
@@ -81,7 +90,6 @@ export default function Bracket() {
     }
   };
 
-  // 🔹 Réinitialiser tous les statuts
   const handleResetStatuses = async () => {
     if (!window.confirm("Réinitialiser tous les statuts ?")) return;
 
@@ -123,9 +131,9 @@ export default function Bracket() {
     return false;
   };
 
-  // 🔹 Filtres combinés
   const getVisibleColumns = () => {
     const term = (searchTerm || "").trim().toLowerCase();
+
     return columns.map((col) =>
       col.filter((c) => {
         if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
@@ -152,6 +160,13 @@ export default function Bracket() {
   return (
     <>
       <div className="controls">
+        {/* Toggle mobile vertical/horizontal */}
+        <div className="toggle-orientation">
+          <button onClick={() => setIsVertical(!isVertical)}>
+            {isVertical ? <FaArrowsAltH /> : <FaArrowsAltV />}
+          </button>
+        </div>
+
         {/* Filtres couleur */}
         <div className="color-filters">
           <div
@@ -203,18 +218,14 @@ export default function Bracket() {
           />
         </div>
 
-        {/* 🔹 Bouton reset à droite */}
-        <button
-          className="reset-btn"
-          onClick={handleResetStatuses}
-          disabled={loadingReset}
-        >
+        {/* Bouton reset */}
+        <button className="reset-btn" onClick={handleResetStatuses} disabled={loadingReset}>
           <FaRedo style={{ marginRight: 6 }} />
           {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
         </button>
       </div>
 
-      <div className="bracket-container">
+      <div className={`bracket-container ${isVertical ? "vertical" : "horizontal"}`}>
         {visibleColumns.map((col, colIdx) =>
           (stepFilter === "Tous" || stepFilter === ETAPES[colIdx]) ? (
             <div className="bracket-column" key={colIdx}>
@@ -246,6 +257,9 @@ export default function Bracket() {
                       </div>
                       <div className="etape-badge">{combat.etape}</div>
 
+                      {/* Coach badge centré */}
+                      <div className="coach-badge">🎯 Coach: {combat.coach}</div>
+
                       {isEditing ? (
                         <div className="editing-fields">
                           <input defaultValue={combat.participant} disabled />
@@ -274,23 +288,19 @@ export default function Bracket() {
                             <option value="Rouge">Rouge</option>
                             <option value="Bleu">Bleu</option>
                           </select>
-                          <input
+                          <select
                             defaultValue={combat.coach}
                             onChange={(e) => setEditValues((s) => ({ ...s, coach: e.target.value }))}
-                          />
+                          >
+                            <option value="Mélanie">Mélanie</option>
+                            <option value="Nadège">Nadège</option>
+                            <option value="Christophe">Christophe</option>
+                            <option value="Guillaume">Guillaume</option>
+                          </select>
 
                           <div className="edit-buttons">
-                            <button onClick={() => handleSave(combat.participant, combat.num)}>
-                              ✅ Valider
-                            </button>
-                            <button
-                              onClick={() => {
-                                setEditingCard(null);
-                                setEditValues({});
-                              }}
-                            >
-                              ❌ Annuler
-                            </button>
+                            <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
+                            <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
                           </div>
                         </div>
                       ) : (
@@ -300,7 +310,6 @@ export default function Bracket() {
                           <div className="combat-info">
                             #{combat.num} - {combat.heure} - Aire {combat.aire}
                           </div>
-                          <div className="coach-label">🎯 Coach : {combat.coach}</div>
 
                           <div className="status-buttons">
                             <button
@@ -317,24 +326,22 @@ export default function Bracket() {
                             </button>
                           </div>
 
-                          {!isEditing && (
-                            <button
-                              className="edit-btn"
-                              onClick={() => {
-                                setEditingCard({ participant: combat.participant, num: combat.num });
-                                setEditValues({
-                                  adversaire: combat.adversaire,
-                                  num: combat.num,
-                                  heure: combat.heure,
-                                  aire: combat.aire,
-                                  couleur: combat.couleur,
-                                  coach: combat.coach,
-                                });
-                              }}
-                            >
-                              Modifier
-                            </button>
-                          )}
+                          <button
+                            className="edit-btn"
+                            onClick={() => {
+                              setEditingCard({ participant: combat.participant, num: combat.num });
+                              setEditValues({
+                                adversaire: combat.adversaire,
+                                num: combat.num,
+                                heure: combat.heure,
+                                aire: combat.aire,
+                                couleur: combat.couleur,
+                                coach: combat.coach,
+                              });
+                            }}
+                          >
+                            Modifier
+                          </button>
                         </>
                       )}
                     </div>

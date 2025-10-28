@@ -6,6 +6,13 @@
   align-items: center;
 }
 
+.toggle-orientation {
+  display: none;
+}
+@media (max-width: 768px) {
+  .toggle-orientation { display: block; }
+}
+
 .color-filters {
   display: flex;
   gap: 10px;
@@ -58,49 +65,15 @@
   background: rgba(255,255,255,1);
 }
 
-/* 🔹 Bouton Réinitialiser à droite */
 .reset-btn {
   margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
   border: none;
   background-color: #ffb84d;
   color: #222;
-  font-weight: 700;
+  font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s;
-}
-
-.reset-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.16);
-}
-
-.reset-btn:active {
-  transform: translateY(0);
-}
-
-.reset-btn[disabled] {
-  opacity: 0.6;
-  cursor: default;
-  transform: none;
-  box-shadow: none;
-}
-
-/* ✅ Responsive */
-@media (max-width: 760px) {
-  .controls {
-    flex-wrap: wrap;
-  }
-  .reset-btn {
-    margin-left: 0;
-    width: 100%;
-    justify-content: center;
-  }
 }
 
 .bracket-container {
@@ -112,6 +85,8 @@
   background-color: #f9f9f9;
   min-height: 100vh;
 }
+.bracket-container.horizontal { flex-direction: row; }
+.bracket-container.vertical { flex-direction: column; }
 
 .bracket-column {
   display: flex;
@@ -166,19 +141,18 @@
 .status-badge.gagné { background: #4caf50; }
 .status-badge.perdu { background: #b71c1c; }
 
-.participant { font-weight: bold; font-size: 14px; }
-.versus { font-size: 12px; margin-top: 3px; }
-.combat-info { font-size: 11px; margin-top: 5px; color: #eee; }
-
-.coach-label {
-  font-size: 12px;
-  margin-top: 6px;
-  background: rgba(255,255,255,0.25);
-  border-radius: 5px;
+.coach-badge {
+  text-align: center;
+  background: rgba(255,255,255,0.2);
   padding: 2px 6px;
-  font-weight: 500;
-  color: #fff;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
 }
+
+.participant { font-weight: bold; font-size: 14px; text-align: center; }
+.versus { font-size: 12px; margin-top: 3px; text-align: center; }
+.combat-info { font-size: 11px; margin-top: 5px; color: #eee; text-align: center; }
 
 .status-buttons {
   display: flex;
@@ -218,9 +192,7 @@
   transition: 0.2s;
 }
 
-.edit-btn:hover {
-  background-color: rgba(255,255,255,0.5);
-}
+.edit-btn:hover { background-color: rgba(255,255,255,0.5); }
 
 .combat-card:hover {
   transform: scale(1.05);
@@ -228,7 +200,7 @@
   z-index: 1;
 }
 
-.editing-fields input {
+.editing-fields input, .editing-fields select {
   display: block;
   margin: 5px 0;
   width: 100%;
