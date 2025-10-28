@@ -215,3 +215,16 @@
   gap: 8px;
   margin-top: 8px;
 }
+@media (max-width: 768px) {
+  .bracket-container.vertical {
+    width: 100%;
+  }
+
+  .bracket-column {
+    width: 100%; /* chaque colonne prend toute la largeur */
+  }
+
+  .combat-card {
+    width: 100%; /* chaque carte s'étend sur toute la colonne */
+  }
+}
