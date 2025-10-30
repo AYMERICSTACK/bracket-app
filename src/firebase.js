@@ -1,8 +1,12 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { 
+  getAuth, 
+  GoogleAuthProvider,
+  EmailAuthProvider 
+} from "firebase/auth";
 
-// Remplace ces valeurs par celles de ton projet Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqmV4cGPR5ukBSQvormWognk6YwMVmAYY",
   authDomain: "bracketapp-48387.firebaseapp.com",
@@ -13,4 +17,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 export const db = getFirestore(app);
+export const auth = getAuth(app);
+
+// Fournisseurs d’authentification
+export const googleProvider = new GoogleAuthProvider();
+export const emailProvider = new EmailAuthProvider();
