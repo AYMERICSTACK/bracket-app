@@ -3,6 +3,8 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import { FaSearch, FaFilter, FaRedo, FaArrowsAltV, FaArrowsAltH } from "react-icons/fa";
 import "./Bracket.css";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const ETAPES = ["16ème", "8ème", "Quart", "Demi", "Finale"];
 const COLOR_ALL = "Tous";
@@ -10,7 +12,6 @@ const ALLOWED_UIDS = [
   "2VqoJdZpE6NOtSWx3ko7OtzXBFk1",
   "BLqmftqFsgSKtceNI3c76jrdE0p1",
 ];
-const CATEGORIES = ["-37kg","-50kg","-55kg","-60kg","-65kg","-70kg","-75kg"];
 
 export default function Bracket({ user }) {
   const [columns, setColumns] = useState([]);
@@ -21,6 +22,9 @@ export default function Bracket({ user }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingReset, setLoadingReset] = useState(false);
   const [isVertical, setIsVertical] = useState(window.innerWidth < 768);
+  const [categories, setCategories] = useState([
+    "-37kg", "-50kg", "-55kg", "-60kg", "-65kg", "-70kg", "-75kg"
+  ]);
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
 
@@ -53,14 +57,16 @@ export default function Bracket({ user }) {
 
   const handleSave = async (participantId, num) => {
     if (!canEdit) return;
-
     const newCols = columns.map(col =>
-      col.map(c => (c.participant === participantId && c.num === num ? { ...c, ...editValues } : c))
+      col.map(c =>
+        c.participant === participantId && c.num === num
+          ? { ...c, ...editValues }
+          : c
+      )
     );
     setColumns(newCols);
     setEditingCard(null);
     setEditValues({});
-
     try {
       const docRef = doc(db, "brackets", participantId);
       const participantCombats = newCols.flat().filter(c => c.participant === participantId);
@@ -72,12 +78,14 @@ export default function Bracket({ user }) {
 
   const handleStatusChange = async (combat, statutValue) => {
     if (!canEdit) return;
-
     const newCols = columns.map(col =>
-      col.map(c => (c.participant === combat.participant && c.num === combat.num ? { ...c, statut: statutValue } : c))
+      col.map(c =>
+        c.participant === combat.participant && c.num === combat.num
+          ? { ...c, statut: statutValue }
+          : c
+      )
     );
     setColumns(newCols);
-
     try {
       const docRef = doc(db, "brackets", combat.participant);
       const participantCombats = newCols.flat().filter(c => c.participant === combat.participant);
@@ -87,22 +95,49 @@ export default function Bracket({ user }) {
     }
   };
 
+  const handleExportPDF = () => {
+    const doc = new jsPDF("p", "pt");
+    const date = new Date().toLocaleDateString("fr-FR");
+    doc.setFontSize(16);
+    doc.text("Bilan des combats - Bracket", 40, 40);
+    doc.setFontSize(10);
+    doc.text(`Exporté le ${date}`, 40, 55);
+
+    const rows = columns.flat().map(c => [
+      c.participant,
+      c.adversaire,
+      c.categorie,
+      c.couleur,
+      c.statut === "gagné" ? "✅ Gagné" :
+      c.statut === "perdu" ? "❌ Perdu" : "⏳ Non joué",
+      c.heure || "-",
+      c.aire || "-",
+      c.coach || "-"
+    ]);
+
+    autoTable(doc, {
+      head: [["Participant", "Adversaire", "Catégorie", "Couleur", "Statut", "Heure", "Aire", "Coach"]],
+      body: rows,
+      startY: 80,
+      styles: { fontSize: 8, cellPadding: 4 },
+      headStyles: { fillColor: [80, 128, 255] },
+    });
+
+    doc.save(`bracket_${date}.pdf`);
+  };
+
   const handleResetStatuses = async () => {
     if (!canEdit) return;
     if (!window.confirm("Réinitialiser tous les statuts ?")) return;
-
     setLoadingReset(true);
     try {
-      const bracketCol = collection(db, "brackets");
-      const snapshot = await getDocs(bracketCol);
-
+      const snapshot = await getDocs(collection(db, "brackets"));
       const updates = [];
       snapshot.forEach(docSnap => {
         const combats = (docSnap.data().combats || []).map(c => ({ ...c, statut: "non_joué" }));
         updates.push(updateDoc(doc(db, "brackets", docSnap.id), { combats }));
       });
       await Promise.all(updates);
-
       const newCols = columns.map(col => col.map(c => ({ ...c, statut: "non_joué" })));
       setColumns(newCols);
     } catch (err) {
@@ -124,30 +159,35 @@ export default function Bracket({ user }) {
     return false;
   };
 
+  const normalizeText = str =>
+    (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
   const getVisibleColumns = () => {
-    const term = (searchTerm || "").trim().toLowerCase();
-    return columns.map(col => col.filter(c => {
-      if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
-      if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
-      if (term && !((c.participant || "").toLowerCase().includes(term) || (c.adversaire || "").toLowerCase().includes(term))) return false;
-      if (hasLostBefore(c.participant, c.etape)) return false;
-      return true;
-    }));
+    const term = normalizeText(searchTerm.trim());
+    return columns.map(col =>
+      col.filter(c => {
+        const participant = normalizeText(c.participant);
+        const adversaire = normalizeText(c.adversaire);
+        const etape = c.etape || "";
+        if (stepFilter !== "Tous" && etape !== stepFilter) return false;
+        if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
+        if (term && !(participant.includes(term) || adversaire.includes(term))) return false;
+        if (hasLostBefore(c.participant, etape)) return false;
+        return true;
+      })
+    );
   };
 
   const visibleColumns = getVisibleColumns();
   const visibleFlat = visibleColumns.flat();
-  const countVisibleColor = (color) => visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
+  const countVisibleColor = color =>
+    visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
 
   return (
     <>
       <div
         style={{
-          background: user
-            ? canEdit
-              ? "#d4edda"
-              : "#fff3cd"
-            : "#f8d7da",
+          background: user ? (canEdit ? "#d4edda" : "#fff3cd") : "#f8d7da",
           color: "#333",
           padding: "10px",
           borderRadius: "8px",
@@ -155,11 +195,11 @@ export default function Bracket({ user }) {
           textAlign: "center",
         }}
       >
-        {user ? (
-          canEdit ? "✅ Connecté et autorisé à modifier" : "⚠️ Connecté, lecture seule"
-        ) : (
-          "🔒 Non connecté — lecture seule"
-        )}
+        {user
+          ? canEdit
+            ? "✅ Connecté et autorisé à modifier"
+            : "⚠️ Connecté, lecture seule"
+          : "🔒 Non connecté — lecture seule"}
       </div>
 
       {/* CONTROLS */}
@@ -171,22 +211,37 @@ export default function Bracket({ user }) {
         </div>
 
         <div className="color-filters">
-          <div className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}>
+          <div
+            className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`}
+            onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}
+          >
             🔴 {countVisibleColor("Rouge")}
           </div>
-          <div className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}>
+          <div
+            className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`}
+            onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}
+          >
             🔵 {countVisibleColor("Bleu")}
           </div>
-          <div className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`} onClick={() => setColorFilter(COLOR_ALL)}>
+          <div
+            className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`}
+            onClick={() => setColorFilter(COLOR_ALL)}
+          >
             ⚪ Tous
           </div>
         </div>
 
         <div className="filter-wrapper">
           <FaFilter className="icon" />
-          <select className="step-filter" value={stepFilter} onChange={(e) => setStepFilter(e.target.value)}>
+          <select
+            className="step-filter"
+            value={stepFilter}
+            onChange={e => setStepFilter(e.target.value)}
+          >
             <option value="Tous">Toutes les étapes</option>
-            {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
+            {ETAPES.map(et => (
+              <option key={et} value={et}>{et}</option>
+            ))}
           </select>
         </div>
 
@@ -197,7 +252,7 @@ export default function Bracket({ user }) {
             className="search-input"
             placeholder="Rechercher un participant ou adversaire"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
           />
         </div>
 
@@ -205,6 +260,12 @@ export default function Bracket({ user }) {
           <FaRedo style={{ marginRight: 6 }} />
           {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
         </button>
+        {canEdit && (
+          <button className="export-btn" onClick={handleExportPDF} disabled={!columns.length}>
+            📄 Exporter en PDF
+          </button>
+)}
+
       </div>
 
       {/* BRACKET */}
@@ -233,26 +294,22 @@ export default function Bracket({ user }) {
                       {isEditing && canEdit ? (
                         <div className="editing-fields">
                           <input defaultValue={combat.participant} disabled />
-                          <input defaultValue={combat.adversaire} onChange={(e) => setEditValues(s => ({ ...s, adversaire: e.target.value }))} />
-                          <input defaultValue={combat.num} onChange={(e) => setEditValues(s => ({ ...s, num: e.target.value }))} />
-                          <input defaultValue={combat.heure} onChange={(e) => setEditValues(s => ({ ...s, heure: e.target.value }))} />
-                          <input defaultValue={combat.aire} onChange={(e) => setEditValues(s => ({ ...s, aire: e.target.value }))} />
-                          <select defaultValue={combat.couleur} onChange={(e) => setEditValues(s => ({ ...s, couleur: e.target.value }))}>
+                          <input defaultValue={combat.adversaire} onChange={e => setEditValues(s => ({ ...s, adversaire: e.target.value }))} />
+                          <input defaultValue={combat.num} onChange={e => setEditValues(s => ({ ...s, num: e.target.value }))} />
+                          <input defaultValue={combat.heure} onChange={e => setEditValues(s => ({ ...s, heure: e.target.value }))} />
+                          <input defaultValue={combat.aire} onChange={e => setEditValues(s => ({ ...s, aire: e.target.value }))} />
+                          <select defaultValue={combat.couleur} onChange={e => setEditValues(s => ({ ...s, couleur: e.target.value }))}>
                             <option value="Rouge">Rouge</option>
                             <option value="Bleu">Bleu</option>
                           </select>
-                          <select defaultValue={combat.coach} onChange={(e) => setEditValues(s => ({ ...s, coach: e.target.value }))}>
+                          <select defaultValue={combat.coach} onChange={e => setEditValues(s => ({ ...s, coach: e.target.value }))}>
                             {["Mélanie","Nadège","Christophe","Guillaume"].map(c => <option key={c} value={c}>{c}</option>)}
                           </select>
-                              <input
-                                list="categories-list"
-                                defaultValue={combat.categorie}
-                                onChange={(e) => setEditValues(s => ({ ...s, categorie: e.target.value }))}
-                                placeholder="Entrez une catégorie"
-                              />
-                              <datalist id="categories-list">
-                                {CATEGORIES.map(cat => <option key={cat} value={cat} />)}
-                              </datalist>
+
+                          <input list="categories" defaultValue={combat.categorie} onChange={e => setEditValues(s => ({ ...s, categorie: e.target.value }))} />
+                          <datalist id="categories">
+                            {categories.map(cat => <option key={cat} value={cat} />)}
+                          </datalist>
 
                           <div className="edit-buttons">
                             <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
