@@ -275,3 +275,34 @@
 .fade-enter-active { opacity: 1; transition: opacity 0.5s ease; }
 .fade-exit { opacity: 1; }
 .fade-exit-active { opacity: 0; transition: opacity 0.5s ease; }
+/* ============================= */
+/*     Bouton "Toutes les étapes" responsive et centré */
+/* ============================= */
+.color-box.tous {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* espace entre texte et icône */
+  min-width: 130px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #999;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.color-box.tous .icon {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+/* ✅ Ajustement mobile : plus large pour éviter tout chevauchement */
+@media (max-width: 768px) {
+  .color-box.tous {
+    min-width: 140px;
+    padding-right: 24px;
+    justify-content: center;
+  }
+}
