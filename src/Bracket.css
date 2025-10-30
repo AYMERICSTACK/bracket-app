@@ -46,18 +46,39 @@
   pointer-events: none;
 }
 
-.step-filter, .search-input {
-  padding: 8px 12px 8px 30px;
+/* ============================= */
+/*       Select / Recherche      */
+/* ============================= */
+.step-filter {
+  padding: 8px 12px 8px 40px; /* ↑ ici on décale le texte à droite pour l'icône */
   border-radius: 12px;
   border: 1px solid #ccc;
   font-size: 14px;
   background: rgba(255,255,255,0.9);
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   transition: all 0.25s ease;
-  min-width: 160px; /* Ajout pour mobile : allonger le select */
+  min-width: 160px;
+  appearance: none; /* supprime la flèche native desktop */
 }
 
-.step-filter:hover, .search-input:focus {
+.step-filter:hover, .step-filter:focus {
+  border-color: #888;
+  background: rgba(255,255,255,1);
+}
+
+.search-input {
+  padding: 8px 12px 8px 30px; /* laisse l'espace pour l'icône HTML existante */
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.25s ease;
+  width: 100%;
+  min-width: 160px;
+}
+
+.search-input:hover, .search-input:focus {
   border-color: #888;
   background: rgba(255,255,255,1);
 }
@@ -95,7 +116,6 @@
 .bracket-container.horizontal { flex-direction: row; }
 .bracket-container.vertical { flex-direction: column; }
 
-/* Colonnes */
 .bracket-column {
   display: flex;
   flex-direction: column;
@@ -105,14 +125,8 @@
 }
 
 /* Cartes combat */
-.combat-card-wrapper {
-  position: relative;
-  transition: all 0.2s ease;
-}
-.combat-card-wrapper.dimmed {
-  opacity: 0.5;
-  filter: grayscale(0.7);
-}
+.combat-card-wrapper { position: relative; transition: all 0.2s ease; }
+.combat-card-wrapper.dimmed { opacity: 0.5; filter: grayscale(0.7); }
 
 .combat-card {
   border-radius: 10px;
@@ -133,54 +147,18 @@
 .combat-card.rouge { background-color: #ff5050; }
 .combat-card.bleu { background-color: #5080ff; }
 
-/* Badge étape */
-.etape-badge {
-  position: absolute;
-  top: -10px;
-  right: 10px;
-  background: rgba(0,0,0,0.75);
-  color: #fff;
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-/* Badge statut */
-.status-badge {
-  position: absolute;
-  top: -10px;
-  left: 10px;
-  font-size: 10px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
+.etape-badge { position: absolute; top: -10px; right: 10px; background: rgba(0,0,0,0.75); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+.status-badge { position: absolute; top: -10px; left: 10px; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; }
 .status-badge.gagné { background: #4caf50; }
 .status-badge.perdu { background: #b71c1c; }
 
-/* Badge coach */
-.coach-badge {
-  text-align: center;
-  background: rgba(255,255,255,0.2);
-  padding: 2px 6px;
-  border-radius: 8px;
-  margin-bottom: 6px;
-  font-size: 12px;
-}
+.coach-badge { text-align: center; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 8px; margin-bottom: 6px; font-size: 12px; }
 
-/* Participant / Versus / Info */
 .participant { font-weight: bold; font-size: 14px; text-align: center; }
 .versus { font-size: 12px; margin-top: 3px; text-align: center; }
 .combat-info { font-size: 11px; margin-top: 5px; color: #eee; text-align: center; }
 
-/* Boutons statut */
-.status-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 5px;
-}
-
+.status-buttons { display: flex; justify-content: space-between; margin-top: 5px; }
 .btn-win, .btn-lose {
   flex: 1;
   padding: 4px 6px;
@@ -191,17 +169,10 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
 .btn-win { background: rgba(76, 175, 80, 0.7); color: #fff; }
 .btn-lose { background: rgba(244, 67, 54, 0.7); color: #fff; }
+.btn-win.active, .btn-lose.active { background: #fff; color: #000; font-weight: bold; }
 
-.btn-win.active, .btn-lose.active {
-  background: #fff;
-  color: #000;
-  font-weight: bold;
-}
-
-/* Bouton édition */
 .edit-btn {
   margin-top: 5px;
   padding: 4px 6px;
@@ -215,26 +186,8 @@
 }
 .edit-btn:hover { background-color: rgba(255,255,255,0.5); }
 
-/* Champs édition */
-.editing-fields input, .editing-fields select {
-  display: block;
-  margin: 5px 0;
-  width: 100%;
-  padding: 6px 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 12px;
-}
-.categorie-badge {
-  text-align: center;
-  background: rgba(255,255,255,0.2);
-  padding: 2px 6px;
-  border-radius: 6px;
-  margin-top: 4px;
-  font-size: 12px;
-  color: #fff;
-}
-
+.editing-fields input, .editing-fields select { display: block; margin: 5px 0; width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 12px; }
+.categorie-badge { text-align: center; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 6px; margin-top: 4px; font-size: 12px; color: #fff; }
 .edit-buttons { display: flex; gap: 8px; margin-top: 8px; }
 
 /* ============================= */
@@ -262,9 +215,14 @@
 
   .combat-card { width: 100%; box-sizing: border-box; border-radius: 8px; padding: 10px; }
 
-  /* ✅ Ajustement pour le select sur mobile */
+  /* Flèche du select uniquement mobile */
   .step-filter {
-    min-width: 200px; /* plus large pour éviter chevauchement avec icône */
+    min-width: 200px;
+    padding-left: 40px;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23555' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9 5l7 7-7 7'/></svg>");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 14px;
   }
 }
 
