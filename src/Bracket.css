@@ -54,6 +54,7 @@
   background: rgba(255,255,255,0.9);
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   transition: all 0.25s ease;
+  min-width: 160px; /* Ajout pour mobile : allonger le select */
 }
 
 .step-filter:hover, .search-input:focus {
@@ -234,7 +235,6 @@
   color: #fff;
 }
 
-
 .edit-buttons { display: flex; gap: 8px; margin-top: 8px; }
 
 /* ============================= */
@@ -261,6 +261,11 @@
   }
 
   .combat-card { width: 100%; box-sizing: border-box; border-radius: 8px; padding: 10px; }
+
+  /* ✅ Ajustement pour le select sur mobile */
+  .step-filter {
+    min-width: 200px; /* plus large pour éviter chevauchement avec icône */
+  }
 }
 
 /* ============================= */
