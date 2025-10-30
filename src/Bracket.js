@@ -244,9 +244,16 @@ export default function Bracket({ user }) {
                           <select defaultValue={combat.coach} onChange={(e) => setEditValues(s => ({ ...s, coach: e.target.value }))}>
                             {["Mélanie","Nadège","Christophe","Guillaume"].map(c => <option key={c} value={c}>{c}</option>)}
                           </select>
-                          <select defaultValue={combat.categorie} onChange={(e) => setEditValues(s => ({ ...s, categorie: e.target.value }))}>
-                            {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                          </select>
+                              <input
+                                list="categories-list"
+                                defaultValue={combat.categorie}
+                                onChange={(e) => setEditValues(s => ({ ...s, categorie: e.target.value }))}
+                                placeholder="Entrez une catégorie"
+                              />
+                              <datalist id="categories-list">
+                                {CATEGORIES.map(cat => <option key={cat} value={cat} />)}
+                              </datalist>
+
                           <div className="edit-buttons">
                             <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
                             <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
