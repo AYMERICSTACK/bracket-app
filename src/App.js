@@ -26,6 +26,7 @@ export default function App() {
   const handleLogout = async () => {
     await signOut(auth);
     setUser(null);
+    setShowLogin(false); // fermeture automatique de la pop-up
   };
 
   const isAuthorized = user && ALLOWED_UIDS.includes(user.uid);
@@ -95,6 +96,19 @@ export default function App() {
           )}
         </div>
       </div>
+
+      {/* Affichage d’un lien Retour si pas connecté */}
+      {!user && showLogin && (
+        <div style={{ textAlign: "center", marginBottom: "10px" }}>
+          🔙{" "}
+          <span
+            style={{ color: "#007bff", cursor: "pointer" }}
+            onClick={() => setShowLogin(false)}
+          >
+            Retour au Bracket
+          </span>
+        </div>
+      )}
 
       {/* Transition principale */}
       <SwitchTransition mode="out-in">
