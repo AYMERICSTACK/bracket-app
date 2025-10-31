@@ -167,16 +167,19 @@ export default function Bracket({ user }) {
 
   return (
     <>
-      <div style={{
-        background: user ? (canEdit ? "#d4edda" : "#fff3cd") : "#f8d7da",
-        color: "#333",
-        padding: "10px",
-        borderRadius: "8px",
-        margin: "10px",
-        textAlign: "center",
-      }}>
-        {user ? canEdit ? "✅ Connecté et autorisé à modifier" : "⚠️ Connecté, lecture seule" : "🔒 Non connecté — lecture seule"}
-      </div>
+        <div style={{
+            background: user ? (canEdit ? "#d4edda" : "#fff3cd") : "#f8d7da",
+            color: "#333",
+            padding: "10px",
+            borderRadius: "8px",
+            margin: "10px",
+            textAlign: "center",
+        }}>
+          {user ? canEdit ? "✅ Connecté et autorisé à modifier"
+                        : "⚠️ Connecté, lecture seule"
+              : "🔒 Non connecté — lecture seule"}
+        </div>
+
 
       {/* CONTROLS */}
       <div className="controls">
