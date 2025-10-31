@@ -1,0 +1,812 @@
+[
+  {
+    "id": "Alban",
+    "data": {
+      "combats": [
+        {
+          "num": "c13",
+          "coach": "Mélanie",
+          "participant": "Alban",
+          "adversaire": "Mathis",
+          "categorie": "-75kg",
+          "couleur": "Bleu",
+          "statut": "non_joué",
+          "aire": "2",
+          "heure": "10:30",
+          "etape": "Quart"
+        },
+        {
+          "heure": "11:30",
+          "adversaire": "Mathis",
+          "statut": "non_joué",
+          "num": "c14",
+          "coach": "Mélanie",
+          "etape": "Demi",
+          "couleur": "Rouge",
+          "aire": "2",
+          "categorie": "-75kg",
+          "participant": "Alban"
+        },
+        {
+          "statut": "non_joué",
+          "num": "c15",
+          "couleur": "Bleu",
+          "categorie": "-75kg",
+          "participant": "Alban",
+          "heure": "12:30",
+          "coach": "Mélanie",
+          "aire": "2",
+          "etape": "Finale",
+          "adversaire": "Mathis"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Alicia",
+    "data": {
+      "combats": [
+        {
+          "coach": "Nadège",
+          "statut": "non_joué",
+          "heure": "13:00",
+          "etape": "Quart",
+          "participant": "Alicia",
+          "aire": "3",
+          "num": "c7",
+          "adversaire": "Samira",
+          "couleur": "Bleu",
+          "categorie": "-60kg"
+        },
+        {
+          "num": "c8",
+          "statut": "non_joué",
+          "participant": "Alicia",
+          "coach": "Nadège",
+          "couleur": "Rouge",
+          "heure": "14:00",
+          "adversaire": "Samira",
+          "aire": "3",
+          "etape": "Demi",
+          "categorie": "-60kg"
+        },
+        {
+          "coach": "Nadège",
+          "heure": "15:00",
+          "participant": "Alicia",
+          "couleur": "Bleu",
+          "num": "c9",
+          "etape": "Finale",
+          "adversaire": "Samira",
+          "statut": "non_joué",
+          "aire": "3",
+          "categorie": "-60kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Arthur",
+    "data": {
+      "combats": [
+        {
+          "adversaire": "Valentin",
+          "etape": "Quart",
+          "coach": "Guillaume",
+          "couleur": "Bleu",
+          "participant": "Arthur",
+          "heure": "10:00",
+          "aire": "1",
+          "num": "c10",
+          "statut": "non_joué",
+          "categorie": "-75kg"
+        },
+        {
+          "heure": "11:00",
+          "statut": "non_joué",
+          "etape": "Demi",
+          "coach": "Guillaume",
+          "couleur": "Rouge",
+          "adversaire": "Valentin",
+          "participant": "Arthur",
+          "num": "c11",
+          "aire": "1",
+          "categorie": "-75kg"
+        },
+        {
+          "participant": "Arthur",
+          "num": "c12",
+          "coach": "Guillaume",
+          "etape": "Finale",
+          "couleur": "Bleu",
+          "heure": "12:00",
+          "aire": "1",
+          "adversaire": "Valentin",
+          "statut": "non_joué",
+          "categorie": "-75kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Chloé",
+    "data": {
+      "combats": [
+        {
+          "participant": "Chloé",
+          "etape": "Quart",
+          "heure": "10:30",
+          "coach": "Guillaume",
+          "aire": "2",
+          "statut": "non_joué",
+          "couleur": "Rouge",
+          "num": "c4",
+          "adversaire": "Iona",
+          "categorie": "-55kg"
+        },
+        {
+          "heure": "11:30",
+          "aire": "2",
+          "couleur": "Bleu",
+          "num": "c5",
+          "participant": "Chloé",
+          "statut": "non_joué",
+          "etape": "Demi",
+          "adversaire": "Iona",
+          "coach": "Guillaume",
+          "categorie": "-55kg"
+        },
+        {
+          "etape": "Finale",
+          "coach": "Guillaume",
+          "adversaire": "Iona",
+          "num": "c6",
+          "aire": "2",
+          "statut": "non_joué",
+          "couleur": "Rouge",
+          "heure": "12:30",
+          "participant": "Chloé",
+          "categorie": "-55kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Cécile",
+    "data": {
+      "combats": [
+        {
+          "num": "c1",
+          "coach": "Nadège",
+          "couleur": "Bleu",
+          "heure": "10:00",
+          "statut": "non_joué",
+          "aire": "1",
+          "etape": "Quart",
+          "participant": "Cécile",
+          "adversaire": "Mélanie",
+          "categorie": "-65kg"
+        },
+        {
+          "heure": "11:00",
+          "aire": "1",
+          "coach": "Nadège",
+          "adversaire": "Mélanie",
+          "statut": "non_joué",
+          "couleur": "Rouge",
+          "etape": "Demi",
+          "participant": "Cécile",
+          "num": "c2",
+          "categorie": "-65kg"
+        },
+        {
+          "adversaire": "Mélanie",
+          "statut": "non_joué",
+          "participant": "Cécile",
+          "couleur": "Bleu",
+          "heure": "12:00",
+          "num": "c3",
+          "etape": "Finale",
+          "aire": "1",
+          "coach": "Nadège",
+          "categorie": "-65kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Iona",
+    "data": {
+      "combats": [
+        {
+          "coach": "Christophe",
+          "adversaire": "Chloé",
+          "etape": "Quart",
+          "participant": "Iona",
+          "heure": "10:30",
+          "num": "c4",
+          "aire": "2",
+          "couleur": "Bleu",
+          "statut": "non_joué",
+          "categorie": "-55kg"
+        },
+        {
+          "coach": "Christophe",
+          "aire": "2",
+          "num": "c5",
+          "etape": "Demi",
+          "heure": "11:30",
+          "statut": "non_joué",
+          "adversaire": "Chloé",
+          "couleur": "Rouge",
+          "participant": "Iona",
+          "categorie": "-55kg"
+        },
+        {
+          "num": "c6",
+          "participant": "Iona",
+          "adversaire": "Chloé",
+          "statut": "non_joué",
+          "heure": "12:30",
+          "couleur": "Bleu",
+          "aire": "2",
+          "coach": "Christophe",
+          "etape": "Finale",
+          "categorie": "-55kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Joris",
+    "data": {
+      "combats": [
+        {
+          "num": "c16",
+          "coach": "Christophe",
+          "couleur": "Rouge",
+          "participant": "Joris",
+          "heure": "13:00",
+          "adversaire": "Rémy",
+          "statut": "non_joué",
+          "etape": "Quart",
+          "aire": "3",
+          "categorie": "-70kg"
+        },
+        {
+          "participant": "Joris",
+          "aire": "3",
+          "num": "c17",
+          "coach": "Christophe",
+          "statut": "non_joué",
+          "etape": "Demi",
+          "adversaire": "Rémy",
+          "couleur": "Bleu",
+          "heure": "14:00",
+          "categorie": "-70kg"
+        },
+        {
+          "heure": "15:00",
+          "coach": "Christophe",
+          "aire": "3",
+          "adversaire": "Rémy",
+          "couleur": "Rouge",
+          "etape": "Finale",
+          "num": "c18",
+          "statut": "non_joué",
+          "participant": "Joris",
+          "categorie": "-70kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Julien",
+    "data": {
+      "combats": [
+        {
+          "coach": "Mélanie",
+          "num": "c19",
+          "etape": "Quart",
+          "statut": "non_joué",
+          "couleur": "Rouge",
+          "participant": "Julien",
+          "heure": "10:00",
+          "adversaire": "Sacha",
+          "aire": "1",
+          "categorie": "-73kg"
+        },
+        {
+          "statut": "non_joué",
+          "couleur": "Bleu",
+          "coach": "Mélanie",
+          "adversaire": "Sacha",
+          "aire": "1",
+          "etape": "Demi",
+          "participant": "Julien",
+          "heure": "11:00",
+          "num": "c20",
+          "categorie": "-73kg"
+        },
+        {
+          "heure": "12:00",
+          "adversaire": "Sacha",
+          "aire": "1",
+          "coach": "Mélanie",
+          "participant": "Julien",
+          "couleur": "Rouge",
+          "etape": "Finale",
+          "num": "c21",
+          "statut": "non_joué",
+          "categorie": "-73kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Léony",
+    "data": {
+      "combats": [
+        {
+          "coach": "Guillaume",
+          "statut": "non_joué",
+          "heure": "14:00",
+          "etape": "Quart",
+          "adversaire": "Sophie",
+          "couleur": "Bleu",
+          "participant": "Léony",
+          "num": "c17",
+          "aire": "1",
+          "categorie": "-37kg"
+        },
+        {
+          "statut": "non_joué",
+          "participant": "Léony",
+          "num": "c29",
+          "adversaire": "Sophie",
+          "heure": "15:00",
+          "aire": "2",
+          "etape": "Demi",
+          "couleur": "Bleu",
+          "categorie": "-37kg"
+        },
+        {
+          "num": "c36",
+          "participant": "Léony",
+          "couleur": "Rouge",
+          "etape": "Finale",
+          "statut": "non_joué",
+          "heure": "16:00",
+          "adversaire": "Sophie",
+          "aire": "2",
+          "categorie": "-37kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Mathis",
+    "data": {
+      "combats": [
+        {
+          "coach": "Nadège",
+          "adversaire": "Alban",
+          "num": "c13",
+          "statut": "non_joué",
+          "couleur": "Rouge",
+          "heure": "10:30",
+          "participant": "Mathis",
+          "aire": "2",
+          "etape": "Quart",
+          "categorie": "-68kg"
+        },
+        {
+          "couleur": "Bleu",
+          "aire": "2",
+          "adversaire": "Alban",
+          "coach": "Nadège",
+          "heure": "11:30",
+          "num": "c14",
+          "participant": "Mathis",
+          "etape": "Demi",
+          "statut": "non_joué",
+          "categorie": "-68kg"
+        },
+        {
+          "aire": "2",
+          "adversaire": "Alban",
+          "etape": "Finale",
+          "coach": "Nadège",
+          "statut": "non_joué",
+          "couleur": "Rouge",
+          "participant": "Mathis",
+          "heure": "12:30",
+          "num": "c15",
+          "categorie": "-68kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Mélanie",
+    "data": {
+      "combats": [
+        {
+          "participant": "Mélanie",
+          "adversaire": "Cécile",
+          "etape": "Quart",
+          "heure": "10:00",
+          "coach": "Mélanie",
+          "couleur": "Rouge",
+          "num": "c1",
+          "statut": "non_joué",
+          "aire": "1",
+          "categorie": "-70kg"
+        },
+        {
+          "etape": "Demi",
+          "adversaire": "Cécile",
+          "coach": "Mélanie",
+          "participant": "Mélanie",
+          "heure": "11:00",
+          "statut": "non_joué",
+          "num": "c2",
+          "aire": "1",
+          "couleur": "Bleu",
+          "categorie": "-70kg"
+        },
+        {
+          "statut": "non_joué",
+          "heure": "12:00",
+          "couleur": "Rouge",
+          "coach": "Mélanie",
+          "participant": "Mélanie",
+          "num": "c3",
+          "adversaire": "Cécile",
+          "etape": "Finale",
+          "aire": "1",
+          "categorie": "-70kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Nadège",
+    "data": {
+      "combats": [
+        {
+          "statut": "non_joué",
+          "coach": "Christophe",
+          "participant": "Nadège",
+          "etape": "Quart",
+          "adversaire": "Sophie",
+          "num": "c25",
+          "couleur": "Rouge",
+          "aire": "1",
+          "heure": "13:00",
+          "categorie": "-60kg"
+        },
+        {
+          "etape": "Demi",
+          "statut": "non_joué",
+          "adversaire": "Elsa",
+          "participant": "Nadège",
+          "couleur": "Bleu",
+          "aire": "1",
+          "heure": "14:00",
+          "num": "c36",
+          "categorie": "-60kg"
+        },
+        {
+          "heure": "15:00",
+          "statut": "non_joué",
+          "num": "c45",
+          "aire": "1",
+          "adversaire": "Sophie",
+          "couleur": "Rouge",
+          "etape": "Finale",
+          "participant": "Nadège",
+          "categorie": "-60kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Paul",
+    "data": {
+      "combats": [
+        {
+          "num": "c25",
+          "couleur": "Rouge",
+          "aire": "1",
+          "adversaire": "Sophie",
+          "heure": "13:00",
+          "participant": "Paul",
+          "statut": "non_joué",
+          "etape": "Quart",
+          "categorie": "N/A"
+        },
+        {
+          "heure": "14:00",
+          "couleur": "Bleu",
+          "adversaire": "Sophie",
+          "participant": "Paul",
+          "etape": "Demi",
+          "num": "c36",
+          "aire": "1",
+          "statut": "non_joué",
+          "categorie": "N/A"
+        },
+        {
+          "heure": "15:00",
+          "adversaire": "Sophie",
+          "participant": "Paul",
+          "num": "c45",
+          "aire": "1",
+          "couleur": "Rouge",
+          "etape": "Finale",
+          "statut": "non_joué",
+          "categorie": "N/A"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Rémy",
+    "data": {
+      "combats": [
+        {
+          "participant": "Rémy",
+          "aire": "3",
+          "num": "c16",
+          "coach": "Christophe",
+          "etape": "Quart",
+          "adversaire": "Joris",
+          "heure": "13:00",
+          "statut": "non_joué",
+          "couleur": "Bleu",
+          "categorie": "-70kg"
+        },
+        {
+          "participant": "Rémy",
+          "couleur": "Rouge",
+          "etape": "Demi",
+          "adversaire": "Joris",
+          "num": "c17",
+          "aire": "3",
+          "statut": "non_joué",
+          "coach": "Guillaume",
+          "heure": "14:00",
+          "categorie": "-70kg"
+        },
+        {
+          "couleur": "Bleu",
+          "etape": "Finale",
+          "statut": "non_joué",
+          "adversaire": "Joris",
+          "coach": "Guillaume",
+          "aire": "3",
+          "num": "c18",
+          "heure": "15:00",
+          "participant": "Rémy",
+          "categorie": "-70kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Sacha",
+    "data": {
+      "combats": [
+        {
+          "adversaire": "Julien",
+          "participant": "Sacha",
+          "statut": "non_joué",
+          "aire": "1",
+          "num": "c19",
+          "coach": "Nadège",
+          "heure": "10:00",
+          "etape": "Quart",
+          "couleur": "Bleu",
+          "categorie": "-73kg"
+        },
+        {
+          "couleur": "Rouge",
+          "adversaire": "Julien",
+          "heure": "11:00",
+          "statut": "non_joué",
+          "coach": "Nadège",
+          "etape": "Demi",
+          "num": "c20",
+          "aire": "1",
+          "participant": "Sacha",
+          "categorie": "-73kg"
+        },
+        {
+          "num": "c21",
+          "participant": "Sacha",
+          "coach": "Nadège",
+          "couleur": "Bleu",
+          "etape": "Finale",
+          "heure": "12:00",
+          "aire": "1",
+          "adversaire": "Julien",
+          "statut": "non_joué",
+          "categorie": "-73kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Samir",
+    "data": {
+      "combats": [
+        {
+          "statut": "non_joué",
+          "participant": "Samir",
+          "coach": "Christophe",
+          "etape": "Quart",
+          "adversaire": "Zakaria",
+          "num": "c22",
+          "couleur": "Bleu",
+          "aire": "2",
+          "heure": "10:30",
+          "categorie": "-80kg"
+        },
+        {
+          "statut": "non_joué",
+          "coach": "Christophe",
+          "heure": "11:30",
+          "etape": "Demi",
+          "adversaire": "Zakaria",
+          "couleur": "Rouge",
+          "participant": "Samir",
+          "num": "c23",
+          "aire": "2",
+          "categorie": "-80kg"
+        },
+        {
+          "coach": "Christophe",
+          "heure": "12:30",
+          "couleur": "Bleu",
+          "participant": "Samir",
+          "etape": "Finale",
+          "num": "c24",
+          "adversaire": "Zakaria",
+          "statut": "non_joué",
+          "aire": "2",
+          "categorie": "-80kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Samira",
+    "data": {
+      "combats": [
+        {
+          "participant": "Samira",
+          "heure": "13:00",
+          "statut": "non_joué",
+          "num": "c7",
+          "couleur": "Rouge",
+          "aire": "3",
+          "adversaire": "Alicia",
+          "etape": "Quart",
+          "coach": "Mélanie",
+          "categorie": "-60kg"
+        },
+        {
+          "num": "c8",
+          "etape": "Demi",
+          "couleur": "Bleu",
+          "coach": "Mélanie",
+          "statut": "non_joué",
+          "adversaire": "Alicia",
+          "heure": "14:00",
+          "participant": "Samira",
+          "aire": "3",
+          "categorie": "-60kg"
+        },
+        {
+          "heure": "15:00",
+          "num": "c9",
+          "participant": "Samira",
+          "statut": "non_joué",
+          "coach": "Mélanie",
+          "etape": "Finale",
+          "aire": "3",
+          "adversaire": "Alicia",
+          "couleur": "Rouge",
+          "categorie": "-60kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Valentin",
+    "data": {
+      "combats": [
+        {
+          "coach": "Christophe",
+          "statut": "non_joué",
+          "aire": "1",
+          "couleur": "Rouge",
+          "heure": "10:00",
+          "num": "c10",
+          "etape": "Quart",
+          "adversaire": "Arthur",
+          "participant": "Valentin",
+          "categorie": "-75kg"
+        },
+        {
+          "couleur": "Bleu",
+          "adversaire": "Arthur",
+          "coach": "Christophe",
+          "participant": "Valentin",
+          "heure": "11:00",
+          "num": "c11",
+          "aire": "1",
+          "statut": "non_joué",
+          "etape": "Demi",
+          "categorie": "-75kg"
+        },
+        {
+          "coach": "Christophe",
+          "etape": "Finale",
+          "couleur": "Rouge",
+          "heure": "12:00",
+          "aire": "1",
+          "adversaire": "Arthur",
+          "statut": "non_joué",
+          "participant": "Valentin",
+          "num": "c12",
+          "categorie": "-75kg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Zakaria",
+    "data": {
+      "combats": [
+        {
+          "coach": "Guillaume",
+          "etape": "Quart",
+          "statut": "non_joué",
+          "adversaire": "Samir",
+          "aire": "2",
+          "num": "c22",
+          "participant": "Zakaria",
+          "heure": "10:30",
+          "couleur": "Rouge",
+          "categorie": "-80kg"
+        },
+        {
+          "num": "c23",
+          "coach": "Guillaume",
+          "statut": "non_joué",
+          "aire": "2",
+          "heure": "11:30",
+          "adversaire": "Samir",
+          "etape": "Demi",
+          "couleur": "Bleu",
+          "participant": "Zakaria",
+          "categorie": "-80kg"
+        },
+        {
+          "num": "c24",
+          "coach": "Guillaume",
+          "adversaire": "Samir",
+          "aire": "2",
+          "couleur": "Rouge",
+          "heure": "12:30",
+          "etape": "Finale",
+          "participant": "Zakaria",
+          "statut": "non_joué",
+          "categorie": "-80kg"
+        }
+      ]
+    }
+  }
+]

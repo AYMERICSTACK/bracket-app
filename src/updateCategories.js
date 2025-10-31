@@ -1,26 +1,30 @@
 // updateCategories.js
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, updateDoc, doc } from "firebase/firestore";
+// updateCategories.js
+import { initializeApp, cert } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+import fs from "fs";
+import path from "path";
 
-// 🔹 Configuration Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAqmV4cGPR5ukBSQvormWognk6YwMVmAYY",
-  authDomain: "bracketapp-48387.firebaseapp.com",
-  projectId: "bracketapp-48387",
-  storageBucket: "bracketapp-48387.firebasestorage.app",
-  messagingSenderId: "968998996438",
-  appId: "1:968998996438:web:0bb15e61b7ebfe2eeabc77"
-};
+// Chemin vers la clé
+const serviceAccountPath = path.resolve("serviceAccountKey.json");
+const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Initialisation Firebase Admin
+initializeApp({
+  credential: cert(serviceAccount)
+});
+
+const db = getFirestore();
+
+// Ici ton code pour updateCategories
+
+
 
 // 🔹 Catégories par participant
 const CATEGORIES = {
   "Mélanie": "-70kg",
   "Nadège": "-60kg",
   "Léony": "-37kg",
-  // Les autres participants par défaut à mettre au hasard ou N/A
   "Cécile": "-65kg",
   "Iona": "-55kg",
   "Chloé": "-55kg",
@@ -39,26 +43,39 @@ const CATEGORIES = {
 };
 
 async function updateCategories() {
-  const bracketCol = collection(db, "brackets");
-  const snapshot = await getDocs(bracketCol);
+  console.log("🔄 Lecture de la collection 'brackets'...");
+  const snapshot = await db.collection("brackets").get();
 
-  const updates = [];
+  // 🔸 Backup automatique avant modification
+  const backup = snapshot.docs.map(d => ({ id: d.id, data: d.data() }));
+  fs.writeFileSync("brackets_backup.json", JSON.stringify(backup, null, 2));
+  console.log("📦 Sauvegarde créée → brackets_backup.json");
 
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    const combats = (data.combats || []).map(c => {
-      // Si la catégorie existe déjà, on ne change rien
-      if (c.categorie) return c;
-      return {
-        ...c,
-        categorie: CATEGORIES[c.participant] || "N/A"
-      };
-    });
-    updates.push(updateDoc(doc(db, "brackets", docSnap.id), { combats }));
-  });
+  // 🔸 Mise à jour des documents
+  let success = 0;
+  let errors = 0;
 
-  await Promise.all(updates);
-  console.log("✅ Catégories mises à jour pour tous les participants !");
+  for (const docSnap of snapshot.docs) {
+    try {
+      const data = docSnap.data();
+      const combats = (data.combats || []).map((c) => {
+        if (c.categorie) return c;
+        return {
+          ...c,
+          categorie: CATEGORIES[c.participant] || "N/A",
+        };
+      });
+
+      await docSnap.ref.update({ combats });
+      console.log(`✅ ${docSnap.id} mis à jour`);
+      success++;
+    } catch (err) {
+      console.error(`❌ Erreur sur ${docSnap.id}: ${err.message}`);
+      errors++;
+    }
+  }
+
+  console.log(`\n🎯 Terminé : ${success} succès / ${errors} erreurs`);
 }
 
-updateCategories().catch(err => console.error(err));
+updateCategories().catch(err => console.error("💥 Erreur globale:", err));

@@ -1,37 +1,30 @@
 @echo off
-chcp 65001 >nul
-:: ================================
-:: 🚀 Script push automatique Git
-:: ================================
-
-cd /d "C:\Users\adjeridi\Documents\bracket-app"
-
-echo.
 echo 📂 Vérification de l'état du dépôt...
 git status
-
 echo.
+
+:ASK
+set /p proceed="Voulez-vous ajouter tous les fichiers modifiés et créer un commit ? (O/N) "
+if /i "%proceed%"=="O" goto ADD
+if /i "%proceed%"=="N" goto END
+echo Veuillez répondre O ou N.
+goto ASK
+
+:ADD
 echo ➕ Ajout de tous les fichiers modifiés...
-git add .
+git add -A
 
-set /p MESSAGE=📝 Entrez le message du commit : 
+set /p msg="📝 Entrez le message du commit : "
+if "%msg%"=="" (
+    echo ❌ Message vide, commit annulé.
+    goto END
+)
 
-echo.
-echo 💾 Commit en cours...
-git commit -m "%MESSAGE%"
+git commit -m "%msg%"
+git push
+echo ✅ Push terminé !
+goto END
 
-echo.
-echo 🌿 Vérification de la branche actuelle...
-git branch
-
-echo.
-echo 🚀 Envoi sur GitHub (branche main)...
-git push origin main
-
-echo.
-echo ✅ Push terminé avec succès !
-echo -----------------------------------------
-git log --oneline -5
-echo -----------------------------------------
-
+:END
+echo Fin du script.
 pause
