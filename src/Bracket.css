@@ -107,6 +107,7 @@
   gap: 40px;
   padding: 20px;
   overflow-x: auto;
+  overflow-y: hidden; /* on garde scroll vertical désactivé */
   background-color: #f9f9f9;
   min-height: 100vh;
   scroll-behavior: smooth;
@@ -124,7 +125,7 @@
   transition: all 0.25s ease;
 }
 
-/* ✅ Titres d’étape */
+/* Titres d’étape */
 .bracket-column h3 {
   text-align: center;
   background: rgba(240, 240, 240, 0.85);
@@ -155,7 +156,6 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-top 0.3s ease;
 }
 
-/* ✅ Hover animé sur les cartes combat */
 .combat-card:hover {
   transform: translateY(-5px) scale(1.05);
   box-shadow: 0 10px 20px rgba(0,0,0,0.45),
@@ -205,7 +205,6 @@
 
 .status-buttons { display: flex; justify-content: space-between; margin-top: 5px; }
 
-/* ✅ Boutons Gagné / Perdu avec hover */
 .btn-win, .btn-lose {
   flex: 1;
   padding: 4px 6px;
@@ -220,23 +219,11 @@
 .btn-win { background: rgba(76, 175, 80, 0.7); color: #fff; }
 .btn-lose { background: rgba(244, 67, 54, 0.7); color: #fff; }
 
-.btn-win:hover {
-  background-color: #d4edda !important;
-  transform: scale(1.05);
-}
+.btn-win:hover { background-color: #d4edda !important; transform: scale(1.05); }
+.btn-lose:hover { background-color: #f8d7da !important; transform: scale(1.05); }
 
-.btn-lose:hover {
-  background-color: #f8d7da !important;
-  transform: scale(1.05);
-}
+.btn-win.active, .btn-lose.active { background: #fff; color: #000; font-weight: bold; }
 
-.btn-win.active, .btn-lose.active {
-  background: #fff;
-  color: #000;
-  font-weight: bold;
-}
-
-/* ✅ Bouton Modifier */
 .edit-btn {
   margin-top: 5px;
   padding: 4px 6px;
@@ -248,12 +235,8 @@
   color: #fff;
   transition: all 0.25s ease;
 }
-.edit-btn:hover {
-  background-color: rgba(255,255,255,0.5);
-  transform: scale(1.05);
-}
+.edit-btn:hover { background-color: rgba(255,255,255,0.5); transform: scale(1.05); }
 
-/* ✅ Animation entrée du mode édition */
 .editing-fields {
   animation: fadeSlideIn 0.25s ease forwards;
   background: rgba(255, 255, 255, 0.95);
@@ -286,11 +269,8 @@
   color: #fff;
 }
 
-.edit-buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
+.edit-buttons { display: flex; gap: 8px; margin-top: 8px; }
+
 .export-btn {
   padding: 8px 12px;
   border-radius: 8px;
@@ -301,43 +281,18 @@
   cursor: pointer;
   transition: all 0.25s ease;
 }
-
-.export-btn:hover {
-  background-color: #45a049;
-  transform: scale(1.05);
-}
-
+.export-btn:hover { background-color: #45a049; transform: scale(1.05); }
 
 /* ============================= */
 /*       Responsive Mobile        */
 /* ============================= */
 @media (max-width: 768px) {
-  .bracket-container.horizontal {
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 40px;
-    padding: 20px;
+  .bracket-container {
     overflow-x: auto;
-    overflow-y: hidden;
-    box-sizing: border-box;
+    overflow-y: hidden; /* scroll vertical désactivé */
   }
-
-  .bracket-column {
-    flex: 0 0 auto;
-    min-width: 180px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .combat-card {
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 8px;
-    padding: 10px;
-  }
-
+  .bracket-column { flex: 0 0 auto; min-width: 180px; display: flex; flex-direction: column; gap: 20px; }
+  .combat-card { width: 100%; box-sizing: border-box; border-radius: 8px; padding: 10px; }
   .step-filter {
     min-width: 200px;
     padding-left: 40px;
