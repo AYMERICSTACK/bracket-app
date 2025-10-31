@@ -23,16 +23,10 @@ export default function Bracket({ user }) {
   const [loadingReset, setLoadingReset] = useState(false);
   const [isVertical, setIsVertical] = useState(window.innerWidth < 768);
   const [categories, setCategories] = useState([
-    "-37kg", "-50kg", "-55kg", "-60kg", "-65kg", "-70kg", "-75kg"
+    "-37kg","-50kg","-55kg","-60kg","-65kg","-70kg","-75kg"
   ]);
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
-
-  useEffect(() => {
-    const handleResize = () => setIsVertical(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +39,8 @@ export default function Bracket({ user }) {
         const arr = [];
         for (const key in data) {
           data[key].forEach(c => {
-            if ((c.etape || "").toLowerCase() === etape.toLowerCase()) arr.push(c);
+            if ((c.etape || "").toLowerCase() === etape.toLowerCase())
+              arr.push(c);
           });
         }
         return arr;
@@ -102,19 +97,11 @@ export default function Bracket({ user }) {
     doc.text("Bilan des combats - Bracket", 40, 40);
     doc.setFontSize(10);
     doc.text(`Exporté le ${date}`, 40, 55);
-
     const rows = columns.flat().map(c => [
-      c.participant,
-      c.adversaire,
-      c.categorie,
-      c.couleur,
-      c.statut === "gagné" ? "✅ Gagné" :
-      c.statut === "perdu" ? "❌ Perdu" : "⏳ Non joué",
-      c.heure || "-",
-      c.aire || "-",
-      c.coach || "-"
+      c.participant, c.adversaire, c.categorie, c.couleur,
+      c.statut === "gagné" ? "✅ Gagné" : c.statut === "perdu" ? "❌ Perdu" : "⏳ Non joué",
+      c.heure || "-", c.aire || "-", c.coach || "-"
     ]);
-
     autoTable(doc, {
       head: [["Participant", "Adversaire", "Catégorie", "Couleur", "Statut", "Heure", "Aire", "Coach"]],
       body: rows,
@@ -122,7 +109,6 @@ export default function Bracket({ user }) {
       styles: { fontSize: 8, cellPadding: 4 },
       headStyles: { fillColor: [80, 128, 255] },
     });
-
     doc.save(`bracket_${date}.pdf`);
   };
 
@@ -159,92 +145,67 @@ export default function Bracket({ user }) {
     return false;
   };
 
-  const normalizeText = str =>
-    (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const normalizeText = str => (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   const getVisibleColumns = () => {
     const term = normalizeText(searchTerm.trim());
-    return columns.map(col =>
-      col.filter(c => {
-        const participant = normalizeText(c.participant);
-        const adversaire = normalizeText(c.adversaire);
-        const etape = c.etape || "";
-        if (stepFilter !== "Tous" && etape !== stepFilter) return false;
-        if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
-        if (term && !(participant.includes(term) || adversaire.includes(term))) return false;
-        if (hasLostBefore(c.participant, etape)) return false;
-        return true;
-      })
-    );
+    return columns.map(col => col.filter(c => {
+      const participant = normalizeText(c.participant);
+      const adversaire = normalizeText(c.adversaire);
+      const etape = c.etape || "";
+      if (stepFilter !== "Tous" && etape !== stepFilter) return false;
+      if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
+      if (term && !(participant.includes(term) || adversaire.includes(term))) return false;
+      if (hasLostBefore(c.participant, etape)) return false;
+      return true;
+    }));
   };
 
   const visibleColumns = getVisibleColumns();
   const visibleFlat = visibleColumns.flat();
-  const countVisibleColor = color =>
-    visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
+  const countVisibleColor = color => visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
 
   return (
     <>
-      <div
-        style={{
-          background: user ? (canEdit ? "#d4edda" : "#fff3cd") : "#f8d7da",
-          color: "#333",
-          padding: "10px",
-          borderRadius: "8px",
-          margin: "10px",
-          textAlign: "center",
-        }}
-      >
-        {user
-          ? canEdit
-            ? "✅ Connecté et autorisé à modifier"
-            : "⚠️ Connecté, lecture seule"
-          : "🔒 Non connecté — lecture seule"}
+      <div style={{
+        background: user ? (canEdit ? "#d4edda" : "#fff3cd") : "#f8d7da",
+        color: "#333",
+        padding: "10px",
+        borderRadius: "8px",
+        margin: "10px",
+        textAlign: "center",
+      }}>
+        {user ? canEdit ? "✅ Connecté et autorisé à modifier" : "⚠️ Connecté, lecture seule" : "🔒 Non connecté — lecture seule"}
       </div>
 
       {/* CONTROLS */}
       <div className="controls">
         <div className="toggle-orientation">
-          <button onClick={() => setIsVertical(!isVertical)}>
-            {isVertical ? <FaArrowsAltH /> : <FaArrowsAltV />}
-          </button>
+        <button onClick={() => setIsVertical(!isVertical)}>
+          {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+        </button>
         </div>
-
         <div className="color-filters">
           <div
             className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`}
             onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}
-          >
-            🔴 {countVisibleColor("Rouge")}
-          </div>
+          > 🔴 {countVisibleColor("Rouge")} </div>
           <div
             className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`}
             onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}
-          >
-            🔵 {countVisibleColor("Bleu")}
-          </div>
+          > 🔵 {countVisibleColor("Bleu")} </div>
           <div
             className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`}
             onClick={() => setColorFilter(COLOR_ALL)}
-          >
-            ⚪ Tous
-          </div>
+          > ⚪ Tous </div>
         </div>
-
         <div className="filter-wrapper">
           <FaFilter className="icon" />
-          <select
-            className="step-filter"
-            value={stepFilter}
-            onChange={e => setStepFilter(e.target.value)}
-          >
+          <select className="step-filter" value={stepFilter} onChange={e => setStepFilter(e.target.value)}>
             <option value="Tous">Toutes les étapes</option>
-            {ETAPES.map(et => (
-              <option key={et} value={et}>{et}</option>
-            ))}
+            {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
           </select>
         </div>
-
         <div className="search-wrapper">
           <FaSearch className="icon" />
           <input
@@ -255,7 +216,6 @@ export default function Bracket({ user }) {
             onChange={e => setSearchTerm(e.target.value)}
           />
         </div>
-
         <button className="reset-btn" onClick={handleResetStatuses} disabled={!canEdit || loadingReset}>
           <FaRedo style={{ marginRight: 6 }} />
           {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
@@ -264,8 +224,7 @@ export default function Bracket({ user }) {
           <button className="export-btn" onClick={handleExportPDF} disabled={!columns.length}>
             📄 Exporter en PDF
           </button>
-)}
-
+        )}
       </div>
 
       {/* BRACKET */}
@@ -273,14 +232,12 @@ export default function Bracket({ user }) {
         {visibleColumns.map((col, colIdx) => {
           if (!col || col.length === 0) return null;
           if (stepFilter !== "Tous" && stepFilter !== ETAPES[colIdx]) return null;
-
           return (
             <div className="bracket-column" key={colIdx}>
               <h3>{ETAPES[colIdx]}</h3>
               {col.map((combat, idx) => {
                 const isEditing = editingCard && editingCard.participant === combat.participant && editingCard.num === combat.num;
                 const statutLower = (combat.statut || "").toLowerCase();
-
                 return (
                   <div className={`combat-card-wrapper ${statutLower === "perdu" ? "dimmed" : ""}`} key={`${combat.participant}-${combat.num}-${idx}`}>
                     <div className={`combat-card ${(combat.couleur || "").toLowerCase() === "rouge" ? "rouge" : "bleu"}`}>
@@ -305,12 +262,10 @@ export default function Bracket({ user }) {
                           <select defaultValue={combat.coach} onChange={e => setEditValues(s => ({ ...s, coach: e.target.value }))}>
                             {["Mélanie","Nadège","Christophe","Guillaume"].map(c => <option key={c} value={c}>{c}</option>)}
                           </select>
-
                           <input list="categories" defaultValue={combat.categorie} onChange={e => setEditValues(s => ({ ...s, categorie: e.target.value }))} />
                           <datalist id="categories">
                             {categories.map(cat => <option key={cat} value={cat} />)}
                           </datalist>
-
                           <div className="edit-buttons">
                             <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
                             <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
@@ -350,3 +305,4 @@ export default function Bracket({ user }) {
     </>
   );
 }
+

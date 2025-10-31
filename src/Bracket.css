@@ -9,10 +9,20 @@
   align-items: center;
 }
 
-.toggle-orientation { display: none; }
-@media (max-width: 768px) { .toggle-orientation { display: block; } }
+.toggle-orientation {
+  display: none;
+}
 
-.color-filters { display: flex; gap: 10px; }
+@media (max-width: 768px) {
+  .toggle-orientation {
+    display: block;
+  }
+}
+
+.color-filters {
+  display: flex;
+  gap: 10px;
+}
 
 .color-box {
   padding: 6px 12px;
@@ -94,6 +104,7 @@
   cursor: pointer;
   transition: all 0.25s ease;
 }
+
 .reset-btn:hover { background-color: #ffaa33; }
 
 /* ============================= */
@@ -107,7 +118,6 @@
   gap: 40px;
   padding: 20px;
   overflow-x: auto;
-  overflow-y: hidden; /* on garde scroll vertical désactivé */
   background-color: #f9f9f9;
   min-height: 100vh;
   scroll-behavior: smooth;
@@ -137,14 +147,8 @@
 }
 
 /* Cartes combat */
-.combat-card-wrapper {
-  position: relative;
-  transition: all 0.25s ease;
-}
-.combat-card-wrapper.dimmed {
-  opacity: 0.5;
-  filter: grayscale(0.7);
-}
+.combat-card-wrapper { position: relative; transition: all 0.25s ease; }
+.combat-card-wrapper.dimmed { opacity: 0.5; filter: grayscale(0.7); }
 
 .combat-card {
   border-radius: 10px;
@@ -156,6 +160,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-top 0.3s ease;
 }
 
+/* Hover animé sur les cartes combat */
 .combat-card:hover {
   transform: translateY(-5px) scale(1.05);
   box-shadow: 0 10px 20px rgba(0,0,0,0.45),
@@ -186,24 +191,45 @@
   padding: 2px 6px;
   border-radius: 4px;
 }
-
 .status-badge.gagné { background: #4caf50; }
 .status-badge.perdu { background: #b71c1c; }
 
-.coach-badge {
+.coach-badge,
+.categorie-badge {
   text-align: center;
   background: rgba(255,255,255,0.2);
   padding: 2px 6px;
   border-radius: 8px;
   margin-bottom: 6px;
   font-size: 12px;
+  color: #fff;
 }
 
-.participant { font-weight: bold; font-size: 14px; text-align: center; }
-.versus { font-size: 12px; margin-top: 3px; text-align: center; }
-.combat-info { font-size: 11px; margin-top: 5px; color: #eee; text-align: center; }
+.participant {
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+}
 
-.status-buttons { display: flex; justify-content: space-between; margin-top: 5px; }
+.versus {
+  font-size: 12px;
+  margin-top: 3px;
+  text-align: center;
+}
+
+.combat-info {
+  font-size: 11px;
+  margin-top: 5px;
+  color: #eee;
+  text-align: center;
+}
+
+/* Status buttons */
+.status-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
 
 .btn-win, .btn-lose {
   flex: 1;
@@ -224,6 +250,7 @@
 
 .btn-win.active, .btn-lose.active { background: #fff; color: #000; font-weight: bold; }
 
+/* Bouton Modifier */
 .edit-btn {
   margin-top: 5px;
   padding: 4px 6px;
@@ -237,6 +264,7 @@
 }
 .edit-btn:hover { background-color: rgba(255,255,255,0.5); transform: scale(1.05); }
 
+/* Animation édition */
 .editing-fields {
   animation: fadeSlideIn 0.25s ease forwards;
   background: rgba(255, 255, 255, 0.95);
@@ -244,6 +272,7 @@
   padding: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
+
 @keyframes fadeSlideIn {
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -257,16 +286,6 @@
   border-radius: 4px;
   border: 1px solid #ccc;
   font-size: 12px;
-}
-
-.categorie-badge {
-  text-align: center;
-  background: rgba(255,255,255,0.2);
-  padding: 2px 6px;
-  border-radius: 6px;
-  margin-top: 4px;
-  font-size: 12px;
-  color: #fff;
 }
 
 .edit-buttons { display: flex; gap: 8px; margin-top: 8px; }
@@ -283,16 +302,34 @@
 }
 .export-btn:hover { background-color: #45a049; transform: scale(1.05); }
 
-/* ============================= */
-/*       Responsive Mobile        */
-/* ============================= */
+/* Responsive Mobile */
 @media (max-width: 768px) {
-  .bracket-container {
+  .bracket-container.horizontal {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 20px;
     overflow-x: auto;
-    overflow-y: hidden; /* scroll vertical désactivé */
+    overflow-y: hidden;
+    box-sizing: border-box;
   }
-  .bracket-column { flex: 0 0 auto; min-width: 180px; display: flex; flex-direction: column; gap: 20px; }
-  .combat-card { width: 100%; box-sizing: border-box; border-radius: 8px; padding: 10px; }
+
+  .bracket-column {
+    flex: 0 0 auto;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .combat-card {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
   .step-filter {
     min-width: 200px;
     padding-left: 40px;
@@ -303,9 +340,7 @@
   }
 }
 
-/* ============================= */
-/*     Transition Login -> Bracket */
-/* ============================= */
+/* Transition Login -> Bracket */
 .fade-enter { opacity: 0; }
 .fade-enter-active { opacity: 1; transition: opacity 0.5s ease; }
 .fade-exit { opacity: 1; }
