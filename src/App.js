@@ -34,68 +34,38 @@ export default function App() {
   return (
     <div>
       {/* Bandeau connexion */}
-      <div
-        style={{
-          background: user
-            ? isAuthorized
-              ? "#d4edda"
-              : "#fff3cd"
-            : "#f8d7da",
-          color: "#333",
-          padding: "10px 20px",
-          borderRadius: "8px",
-          margin: "10px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div>
-          {user ? (
-            isAuthorized ? (
-              <b>✅ Connecté et autorisé à modifier</b>
-            ) : (
-              <b>⚠️ Connecté, lecture seule</b>
-            )
-          ) : (
-            <b>👋 Bienvenue — lecture seule</b>
-          )}
-        </div>
+<div className="top-banner-modern">
+  <div className="banner-left">
+    {user ? (
+      isAuthorized ? (
+        <span className="status authorized">✅ Connecté & autorisé</span>
+      ) : (
+        <span className="status connected">⚠️ Connecté</span>
+      )
+    ) : (
+      <span className="status guest">👋 Bienvenue</span>
+    )}
+  </div>
 
-        <div>
-          {user ? (
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: "5px 10px",
-                borderRadius: "6px",
-                border: "none",
-                cursor: "pointer",
-                background: "#ff4d4d",
-                color: "#fff",
-                fontWeight: "bold",
-              }}
-            >
-              Déconnexion
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowLogin(true)}
-              style={{
-                padding: "5px 10px",
-                borderRadius: "6px",
-                border: "none",
-                cursor: "pointer",
-                background: "#007bff",
-                color: "#fff",
-                fontWeight: "bold",
-              }}
-            >
-              Connexion coach 🔐
-            </button>
-          )}
-        </div>
-      </div>
+  <div className="banner-center">
+    <span>🏆 Tableau des combats</span>
+  </div>
+
+  <div className="banner-right">
+    {user ? (
+      <button className="btn-logout" onClick={handleLogout}>
+        🔒 Déconnexion
+      </button>
+    ) : (
+      <button className="btn-login" onClick={() => setShowLogin(true)}>
+        🔑 Connexion coach
+      </button>
+    )}
+  </div>
+</div>
+
+
+
 
       {/* Affichage d’un lien Retour si pas connecté */}
       {!user && showLogin && (
