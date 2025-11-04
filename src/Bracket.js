@@ -50,23 +50,24 @@ useEffect(() => {
   const handleResize = () => {
     const mobile = window.innerWidth < 768;
 
-    // Si l'utilisateur n'a pas forcé l'orientation, on ajuste automatiquement
+    // ⚠️ On n'écrase isVertical que si l'utilisateur n'a pas forcé
     if (!userForcedOrientation) {
-      setIsVertical(mobile);
+      setIsVertical(prev => (prev !== mobile ? mobile : prev));
     }
 
     if (!mobile) setShowSidebar(true);
   };
 
   window.addEventListener("resize", handleResize);
-  handleResize();
+  handleResize(); // init
   return () => window.removeEventListener("resize", handleResize);
-}, []); // ✅ Vide : ne change jamais de taille
+}, [userForcedOrientation]);
+
 
 // Lors du toggle par bouton
 const handleToggleOrientation = () => {
   setIsVertical(prev => !prev);
-  setUserForcedOrientation(true); // marque que l'utilisateur a forcé l'orientation
+  setUserForcedOrientation(true); // l'utilisateur a choisi son orientation
 };
 
 
