@@ -712,3 +712,26 @@
     justify-content: center;
   }
 }
+  .bracket-container.horizontal {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .bracket-container.vertical {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+/* Transition fluide entre les deux orientations */
+.bracket-container {
+  transition: all 0.3s ease-in-out;
+}
