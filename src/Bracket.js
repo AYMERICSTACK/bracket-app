@@ -50,21 +50,20 @@ useEffect(() => {
 
 
   // 🔹 Responsive
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      if (!userForcedOrientation) setIsVertical(prev => (prev !== mobile ? mobile : prev));
-      if (!mobile) setShowSidebar(true);
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, [userForcedOrientation]);
-
-  const handleToggleOrientation = () => {
-    setIsVertical(prev => !prev);
-    setUserForcedOrientation(true);
+useEffect(() => {
+  const handleResize = () => {
+    if (userForcedOrientation) return; // ⚡ Ne rien faire si l'utilisateur a forcé
+    const mobile = window.innerWidth < 768;
+    setIsVertical(mobile);
+    if (!mobile) setShowSidebar(true);
   };
+
+  window.addEventListener("resize", handleResize);
+  handleResize();
+
+  return () => window.removeEventListener("resize", handleResize);
+}, [userForcedOrientation]);
+
 
   const normalizeText = str => (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
@@ -79,6 +78,10 @@ useEffect(() => {
     }
     return false;
   };
+const handleToggleOrientation = () => {
+  setIsVertical(prev => !prev);
+  setUserForcedOrientation(true); // ⚡ On indique que l’utilisateur force le mode
+};
 
 
   // 🔹 Tous les combats aplatis
