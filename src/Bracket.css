@@ -65,6 +65,13 @@
 }
 
 /* Select / Recherche */
+
+.controls-row {
+  display: flex;           /* côte à côte */
+  align-items: center;     /* alignement vertical */
+  gap: 10px;               /* espace entre eux */
+  flex-wrap: nowrap;       /* empêche le retour à la ligne */
+}
 .filter-wrapper, .search-wrapper {
   position: relative;
   display: flex;
@@ -113,7 +120,8 @@
 }
 
 .reset-btn {
-  margin-left: auto;
+  flex: 0 0 auto; /* taille automatique pour desktop */
+  margin-left: 10px; /* espace avec la recherche */
   padding: 8px 12px;
   border-radius: 8px;
   border: none;
@@ -124,7 +132,69 @@
   transition: all 0.25s ease;
 }
 
-.reset-btn:hover { background-color: #ffaa33; }
+.reset-btn:hover { 
+  background-color: #ffaa33; 
+}
+/* ============================= */
+/*  Desktop - agencement précis  */
+/* ============================= */
+@media (min-width: 769px) {
+
+  /* On regroupe les filtres couleur + les contrôles de droite */
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: 20px;
+  }
+
+  /* Filtres de couleur à gauche */
+  .color-filters {
+    display: flex;
+    gap: 10px;
+    flex: 0 0 auto;
+    align-items: center;
+  }
+
+  /* Conteneur de droite (toutes les étapes + recherche + reset) */
+  .controls-right {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    flex: 1;
+  }
+
+  /* "Toutes les étapes" (select) */
+  .filter-wrapper {
+    flex: 0 0 auto;
+  }
+
+  /* Recherche + Reset empilés verticalement */
+  .search-reset-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex: 0 0 auto;
+  }
+
+  /* Barre de recherche */
+  .search-wrapper {
+    width: 200px;
+  }
+
+  /* Bouton reset sous la recherche */
+  .reset-btn {
+    width: auto;
+    align-self: flex-end;
+    margin: 0;
+  }
+}
+
+
 
 /* ============================= */
 /*       Container Bracket       */
@@ -134,7 +204,7 @@
   flex-direction: row;
   justify-content: flex-start; 
   align-items: flex-start;
-  gap: 40px;
+  gap: 25px;
   padding: 20px;
   background-color: #f9f9f9;
   min-height: 100vh;
@@ -234,6 +304,8 @@
   padding: 2px 6px;
   border-radius: 4px;
 }
+
+/* Partie 1 : Fin */
 /* ============================= */
 /*      Badge Type Combat         */
 /* ============================= */
@@ -262,7 +334,15 @@
 }
 
 /* Boutons type combat */
+.combat-type-filter {
+  display: flex;
+  flex-wrap: nowrap; /* empêche le retour à la ligne */
+  overflow-x: auto;  /* permet de scroller si ça déborde */
+  gap: 8px;
+}
+
 .combat-type-filter button {
+  flex: 0 0 auto; /* taille minimum auto pour chaque bouton */
   padding: 8px 14px;
   border-radius: 12px;
   border: none;
@@ -288,9 +368,6 @@
   opacity: 0.9;
   transform: translateY(-2px) scale(1.05);
 }
-
-.status-badge.gagné { background: #4caf50; }
-.status-badge.perdu { background: #b71c1c; }
 
 /* ============================= */
 /*      Coach et Catégorie       */
@@ -409,17 +486,19 @@
   padding: 14px 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  text-align: center;
 }
 
-.top-banner-modern > div { flex: 1 1 100%; margin: 6px 0; }
+.top-banner-modern > div {
+  flex: 1 1 auto;
+}
 
+/* Bannière gauche / centre / droite */
 .banner-left .status { font-weight: 600; padding: 4px 10px; border-radius: 8px; }
 .banner-left .authorized { background: #4caf50; }
 .banner-left .connected  { background: #ffb74d; }
 .banner-left .guest      { background: #e74c3c; }
 
-.banner-center span { font-weight: 700; font-size: 1.25em; }
+.banner-center span { font-weight: 700; font-size: 1.25em; text-align: center; display: block; }
 
 .banner-right button {
   background: #fff;
@@ -441,6 +520,15 @@
 /* ============================= */
 /*      Status Banners            */
 /* ============================= */
+.status-banner {
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin: 10px 0;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
 .status-banner.authorized {
   background: linear-gradient(90deg, #d4edda, #a8e5a2);
   color: #155724;
@@ -454,15 +542,6 @@
 .status-banner.non-connected {
   background: linear-gradient(135deg, #d32f2f, #b71c1c);
   color: #fff;
-}
-
-.status-banner {
-  padding: 12px 20px;
-  border-radius: 10px;
-  margin: 10px 0;
-  text-align: center;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
 
 /* ============================= */
@@ -531,8 +610,9 @@
 /* ============================= */
 @media (max-width: 768px) {
 
+  /* Toggle orientation */
   .toggle-orientation {
-    display: block; /* doit être présent pour que le bouton s'affiche */
+    display: block;
   }
 
   .toggle-orientation button {
@@ -543,6 +623,7 @@
     border: none;
     cursor: pointer;
   }
+
   .sidebar-toggle { display: block; }
   .sidebar-hidden { display: none; opacity: 0; transform: translateY(-10px); }
   .sidebar-visible { display: block; opacity: 1; transform: translateY(0); transition: all 0.3s ease; }
@@ -553,6 +634,7 @@
     gap: 20px;
   }
 
+  /* Bracket container vertical mobile */
   .bracket-container.vertical {
     width: 100%;
     flex-direction: column;
@@ -578,17 +660,13 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Responsive Controls layout */
-  
-/* Container des contrôles */
-/* Container général des contrôles */
+  /* Controls responsive */
   .controls {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
-  /* Ligne avec filtre et recherche */
   .controls-row {
     display: flex;
     gap: 8px;
@@ -597,17 +675,16 @@
 
   .filter-wrapper,
   .search-wrapper {
-    flex: 1; /* Les deux prennent la même hauteur de ligne et partagent l'espace */
+    flex: 1;
     display: flex;
     align-items: center;
   }
 
   .filter-wrapper select,
   .search-wrapper input {
-    flex: 1; /* Remplissent tout l'espace disponible dans leur wrapper */
+    flex: 1;
   }
 
-  /* Bouton réinitialiser sur une nouvelle ligne, pleine largeur */
   .search-reset-wrapper {
     width: 100%;
   }
@@ -616,14 +693,22 @@
     width: 100%;
     margin-left: 0;
   }
-}
- .combat-type-filter {
-    display: flex;
-    flex-wrap: nowrap; /* empêche le retour à la ligne */
-    overflow-x: auto;  /* permet de scroller si ça déborde */
-    gap: 8px;
+
+  /* Top banner mobile adjustments */
+  .top-banner-modern > div {
+    flex: 1 1 100%;
+    width: 100%;
+    text-align: center;
   }
 
-  .combat-type-filter button {
-    flex: 0 0 auto; /* taille minimum auto pour chaque bouton */
+  .status-banner,
+  .top-banner-modern {
+    padding-left: 8px;
+    padding-right: 8px;
   }
+
+  /* Center color counters for mobile */
+  .color-filters {
+    justify-content: center;
+  }
+}
