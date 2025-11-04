@@ -576,37 +576,34 @@
     gap: 10px;
   }
 
-  /* Ligne avec filtres + recherche */
+  /* Ligne 1 : Select + Search */
   .controls-row {
     display: flex;
-    flex-wrap: wrap;
     gap: 8px;
-    align-items: center;
-  }
-
-  /* Filtre et recherche côte à côte */
-  .filter-wrapper,
-  .search-wrapper {
-    flex: 1;
-    display: flex;
-    align-items: center;
-  }
-
-  .filter-wrapper select,
-  .search-wrapper input {
-    flex: 1;
-  }
-
-  /* Boutons réinitialiser et exporter prennent toute la largeur */
-  .search-reset-wrapper .reset-btn,
-  .search-reset-wrapper .export-btn {
-    flex: 1 1 100%;
     width: 100%;
-    margin-left: 0;
   }
 
-  /* Petite marge entre les boutons si besoin */
-  .search-reset-wrapper .export-btn {
-    margin-top: 6px;
+  .filter-wrapper {
+    flex: 1;
+  }
+  .filter-wrapper select {
+    width: 100%;
+  }
+
+  .search-wrapper {
+    flex: 2; /* Barre de recherche plus large que le select */
+  }
+  .search-wrapper input {
+    width: 100%;
+  }
+
+  /* Ligne 2 : bouton Reset */
+  .search-reset-wrapper {
+    width: 100%;
+  }
+  .search-reset-wrapper .reset-btn {
+    width: 100%;
+    flex: 1 1 100%;
+    margin-left: 0;
   }
 }

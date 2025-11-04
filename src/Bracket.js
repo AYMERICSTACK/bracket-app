@@ -24,6 +24,7 @@ export default function Bracket({ user }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingReset, setLoadingReset] = useState(false);
   const [isVertical, setIsVertical] = useState(window.innerWidth < 768);
+  const [userForcedOrientation, setUserForcedOrientation] = useState(false);
   const [categories, setCategories] = useState(["-37kg","-50kg","-55kg","-60kg","-65kg","-70kg","-75kg"]);
   const [showSidebar, setShowSidebar] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -45,17 +46,29 @@ export default function Bracket({ user }) {
   }, []);
 
   // Responsive
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
+useEffect(() => {
+  const handleResize = () => {
+    const mobile = window.innerWidth < 768;
+
+    // Si l'utilisateur n'a pas forcé l'orientation, on ajuste automatiquement
+    if (!userForcedOrientation) {
       setIsVertical(mobile);
-      if (!mobile) setShowSidebar(true);
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    }
+
+    if (!mobile) setShowSidebar(true);
+  };
+
+  window.addEventListener("resize", handleResize);
+  handleResize();
+  return () => window.removeEventListener("resize", handleResize);
+}, [userForcedOrientation]);
+
+// Lors du toggle par bouton
+const handleToggleOrientation = () => {
+  setIsVertical(prev => !prev);
+  setUserForcedOrientation(true); // on marque que l'utilisateur a forcé l'orientation
+};
+
 
   const normalizeText = str => (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
