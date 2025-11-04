@@ -340,14 +340,14 @@ const handleToggleOrientation = () => {
     )}
 
     {/* Mobile : bouton orientation */}
-    {isMobile && (
-      <div className="toggle-orientation">
-        <button onClick={() => setIsVertical(prev => !prev)}>
-          {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
-        </button>
-      </div>
-    )}
-  </div>
+{isMobile && (
+    <div className="toggle-orientation">
+      <button onClick={handleToggleOrientation}>
+        {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+      </button>
+    </div>
+  )}
+</div>
 </div>
 
       {/* Main Bracket + Sidebar */}
