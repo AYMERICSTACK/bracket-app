@@ -1,39 +1,168 @@
 {
-  "LightContact": {
-    "Julien": [
+  "K1Light_Alban": {
+    "discipline": "K1Light",
+    "participant": "Alban",
+    "combats": [
       {
-        "etape": "Athlète unique",
-        "num": "lc-01",
-        "typeCombat": "LightContact",
+        "etape": "Demi",
+        "num": "k1-01",
+        "typeCombat": "K1Light",
         "adversaire": "-",
-        "heure": "10:00",
-        "couleur": "Rouge",
-        "aire": "1",
-        "participant": "Julien",
-        "coach": "Mélanie",
-        "statut": "En attente",
-        "categorie": "-84kg"
-      }
-    ],
-    "Rémy": [
-      {
-        "etape": "Finale",
-        "num": "lc-02",
-        "typeCombat": "LightContact",
-        "adversaire": "-",
-        "heure": "11:00",
+        "heure": "09:30",
         "couleur": "Bleu",
         "aire": "1",
-        "participant": "Rémy",
-        "coach": "Guillaume",
+        "participant": "Alban",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-79kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "k1-02",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "10:30",
+        "couleur": "Rouge",
+        "aire": "1",
+        "participant": "Alban",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-79kg"
+      }
+    ]
+  },
+  "K1Light_Joris": {
+    "discipline": "K1Light",
+    "participant": "Joris",
+    "combats": [
+      {
+        "etape": "Demi",
+        "num": "k1-03",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "09:40",
+        "couleur": "Rouge",
+        "aire": "2",
+        "participant": "Joris",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-69kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "k1-04",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "10:40",
+        "couleur": "Bleu",
+        "aire": "2",
+        "participant": "Joris",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-69kg"
+      }
+    ]
+  },
+  "K1Light_Léony": {
+    "discipline": "K1Light",
+    "participant": "Léony",
+    "combats": [
+      {
+        "etape": "Demi",
+        "num": "k1-05",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "09:50",
+        "couleur": "Bleu",
+        "aire": "3",
+        "participant": "Léony",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-37kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "k1-06",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "10:50",
+        "couleur": "Rouge",
+        "aire": "3",
+        "participant": "Léony",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-37kg"
+      }
+    ]
+  },
+  "K1Light_Nadège": {
+    "discipline": "K1Light",
+    "participant": "Nadège",
+    "combats": [
+      {
+        "etape": "Demi",
+        "num": "k1-07",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "09:55",
+        "couleur": "Bleu",
+        "aire": "1",
+        "participant": "Nadège",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-60kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "k1-08",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "10:55",
+        "couleur": "Rouge",
+        "aire": "1",
+        "participant": "Nadège",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-60kg"
+      }
+    ]
+  },
+  "K1Light_Valentin": {
+    "discipline": "K1Light",
+    "participant": "Valentin",
+    "combats": [
+      {
+        "etape": "Demi",
+        "num": "k1-09",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "09:35",
+        "couleur": "Bleu",
+        "aire": "2",
+        "participant": "Valentin",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-63kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "k1-10",
+        "typeCombat": "K1Light",
+        "adversaire": "-",
+        "heure": "10:35",
+        "couleur": "Rouge",
+        "aire": "2",
+        "participant": "Valentin",
+        "coach": "Christophe",
         "statut": "En attente",
         "categorie": "-63kg"
       }
     ]
   },
-
-  "KickLight": {
-    "Alban": [
+  "KickLight_Alban": {
+    "discipline": "KickLight",
+    "participant": "Alban",
+    "combats": [
       {
         "etape": "Quart",
         "num": "kl-01",
@@ -73,9 +202,12 @@
         "statut": "En attente",
         "categorie": "-79kg"
       }
-    ],
-
-    "Alicia": [
+    ]
+  },
+  "KickLight_Alicia": {
+    "discipline": "KickLight",
+    "participant": "Alicia",
+    "combats": [
       {
         "etape": "Demi",
         "num": "kl-04",
@@ -102,9 +234,12 @@
         "statut": "En attente",
         "categorie": "-42kg"
       }
-    ],
-
-    "Arthur": [
+    ]
+  },
+  "KickLight_Arthur": {
+    "discipline": "KickLight",
+    "participant": "Arthur",
+    "combats": [
       {
         "etape": "Demi",
         "num": "kl-06",
@@ -131,9 +266,12 @@
         "statut": "En attente",
         "categorie": "-57kg"
       }
-    ],
-
-    "Chloé": [
+    ]
+  },
+  "KickLight_Chloé": {
+    "discipline": "KickLight",
+    "participant": "Chloé",
+    "combats": [
       {
         "etape": "Finale",
         "num": "kl-08",
@@ -147,9 +285,12 @@
         "statut": "En attente",
         "categorie": "-42kg"
       }
-    ],
-
-    "Gabriel": [
+    ]
+  },
+  "KickLight_Gabriel": {
+    "discipline": "KickLight",
+    "participant": "Gabriel",
+    "combats": [
       {
         "etape": "16ème",
         "num": "kl-09",
@@ -215,9 +356,12 @@
         "statut": "En attente",
         "categorie": "-57kg"
       }
-    ],
-
-    "Iona": [
+    ]
+  },
+  "KickLight_Iona": {
+    "discipline": "KickLight",
+    "participant": "Iona",
+    "combats": [
       {
         "etape": "Demi",
         "num": "kl-14",
@@ -244,9 +388,12 @@
         "statut": "En attente",
         "categorie": "+70kg"
       }
-    ],
-
-    "Joris": [
+    ]
+  },
+  "KickLight_Joris": {
+    "discipline": "KickLight",
+    "participant": "Joris",
+    "combats": [
       {
         "etape": "16ème",
         "num": "kl-18",
@@ -312,9 +459,12 @@
         "statut": "En attente",
         "categorie": "-69kg"
       }
-    ],
-
-    "Léony": [
+    ]
+  },
+  "KickLight_Léony": {
+    "discipline": "KickLight",
+    "participant": "Léony",
+    "combats": [
       {
         "etape": "Demi",
         "num": "kl-23",
@@ -341,9 +491,12 @@
         "statut": "En attente",
         "categorie": "-37kg"
       }
-    ],
-
-    "Mathis": [
+    ]
+  },
+  "KickLight_Mathis": {
+    "discipline": "KickLight",
+    "participant": "Mathis",
+    "combats": [
       {
         "etape": "8ème",
         "num": "kl-25",
@@ -396,9 +549,12 @@
         "statut": "En attente",
         "categorie": "-74kg"
       }
-    ],
-
-    "Rémy": [
+    ]
+  },
+  "KickLight_Rémy": {
+    "discipline": "KickLight",
+    "participant": "Rémy",
+    "combats": [
       {
         "etape": "8ème",
         "num": "kl-29",
@@ -451,9 +607,12 @@
         "statut": "En attente",
         "categorie": "-63kg"
       }
-    ],
-
-    "Sacha": [
+    ]
+  },
+  "KickLight_Sacha": {
+    "discipline": "KickLight",
+    "participant": "Sacha",
+    "combats": [
       {
         "etape": "Tour1",
         "num": "kl-33",
@@ -545,9 +704,38 @@
         "statut": "En attente",
         "categorie": "-69kg"
       }
-    ],
-
-    "Samra": [
+    ]
+  },
+  "KickLight_Samra": {
+    "discipline": "KickLight",
+    "participant": "Samra",
+    "combats": [
+      {
+        "etape": "Tour1",
+        "num": "kl-40",
+        "typeCombat": "KickLight",
+        "adversaire": "-",
+        "heure": "09:20",
+        "couleur": "Bleu",
+        "aire": "2",
+        "participant": "Samra",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-55kg"
+      },
+      {
+        "etape": "Tour2",
+        "num": "kl-41",
+        "typeCombat": "KickLight",
+        "adversaire": "-",
+        "heure": "10:00",
+        "couleur": "Rouge",
+        "aire": "2",
+        "participant": "Samra",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-55kg"
+      },
       {
         "etape": "Quart",
         "num": "kl-42",
@@ -587,9 +775,12 @@
         "statut": "En attente",
         "categorie": "-55kg"
       }
-    ],
-
-    "Sohan": [
+    ]
+  },
+  "KickLight_Sohan": {
+    "discipline": "KickLight",
+    "participant": "Sohan",
+    "combats": [
       {
         "etape": "8ème",
         "num": "kl-45",
@@ -642,9 +833,12 @@
         "statut": "En attente",
         "categorie": "-42kg"
       }
-    ],
-
-    "Valentin": [
+    ]
+  },
+  "KickLight_Valentin": {
+    "discipline": "KickLight",
+    "participant": "Valentin",
+    "combats": [
       {
         "etape": "8ème",
         "num": "kl-49",
@@ -697,9 +891,12 @@
         "statut": "En attente",
         "categorie": "-63kg"
       }
-    ],
-
-    "Zakaria": [
+    ]
+  },
+  "KickLight_Zakaria": {
+    "discipline": "KickLight",
+    "participant": "Zakaria",
+    "combats": [
       {
         "etape": "8ème",
         "num": "kl-53",
@@ -754,148 +951,39 @@
       }
     ]
   },
-
-  "K1Light": {
-    "Alban": [
+  "LightContact_Julien": {
+    "discipline": "LightContact",
+    "participant": "Julien",
+    "combats": [
       {
-        "etape": "Demi",
-        "num": "k1-01",
-        "typeCombat": "K1Light",
+        "etape": "Athlète unique",
+        "num": "lc-01",
+        "typeCombat": "LightContact",
         "adversaire": "-",
-        "heure": "09:30",
-        "couleur": "Bleu",
-        "aire": "1",
-        "participant": "Alban",
-        "coach": "Mélanie",
-        "statut": "En attente",
-        "categorie": "-79kg"
-      },
-      {
-        "etape": "Finale",
-        "num": "k1-02",
-        "typeCombat": "K1Light",
-        "adversaire": "-",
-        "heure": "10:30",
+        "heure": "10:00",
         "couleur": "Rouge",
         "aire": "1",
-        "participant": "Alban",
+        "participant": "Julien",
         "coach": "Mélanie",
         "statut": "En attente",
-        "categorie": "-79kg"
+        "categorie": "-84kg"
       }
-    ],
-
-    "Joris": [
-      {
-        "etape": "Demi",
-        "num": "k1-03",
-        "typeCombat": "K1Light",
-        "adversaire": "-",
-        "heure": "09:40",
-        "couleur": "Rouge",
-        "aire": "2",
-        "participant": "Joris",
-        "coach": "Christophe",
-        "statut": "En attente",
-        "categorie": "-69kg"
-      },
+    ]
+  },
+  "LightContact_Rémy": {
+    "discipline": "LightContact",
+    "participant": "Rémy",
+    "combats": [
       {
         "etape": "Finale",
-        "num": "k1-04",
-        "typeCombat": "K1Light",
+        "num": "lc-02",
+        "typeCombat": "LightContact",
         "adversaire": "-",
-        "heure": "10:40",
-        "couleur": "Bleu",
-        "aire": "2",
-        "participant": "Joris",
-        "coach": "Christophe",
-        "statut": "En attente",
-        "categorie": "-69kg"
-      }
-    ],
-
-    "Léony": [
-      {
-        "etape": "Demi",
-        "num": "k1-05",
-        "typeCombat": "K1Light",
-        "adversaire": "-",
-        "heure": "09:50",
-        "couleur": "Bleu",
-        "aire": "3",
-        "participant": "Léony",
-        "coach": "Mélanie",
-        "statut": "En attente",
-        "categorie": "-37kg"
-      },
-      {
-        "etape": "Finale",
-        "num": "k1-06",
-        "typeCombat": "K1Light",
-        "adversaire": "-",
-        "heure": "10:50",
-        "couleur": "Rouge",
-        "aire": "3",
-        "participant": "Léony",
-        "coach": "Mélanie",
-        "statut": "En attente",
-        "categorie": "-37kg"
-      }
-    ],
-
-    "Nadège": [
-      {
-        "etape": "Demi",
-        "num": "k1-07",
-        "typeCombat": "K1Light",
-        "adversaire": "-",
-        "heure": "09:55",
+        "heure": "11:00",
         "couleur": "Bleu",
         "aire": "1",
-        "participant": "Nadège",
-        "coach": "Mélanie",
-        "statut": "En attente",
-        "categorie": "-60kg"
-      },
-      {
-        "etape": "Finale",
-        "num": "k1-08",
-        "typeCombat": "K1Light",
-        "adversaire": "-",
-        "heure": "10:55",
-        "couleur": "Rouge",
-        "aire": "1",
-        "participant": "Nadège",
-        "coach": "Mélanie",
-        "statut": "En attente",
-        "categorie": "-60kg"
-      }
-    ],
-
-    "Valentin": [
-      {
-        "etape": "Demi",
-        "num": "k1-09",
-        "typeCombat": "K1Light",
-        "adversaire": "-",
-        "heure": "09:35",
-        "couleur": "Bleu",
-        "aire": "2",
-        "participant": "Valentin",
-        "coach": "Christophe",
-        "statut": "En attente",
-        "categorie": "-63kg"
-      },
-      {
-        "etape": "Finale",
-        "num": "k1-10",
-        "typeCombat": "K1Light",
-        "adversaire": "-",
-        "heure": "10:35",
-        "couleur": "Rouge",
-        "aire": "2",
-        "participant": "Valentin",
-        "coach": "Christophe",
+        "participant": "Rémy",
+        "coach": "Guillaume",
         "statut": "En attente",
         "categorie": "-63kg"
       }

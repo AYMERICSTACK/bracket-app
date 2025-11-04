@@ -19,7 +19,7 @@ const db = getFirestore();
 const bracketsDataPath = path.resolve("public/brackets.json");
 const bracketsData = JSON.parse(fs.readFileSync(bracketsDataPath, "utf8"));
 
-// 🔹 Fonction pour sauvegarder les données existantes
+// 🔹 Sauvegarde avant import (sécurité)
 async function backupBrackets() {
   console.log("💾 Sauvegarde de la collection 'brackets'...");
 
@@ -27,7 +27,7 @@ async function backupBrackets() {
   const backupData = {};
 
   snapshot.forEach(docSnap => {
-    backupData[docSnap.id] = docSnap.data().combats || [];
+    backupData[docSnap.id] = docSnap.data();
   });
 
   const backupPath = path.resolve(`brackets_backup_${Date.now()}.json`);
@@ -36,19 +36,34 @@ async function backupBrackets() {
   console.log(`✅ Sauvegarde créée → ${backupPath}`);
 }
 
-// 🔹 Fonction principale
+// 🔹 Import principal
 async function importBrackets() {
   await backupBrackets();
 
-  console.log("🔄 Import des brackets...");
+  console.log("🔄 Import des données des brackets...");
 
-  for (const participant in bracketsData) {
-    const combats = bracketsData[participant];
-    await db.collection("brackets").doc(participant).set({ combats });
-    console.log(`✅ Données importées pour ${participant}`);
+  for (const discipline in bracketsData) {
+    const participants = bracketsData[discipline];
+
+    for (const participant in participants) {
+      const combats = participants[participant];
+
+      // On sauvegarde dans une sous-collection structurée
+      await db
+        .collection("brackets")
+        .doc(`${discipline}_${participant}`) // ex: KickLight_Alban
+        .set({
+          discipline,
+          participant,
+          combats
+        });
+
+      console.log(`✅ ${participant} importé dans ${discipline}`);
+    }
   }
 
-  console.log("🎉 Import terminé !");
+  console.log("🎉 Import complet terminé !");
 }
 
-importBrackets().catch(err => console.error(err));
+// 🔹 Exécution
+importBrackets().catch(err => console.error("❌ Erreur lors de l’import :", err));

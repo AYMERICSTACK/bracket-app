@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import { FaSearch, FaFilter, FaRedo, FaArrowsAltV, FaArrowsAltH } from "react-icons/fa";
@@ -6,8 +6,9 @@ import "./Bracket.css";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const ETAPES = ["16ème", "8ème", "Quart", "Demi", "Finale"];
+const ETAPES = ["Tour2", "Tour1", "16ème", "8ème", "Quart", "Demi", "Finale"];
 const COLOR_ALL = "Tous";
+const TYPE_COMBATS = ["Tous", "LightContact", "KickLight", "K1Light"];
 const ALLOWED_UIDS = [
   "2VqoJdZpE6NOtSWx3ko7OtzXBFk1",
   "BLqmftqFsgSKtceNI3c76jrdE0p1",
@@ -19,15 +20,18 @@ export default function Bracket({ user }) {
   const [editValues, setEditValues] = useState({});
   const [stepFilter, setStepFilter] = useState("Tous");
   const [colorFilter, setColorFilter] = useState(COLOR_ALL);
+  const [combatTypeFilter, setCombatTypeFilter] = useState("Tous");
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingReset, setLoadingReset] = useState(false);
   const [isVertical, setIsVertical] = useState(window.innerWidth < 768);
-  const [categories, setCategories] = useState([
-    "-37kg","-50kg","-55kg","-60kg","-65kg","-70kg","-75kg"
-  ]);
+  const [categories, setCategories] = useState(["-37kg","-50kg","-55kg","-60kg","-65kg","-70kg","-75kg"]);
+  const [showSidebar, setShowSidebar] = useState(window.innerWidth >= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [searchUpcoming, setSearchUpcoming] = useState("");
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
 
+  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       const snapshot = await getDocs(collection(db, "brackets"));
@@ -35,36 +39,108 @@ export default function Bracket({ user }) {
       snapshot.forEach(docSnap => {
         data[docSnap.id] = docSnap.data().combats || [];
       });
-      const cols = ETAPES.map(etape => {
-        const arr = [];
-        for (const key in data) {
-          data[key].forEach(c => {
-            if ((c.etape || "").toLowerCase() === etape.toLowerCase())
-              arr.push(c);
-          });
-        }
-        return arr;
-      });
-      setColumns(cols);
+      setColumns(data);
     };
     fetchData();
   }, []);
 
+  // Responsive
+useEffect(() => {
+  const handleResize = () => {
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
+    setIsVertical(mobile);
+
+    if (!mobile) setShowSidebar(true); // toujours visible sur desktop
+  };
+  window.addEventListener("resize", handleResize);
+  handleResize(); // pour initialiser correctement au chargement
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
+
+  const normalizeText = str => (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  const hasLostBefore = (participant, currentEtape) => {
+    const currentIndex = ETAPES.indexOf(currentEtape);
+    if (currentIndex <= 0) return false;
+    for (let i = 0; i < currentIndex; i++) {
+      const col = Object.values(columns).flat().filter(c => c.etape === ETAPES[i]);
+      for (const c of col) {
+        if (c.participant === participant && (c.statut || "").toLowerCase() === "perdu") return true;
+      }
+    }
+    return false;
+  };
+
+const allCombats = useMemo(() => {
+  let arr = [];
+  Object.keys(columns).forEach(type => {
+    Object.values(columns[type]).forEach(fighterCombats => {
+      arr = arr.concat(fighterCombats);
+    });
+  });
+
+  if (combatTypeFilter !== "Tous") {
+    arr = arr.filter(c => (c.typeCombat || "").toLowerCase() === combatTypeFilter.toLowerCase());
+  }
+
+  return arr;
+}, [columns, combatTypeFilter]);
+
+
+  const visibleColumns = useMemo(() => {
+    const term = normalizeText(searchTerm.trim());
+    return ETAPES.map(etape => allCombats.filter(c => {
+      const participant = normalizeText(c.participant);
+      const adversaire = normalizeText(c.adversaire);
+      if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
+      if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
+      if (term && !(participant.includes(term) || adversaire.includes(term))) return false;
+      if (hasLostBefore(c.participant, etape)) return false;
+      return c.etape === etape;
+    }));
+  }, [allCombats, stepFilter, colorFilter, searchTerm, columns]);
+
+  const visibleFlat = visibleColumns.flat();
+
+  const upcomingCombats = useMemo(() => {
+    const now = new Date();
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    const oneHourLaterMinutes = nowMinutes + 60;
+
+    return visibleFlat
+      .filter(c => c.heure)
+      .filter(c => {
+        const [h, m] = c.heure.split(":").map(Number);
+        if (isNaN(h) || isNaN(m)) return false;
+        const combatMinutes = h * 60 + m;
+        return combatMinutes >= nowMinutes && combatMinutes <= oneHourLaterMinutes;
+      })
+      .sort((a, b) => {
+        const [ah, am] = a.heure.split(":").map(Number);
+        const [bh, bm] = b.heure.split(":").map(Number);
+        return ah*60+am - (bh*60+bm);
+      });
+  }, [visibleFlat]);
+
+  const countVisibleColor = color => visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
+
   const handleSave = async (participantId, num) => {
     if (!canEdit) return;
-    const newCols = columns.map(col =>
-      col.map(c =>
-        c.participant === participantId && c.num === num
-          ? { ...c, ...editValues }
-          : c
-      )
-    );
-    setColumns(newCols);
+    const newColumns = {...columns};
+    Object.keys(newColumns).forEach(type => {
+      newColumns[type] = newColumns[type] || {};
+      Object.keys(newColumns[type]).forEach(fighter => {
+        newColumns[type][fighter] = newColumns[type][fighter].map(c => c.num === num ? {...c, ...editValues} : c);
+      });
+    });
+    setColumns(newColumns);
     setEditingCard(null);
     setEditValues({});
     try {
       const docRef = doc(db, "brackets", participantId);
-      const participantCombats = newCols.flat().filter(c => c.participant === participantId);
+      const participantCombats = Object.values(newColumns).flatMap(t => Object.values(t).flat()).filter(c => c.participant === participantId);
       await updateDoc(docRef, { combats: participantCombats });
     } catch (err) {
       console.error("Erreur updateDoc:", err);
@@ -73,43 +149,20 @@ export default function Bracket({ user }) {
 
   const handleStatusChange = async (combat, statutValue) => {
     if (!canEdit) return;
-    const newCols = columns.map(col =>
-      col.map(c =>
-        c.participant === combat.participant && c.num === combat.num
-          ? { ...c, statut: statutValue }
-          : c
-      )
-    );
-    setColumns(newCols);
+    const newColumns = {...columns};
+    Object.keys(newColumns).forEach(type => {
+      Object.keys(newColumns[type]).forEach(fighter => {
+        newColumns[type][fighter] = newColumns[type][fighter].map(c => c.num === combat.num ? {...c, statut: statutValue} : c);
+      });
+    });
+    setColumns(newColumns);
     try {
       const docRef = doc(db, "brackets", combat.participant);
-      const participantCombats = newCols.flat().filter(c => c.participant === combat.participant);
+      const participantCombats = Object.values(newColumns).flatMap(t => Object.values(t).flat()).filter(c => c.participant === combat.participant);
       await updateDoc(docRef, { combats: participantCombats });
     } catch (err) {
       console.error("Erreur updateDoc statut:", err);
     }
-  };
-
-  const handleExportPDF = () => {
-    const doc = new jsPDF("p", "pt");
-    const date = new Date().toLocaleDateString("fr-FR");
-    doc.setFontSize(16);
-    doc.text("Bilan des combats - Bracket", 40, 40);
-    doc.setFontSize(10);
-    doc.text(`Exporté le ${date}`, 40, 55);
-    const rows = columns.flat().map(c => [
-      c.participant, c.adversaire, c.categorie, c.couleur,
-      c.statut === "gagné" ? "✅ Gagné" : c.statut === "perdu" ? "❌ Perdu" : "⏳ Non joué",
-      c.heure || "-", c.aire || "-", c.coach || "-"
-    ]);
-    autoTable(doc, {
-      head: [["Participant", "Adversaire", "Catégorie", "Couleur", "Statut", "Heure", "Aire", "Coach"]],
-      body: rows,
-      startY: 80,
-      styles: { fontSize: 8, cellPadding: 4 },
-      headStyles: { fillColor: [80, 128, 255] },
-    });
-    doc.save(`bracket_${date}.pdf`);
   };
 
   const handleResetStatuses = async () => {
@@ -124,7 +177,12 @@ export default function Bracket({ user }) {
         updates.push(updateDoc(doc(db, "brackets", docSnap.id), { combats }));
       });
       await Promise.all(updates);
-      const newCols = columns.map(col => col.map(c => ({ ...c, statut: "non_joué" })));
+      const newCols = {...columns};
+      Object.keys(newCols).forEach(type => {
+        Object.keys(newCols[type]).forEach(fighter => {
+          newCols[type][fighter] = newCols[type][fighter].map(c => ({ ...c, statut: "non_joué" }));
+        });
+      });
       setColumns(newCols);
     } catch (err) {
       console.error("Erreur reset statuts:", err);
@@ -133,179 +191,223 @@ export default function Bracket({ user }) {
     }
   };
 
-  const hasLostBefore = (participant, currentEtape) => {
-    const currentIndex = ETAPES.indexOf(currentEtape);
-    if (currentIndex <= 0) return false;
-    for (let i = 0; i < currentIndex; i++) {
-      const col = columns[i] || [];
-      for (const c of col) {
-        if (c.participant === participant && (c.statut || "").toLowerCase() === "perdu") return true;
-      }
-    }
-    return false;
+  const handleExportPDF = () => {
+    const doc = new jsPDF("p", "pt");
+    const date = new Date().toLocaleDateString("fr-FR");
+    doc.setFontSize(16);
+    doc.text("Bilan des combats - Bracket", 40, 40);
+    doc.setFontSize(10);
+    doc.text(`Exporté le ${date}`, 40, 55);
+    const rows = visibleFlat.map(c => [
+      c.participant, c.adversaire, c.categorie, c.couleur,
+      c.statut === "gagné" ? "✅ Gagné" : c.statut === "perdu" ? "❌ Perdu" : "⏳ Non joué",
+      c.heure || "-", c.aire || "-", c.coach || "-"
+    ]);
+    autoTable(doc, {
+      head: [["Participant", "Adversaire", "Catégorie", "Couleur", "Statut", "Heure", "Aire", "Coach"]],
+      body: rows,
+      startY: 80,
+      styles: { fontSize: 8, cellPadding: 4 },
+      headStyles: { fillColor: [80, 128, 255] },
+    });
+    doc.save(`bracket_${date}.pdf`);
   };
-
-  const normalizeText = str => (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-
-  const getVisibleColumns = () => {
-    const term = normalizeText(searchTerm.trim());
-    return columns.map(col => col.filter(c => {
-      const participant = normalizeText(c.participant);
-      const adversaire = normalizeText(c.adversaire);
-      const etape = c.etape || "";
-      if (stepFilter !== "Tous" && etape !== stepFilter) return false;
-      if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
-      if (term && !(participant.includes(term) || adversaire.includes(term))) return false;
-      if (hasLostBefore(c.participant, etape)) return false;
-      return true;
-    }));
-  };
-
-  const visibleColumns = getVisibleColumns();
-  const visibleFlat = visibleColumns.flat();
-  const countVisibleColor = color => visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
 
   return (
-    <>
-        <div
-          className={`status-banner ${
-            user ? (canEdit ? "authorized" : "connected") : "non-connected"
-          }`}
+    <div className="bracket-wrapper">
+      {/* Status Banner */}
+      <div className={`status-banner ${user ? (canEdit ? "authorized" : "readonly") : "non-connected"}`}>
+        {user ? (canEdit ? "✅ Connecté et autorisé" : "⚠️ Connecté en lecture seule") : "🔒 Non connecté"}
+      </div>
+
+      {/* Controls */}
+{/* Controls */}
+<div className="controls">
+  {/* Gauche : type de combat */}
+  <div className="controls-left">
+    <div className="combat-type-filter">
+      {TYPE_COMBATS.map(type => (
+        <button
+          key={type}
+          className={`${type} ${combatTypeFilter === type ? "active" : ""}`}
+          onClick={() => setCombatTypeFilter(type)}
         >
-          {user
-            ? canEdit
-              ? "✅ Connecté et autorisé à modifier"
-              : "⚠️ Connecté"
-            : "🔒 Non connecté"}
-        </div>
-
-
-
-      {/* CONTROLS */}
-      <div className="controls">
-        <div className="toggle-orientation">
-        <button onClick={() => setIsVertical(!isVertical)}>
-          {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+          {type}
         </button>
-        </div>
-        <div className="color-filters">
-          <div
-            className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`}
-            onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}
-          > 🔴 {countVisibleColor("Rouge")} </div>
-          <div
-            className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`}
-            onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}
-          > 🔵 {countVisibleColor("Bleu")} </div>
-          <div
-            className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`}
-            onClick={() => setColorFilter(COLOR_ALL)}
-          > ⚪ Tous </div>
-        </div>
-        <div className="filter-wrapper">
-          <FaFilter className="icon" />
-          <select className="step-filter" value={stepFilter} onChange={e => setStepFilter(e.target.value)}>
-            <option value="Tous">Toutes les étapes</option>
-            {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
-          </select>
-        </div>
-        <div className="search-wrapper">
-          <FaSearch className="icon" />
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Rechercher un participant ou adversaire"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <button className="reset-btn" onClick={handleResetStatuses} disabled={!canEdit || loadingReset}>
-          <FaRedo style={{ marginRight: 6 }} />
-          {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
-        </button>
-        {canEdit && (
-          <button className="export-btn" onClick={handleExportPDF} disabled={!columns.length}>
-            📄 Exporter en PDF
+      ))}
+    </div>
+  </div>
+
+  {/* Droite : filtres couleur, étape, recherche, reset/export */}
+<div className="controls-right">
+  <div className="color-filters">
+    <div className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}>
+      🔴 {countVisibleColor("Rouge")}
+    </div>
+    <div className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}>
+      🔵 {countVisibleColor("Bleu")}
+    </div>
+    <div className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`} onClick={() => setColorFilter(COLOR_ALL)}>
+      ⚪ Tous
+    </div>
+  </div>
+
+  <div className="filter-wrapper">
+    <FaFilter className="icon" />
+    <select className="step-filter" value={stepFilter} onChange={e => setStepFilter(e.target.value)}>
+      <option value="Tous">Toutes les étapes</option>
+      {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
+    </select>
+  </div>
+
+  <div className="search-reset-wrapper">
+    <div className="search-wrapper">
+      <FaSearch className="icon" />
+      <input
+        type="text"
+        className="search-input"
+        placeholder="Rechercher un participant ou adversaire"
+        value={searchTerm}
+        onChange={e => setSearchTerm(e.target.value)}
+      />
+    </div>
+
+    <button className="reset-btn" onClick={handleResetStatuses} disabled={!canEdit || loadingReset}>
+      <FaRedo style={{marginRight:6}} />
+      {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
+    </button>
+  </div>
+
+  {canEdit && <button className="export-btn" onClick={handleExportPDF} disabled={!visibleFlat.length}>📄 Exporter en PDF</button>}
+
+  {/* Mobile : bouton orientation */}
+  {isMobile && (
+    <div className="toggle-orientation">
+      <button onClick={() => setIsVertical(prev => !prev)}>
+        {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+      </button>
+    </div>
+  )}
+</div>
+</div>
+
+      {/* Main Bracket + Sidebar */}
+      <div className="main-bracket-container" style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+
+        {isVertical && (
+          <button 
+            onClick={() => setShowSidebar(prev => !prev)} 
+            style={{ marginBottom: "10px", padding: "6px 12px", borderRadius: "8px", border: "none", backgroundColor: "#2575fc", color: "#fff", cursor: "pointer" }}
+          >
+            {showSidebar ? "Masquer les combats à venir" : "Afficher les combats à venir"}
           </button>
         )}
-      </div>
 
-      {/* BRACKET */}
-      <div className={`bracket-container ${isVertical ? "vertical" : "horizontal"}`}>
-        {visibleColumns.map((col, colIdx) => {
-          if (!col || col.length === 0) return null;
-          if (stepFilter !== "Tous" && stepFilter !== ETAPES[colIdx]) return null;
-          return (
-            <div className="bracket-column" key={colIdx}>
-              <h3>{ETAPES[colIdx]}</h3>
-              {col.map((combat, idx) => {
-                const isEditing = editingCard && editingCard.participant === combat.participant && editingCard.num === combat.num;
-                const statutLower = (combat.statut || "").toLowerCase();
-                return (
-                  <div className={`combat-card-wrapper ${statutLower === "perdu" ? "dimmed" : ""}`} key={`${combat.participant}-${combat.num}-${idx}`}>
-                    <div className={`combat-card ${(combat.couleur || "").toLowerCase() === "rouge" ? "rouge" : "bleu"}`}>
-                      <div className={`status-badge ${statutLower}`}>
-                        {statutLower === "gagné" ? "✅ Gagné" : statutLower === "perdu" ? "❌ Perdu" : ""}
-                      </div>
-                      <div className="etape-badge">{combat.etape}</div>
-                      <div className="coach-badge">🎯 Coach : {combat.coach}</div>
-                      <div className="categorie-badge">🏷 {combat.categorie}</div>
+{showSidebar && (
+  <div className="sidebar" style={{ width: "250px", flexShrink: 0 }}>
+    <h3>Combats à venir</h3>
 
-                      {isEditing && canEdit ? (
-                        <div className="editing-fields">
-                          <input defaultValue={combat.participant} disabled />
-                          <input defaultValue={combat.adversaire} onChange={e => setEditValues(s => ({ ...s, adversaire: e.target.value }))} />
-                          <input defaultValue={combat.num} onChange={e => setEditValues(s => ({ ...s, num: e.target.value }))} />
-                          <input defaultValue={combat.heure} onChange={e => setEditValues(s => ({ ...s, heure: e.target.value }))} />
-                          <input defaultValue={combat.aire} onChange={e => setEditValues(s => ({ ...s, aire: e.target.value }))} />
-                          <select defaultValue={combat.couleur} onChange={e => setEditValues(s => ({ ...s, couleur: e.target.value }))}>
-                            <option value="Rouge">Rouge</option>
-                            <option value="Bleu">Bleu</option>
-                          </select>
-                          <select defaultValue={combat.coach} onChange={e => setEditValues(s => ({ ...s, coach: e.target.value }))}>
-                            {["Mélanie","Nadège","Christophe","Guillaume"].map(c => <option key={c} value={c}>{c}</option>)}
-                          </select>
-                          <input list="categories" defaultValue={combat.categorie} onChange={e => setEditValues(s => ({ ...s, categorie: e.target.value }))} />
-                          <datalist id="categories">
-                            {categories.map(cat => <option key={cat} value={cat} />)}
-                          </datalist>
-                          <div className="edit-buttons">
-                            <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
-                            <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="participant">{combat.participant}</div>
-                          <div className="versus">vs {combat.adversaire}</div>
-                          <div className="combat-info">#{combat.num} - {combat.heure} - Aire {combat.aire}</div>
-                          <div className="status-buttons">
-                            <button className={`btn-win ${statutLower === "gagné" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat, "gagné")}>Gagné</button>
-                            <button className={`btn-lose ${statutLower === "perdu" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat, "perdu")}>Perdu</button>
-                          </div>
-                          {canEdit && <button className="edit-btn" onClick={() => {
-                            setEditingCard({ participant: combat.participant, num: combat.num });
-                            setEditValues({
-                              adversaire: combat.adversaire,
-                              num: combat.num,
-                              heure: combat.heure,
-                              aire: combat.aire,
-                              couleur: combat.couleur,
-                              coach: combat.coach,
-                              categorie: combat.categorie
-                            });
-                          }}>Modifier</button>}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+    <div className="sidebar-search">
+      <input
+        type="text"
+        placeholder="Rechercher un participant"
+        value={searchUpcoming}
+        onChange={e => setSearchUpcoming(e.target.value)}
+      />
+    </div>
+
+    {upcomingCombats
+      .filter(c => !searchUpcoming || c.participant.toLowerCase().includes(searchUpcoming.toLowerCase()))
+      .map(c => (
+        <div key={`${c.participant}-${c.num}`} className="sidebar-combat">
+          <div>
+            <strong>{c.heure}</strong> - 
+            <span className={`helmet ${c.couleur?.toLowerCase()}`}></span>
+            {c.participant} vs {c.adversaire}
+          </div>
+          <div>Catégorie: {c.categorie} | Aire {c.aire}</div>
+        </div>
+      ))
+    }
+  </div>
+)}
+
+        <div className={`bracket-container ${isVertical ? "vertical" : "horizontal"}`} style={{ flex: 1 }}>
+          {visibleColumns.map((col, colIdx) => {
+            if (!col || col.length === 0) return null;
+            return (
+              <div className="bracket-column" key={colIdx}>
+                <h3>{ETAPES[colIdx]}</h3>
+                {col.map((combat, idx) => {
+                  const isEditing =
+                    editingCard &&
+                    editingCard.participant === combat.participant &&
+                    editingCard.num === combat.num;
+                  const statutLower = (combat.statut || "").toLowerCase();
+
+                  return (
+<div className={`combat-card-wrapper ${statutLower === "perdu" ? "dimmed" : ""}`} key={`${combat.participant}-${combat.num}-${idx}`}>
+  <div className={`combat-card ${(combat.couleur || "").toLowerCase() === "rouge" ? "rouge" : "bleu"} ${statutLower === "gagné" ? "gagné" : statutLower === "perdu" ? "perdu" : ""}`}>
+    
+    <div className="status-badge">{statutLower === "gagné" ? "✅ Gagné" : statutLower === "perdu" ? "❌ Perdu" : ""}</div>
+    <div className="etape-badge">{combat.etape}</div>
+    
+    {/* 🔹 Badge type combat */}
+{/* 🔹 Badge type combat */}
+<div className={`type-badge ${combat.typeCombat || ""}`}>
+  {combat.typeCombat === "LightContact" && "⚡ LightContact"}
+  {combat.typeCombat === "KickLight" && "🥷 KickLight"}
+  {combat.typeCombat === "K1Light" && "🔥 K1Light"}
+</div>
+
+
+    <div className="coach-badge">🎯 Coach : {combat.coach}</div>
+    <div className="categorie-badge">🏷 {combat.categorie}</div>
+
+    {isEditing && canEdit ? (
+      <div className="editing-fields">
+        <input defaultValue={combat.participant} disabled />
+        <input defaultValue={combat.adversaire} onChange={e => setEditValues(s => ({ ...s, adversaire: e.target.value }))}/>
+        <input defaultValue={combat.num} onChange={e => setEditValues(s => ({ ...s, num: e.target.value }))}/>
+        <input defaultValue={combat.heure} onChange={e => setEditValues(s => ({ ...s, heure: e.target.value }))}/>
+        <input defaultValue={combat.aire} onChange={e => setEditValues(s => ({ ...s, aire: e.target.value }))}/>
+        <select defaultValue={combat.couleur} onChange={e => setEditValues(s => ({ ...s, couleur: e.target.value }))}>
+          <option value="Rouge">Rouge</option>
+          <option value="Bleu">Bleu</option>
+        </select>
+        <select defaultValue={combat.coach} onChange={e => setEditValues(s => ({ ...s, coach: e.target.value }))}>
+          {["Mélanie", "Nadège", "Christophe", "Guillaume"].map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+        <input list="categories" defaultValue={combat.categorie} onChange={e => setEditValues(s => ({ ...s, categorie: e.target.value }))}/>
+        <datalist id="categories">{categories.map(cat => <option key={cat} value={cat} />)}</datalist>
+        <div className="edit-buttons">
+          <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
+          <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
+        </div>
       </div>
-    </>
+    ) : (
+      <>
+        <div className="participant">{combat.participant}</div>
+        <div className="versus">vs {combat.adversaire}</div>
+        <div className="combat-info">#{combat.num} - {combat.heure} - Aire {combat.aire}</div>
+        <div className="status-buttons">
+          <button className={`btn-win ${statutLower === "gagné" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat,"gagné")}>Gagné</button>
+          <button className={`btn-lose ${statutLower === "perdu" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat,"perdu")}>Perdu</button>
+        </div>
+        {canEdit && <button className="edit-btn" onClick={() => { setEditingCard({participant:combat.participant,num:combat.num}); setEditValues({...combat}); }}>Modifier</button>}
+      </>
+    )}
+  </div>
+</div>
+
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
+    </div>
   );
 }
-
