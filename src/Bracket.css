@@ -3,7 +3,7 @@
 /* ============================= */
 .controls {
   display: flex;
-  justify-content: space-between; /* espace entre gauche et droite */
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 15px;
   margin-bottom: 20px;
@@ -23,6 +23,7 @@
   gap: 10px;
   align-items: center;
 }
+
 .search-reset-wrapper {
   display: flex;
   align-items: center;
@@ -32,32 +33,13 @@
 .search-reset-wrapper .search-wrapper {
   flex: 1;
 }
-.sidebar-search {
-  margin-bottom: 10px;
-}
 
-.sidebar-search input {
-  width: 100%;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 13px;
-  box-sizing: border-box;
-}
-
-/* Garder tous les styles existants pour color-filters, filter-wrapper, search-wrapper et combat-type-filter */
-
-
+/* Toggle orientation */
 .toggle-orientation {
   display: none;
 }
 
-@media (max-width: 768px) {
-  .toggle-orientation {
-    display: block;
-  }
-}
-
+/* Color filters */
 .color-filters {
   display: flex;
   gap: 10px;
@@ -82,6 +64,7 @@
   transform: scale(1.1);
 }
 
+/* Select / Recherche */
 .filter-wrapper, .search-wrapper {
   position: relative;
   display: flex;
@@ -95,9 +78,6 @@
   pointer-events: none;
 }
 
-/* ============================= */
-/*       Select / Recherche      */
-/* ============================= */
 .step-filter {
   padding: 8px 12px 8px 40px;
   border-radius: 12px;
@@ -176,7 +156,6 @@
   flex-shrink: 0;
 }
 
-/* Titres d’étape */
 .bracket-column h3 {
   text-align: center;
   background: rgba(240, 240, 240, 0.85);
@@ -187,7 +166,9 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
-/* Cartes combat */
+/* ============================= */
+/*       Cartes de combat        */
+/* ============================= */
 .combat-card-wrapper { position: relative; transition: all 0.25s ease; }
 .combat-card-wrapper.dimmed { opacity: 0.5; filter: grayscale(0.7); }
 
@@ -210,7 +191,6 @@
 .combat-card.rouge { background-color: #ff5050; }
 .combat-card.bleu { background-color: #5080ff; }
 
-/* Glow dynamique sur cartes gagnées/perdues */
 .combat-card.gagné {
   box-shadow: 0 0 12px 3px rgba(76, 175, 80, 0.6);
   border: 2px solid #4caf50;
@@ -233,7 +213,7 @@
   50% { box-shadow: 0 0 20px 5px rgba(244, 67, 54, 0.7); }
 }
 
-/* Badges */
+/* Badges d'étape et statut */
 .etape-badge {
   position: absolute;
   top: -10px;
@@ -254,22 +234,9 @@
   padding: 2px 6px;
   border-radius: 4px;
 }
-.helmet {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  margin: 0 4px;
-}
-
-.helmet.rouge { background-color: #ff5050; }
-.helmet.bleu  { background-color: #5080ff; }
-
-
 /* ============================= */
 /*      Badge Type Combat         */
 /* ============================= */
-/* Badge type combat – version lisible sur toutes couleurs de carte */
 .type-badge {
   text-align: center;
   padding: 2px 6px;
@@ -278,11 +245,23 @@
   font-size: 12px;
   font-weight: 600;
   color: #fff;
-  background: rgba(255, 255, 255, 0.2); /* fallback */
+  background: rgba(255, 255, 255, 0.2);
   transition: all 0.25s ease;
 }
 
-/* Boutons type combat – version badge */
+.type-badge.LightContact { background-color: #ffd700; color: #222; }
+.type-badge.KickLight { background-color: #1e90ff; color: #fff; }
+.type-badge.K1Light { background-color: #ff7f50; color: #fff; }
+
+.combat-card.rouge .type-badge.K1Light { background-color: #ffb08c; color: #000; }
+.combat-card.bleu .type-badge.KickLight { background-color: #80bfff; color: #000; }
+
+.type-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+}
+
+/* Boutons type combat */
 .combat-type-filter button {
   padding: 8px 14px;
   border-radius: 12px;
@@ -295,56 +274,26 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-/* Réutiliser les classes type-badge pour la couleur */
 .combat-type-filter button.LightContact { background-color: #ffd700; color: #222; }
 .combat-type-filter button.KickLight    { background-color: #1e90ff; color: #fff; }
 .combat-type-filter button.K1Light      { background-color: #ff7f50; color: #fff; }
+.combat-type-filter button.Tous         { background-color: #999; color: #fff; }
 
-/* État actif */
 .combat-type-filter button.active {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
-.combat-type-filter button.Tous {
-  background-color: #999; /* gris neutre */
-  color: #fff;
-}
 
-/* Hover */
 .combat-type-filter button:hover {
   opacity: 0.9;
   transform: translateY(-2px) scale(1.05);
 }
 
-
-/* Couleurs spécifiques par type */
-.type-badge.LightContact { background-color: #ffd700; color: #222; } /* jaune/or */
-.type-badge.KickLight { background-color: #1e90ff; color: #fff; } /* bleu */
-.type-badge.K1Light { background-color: #ff7f50; color: #fff; } /* rouge/orangé plus clair */
-
-/* Cas particulier pour fond rouge ou bleu intense de la carte */
-.combat-card.rouge .type-badge.K1Light {
-  background-color: #ffb08c; /* plus clair que le fond rouge */
-  color: #000;
-}
-
-.combat-card.bleu .type-badge.KickLight {
-  background-color: #80bfff; /* plus clair que le fond bleu */
-  color: #000;
-}
-
-/* Hover léger */
-.type-badge:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 6px rgba(0,0,0,0.3);
-}
-
-
 .status-badge.gagné { background: #4caf50; }
 .status-badge.perdu { background: #b71c1c; }
 
 /* ============================= */
-/*      Textes et boutons        */
+/*      Coach et Catégorie       */
 /* ============================= */
 .coach-badge,
 .categorie-badge {
@@ -357,10 +306,16 @@
   color: #fff;
 }
 
+/* ============================= */
+/*      Texte et infos combat    */
+/* ============================= */
 .participant { font-weight: bold; font-size: 14px; text-align: center; }
 .versus { font-size: 12px; margin-top: 3px; text-align: center; }
 .combat-info { font-size: 11px; margin-top: 5px; color: #eee; text-align: center; }
 
+/* ============================= */
+/*      Boutons Gagné / Perdu    */
+/* ============================= */
 .status-buttons {
   display: flex;
   justify-content: space-between;
@@ -381,8 +336,15 @@
 .btn-win { background: rgba(76, 175, 80, 0.7); color: #fff; }
 .btn-lose { background: rgba(244, 67, 54, 0.7); color: #fff; }
 
-.btn-win.active, .btn-lose.active { background: #fff; color: #000; font-weight: bold; }
+.btn-win.active, .btn-lose.active {
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+}
 
+/* ============================= */
+/*      Bouton Modifier combat   */
+/* ============================= */
 .edit-btn {
   margin-top: 5px;
   padding: 4px 6px;
@@ -394,10 +356,48 @@
   color: #fff;
   transition: all 0.25s ease;
 }
-.edit-btn:hover { background-color: rgba(255,255,255,0.5); transform: scale(1.05); }
+
+.edit-btn:hover {
+  background-color: rgba(255,255,255,0.5);
+  transform: scale(1.05);
+}
 
 /* ============================= */
-/* Top Banner Moderne            */
+/*      Mini-brackets / Participants  */
+/* ============================= */
+.mini-brackets-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.participant-card {
+  background-color: #ececec;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 180px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.participant-card:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+.participant-name {
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.fight-info {
+  font-size: 12px;
+  margin: 2px 0;
+  text-align: center;
+}
+/* ============================= */
+/*      Top Banner Moderne        */
 /* ============================= */
 .top-banner-modern {
   display: flex;
@@ -411,6 +411,7 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   text-align: center;
 }
+
 .top-banner-modern > div { flex: 1 1 100%; margin: 6px 0; }
 
 .banner-left .status { font-weight: 600; padding: 4px 10px; border-radius: 8px; }
@@ -430,6 +431,7 @@
   cursor: pointer;
   transition: all 0.25s ease;
 }
+
 .banner-right button:hover { transform: scale(1.05); }
 
 @media (min-width: 768px) {
@@ -437,20 +439,23 @@
 }
 
 /* ============================= */
-/* Status Banners                */
+/*      Status Banners            */
 /* ============================= */
 .status-banner.authorized {
   background: linear-gradient(90deg, #d4edda, #a8e5a2);
   color: #155724;
 }
+
 .status-banner.readonly {
   background: linear-gradient(90deg, #fff3cd, #ffe69c);
   color: #856404;
 }
+
 .status-banner.non-connected {
   background: linear-gradient(135deg, #d32f2f, #b71c1c);
   color: #fff;
 }
+
 .status-banner {
   padding: 12px 20px;
   border-radius: 10px;
@@ -485,54 +490,71 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   transition: all 0.25s ease;
 }
+
 .sidebar-combat:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
+
 .sidebar-combat strong { color: #2575fc; }
 
-/* --- Animation sidebar mobile --- */
-.sidebar-toggle {
-  display: none;
-  background: #2575fc;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  font-weight: bold;
+.sidebar-search {
+  margin-bottom: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
+.sidebar-search input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: all 0.25s ease;
+}
+
+.sidebar-search input::placeholder {
+  color: #888;
+}
+
+.sidebar-search input:focus {
+  border-color: #2575fc;
+  box-shadow: 0 2px 8px rgba(37, 117, 252, 0.3);
+  outline: none;
+}
+
+/* ============================= */
+/*      Responsive / Mobile       */
+/* ============================= */
 @media (max-width: 768px) {
+
+  .toggle-orientation { display: block; }
+
   .sidebar-toggle { display: block; }
   .sidebar-hidden { display: none; opacity: 0; transform: translateY(-10px); }
   .sidebar-visible { display: block; opacity: 1; transform: translateY(0); transition: all 0.3s ease; }
-}
 
-/* ============================= */
-/* Responsive Mobile Layout       */
-/* ============================= */
-@media (max-width: 768px) {
   .main-bracket-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
   }
 
-.bracket-container.vertical {
-  width: 100%;
-  flex-direction: column;
-  align-items: center;         /* ✅ centre horizontalement */
-  justify-content: center;     /* ✅ centre verticalement dans le viewport */
-  gap: 25px;
-  padding: 20px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  min-height: 100vh;           /* ✅ assure un centrage vertical correct */
-  box-sizing: border-box;
-}
-
+  .bracket-container.vertical {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
 
   .bracket-container.vertical .bracket-column {
     width: 90%;
@@ -545,38 +567,46 @@
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
-}
-/* ============================= */
-/* Mini Brackets spécifique       */
-/* ============================= */
-.mini-brackets-container {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
 
-.participant-card {
-  background-color: #ececec;
-  border-radius: 8px;
-  padding: 10px;
-  min-width: 180px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
+  /* Responsive Controls layout */
+  
+/* Container des contrôles */
+  .controls {
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.participant-card:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
-}
+  /* Ligne avec filtres + recherche */
+  .controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
 
-.participant-name {
-  font-weight: 600;
-  margin-bottom: 6px;
-  text-align: center;
-}
+  /* Filtre et recherche côte à côte */
+  .filter-wrapper,
+  .search-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
 
-.fight-info {
-  font-size: 12px;
-  margin: 2px 0;
-  text-align: center;
+  .filter-wrapper select,
+  .search-wrapper input {
+    flex: 1;
+  }
+
+  /* Boutons réinitialiser et exporter prennent toute la largeur */
+  .search-reset-wrapper .reset-btn,
+  .search-reset-wrapper .export-btn {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  /* Petite marge entre les boutons si besoin */
+  .search-reset-wrapper .export-btn {
+    margin-top: 6px;
+  }
 }

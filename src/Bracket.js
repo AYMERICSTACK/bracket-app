@@ -45,19 +45,17 @@ export default function Bracket({ user }) {
   }, []);
 
   // Responsive
-useEffect(() => {
-  const handleResize = () => {
-    const mobile = window.innerWidth < 768;
-    setIsMobile(mobile);
-    setIsVertical(mobile);
-
-    if (!mobile) setShowSidebar(true); // toujours visible sur desktop
-  };
-  window.addEventListener("resize", handleResize);
-  handleResize(); // pour initialiser correctement au chargement
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsVertical(mobile);
+      if (!mobile) setShowSidebar(true);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const normalizeText = str => (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
@@ -73,33 +71,31 @@ useEffect(() => {
     return false;
   };
 
-const allCombats = useMemo(() => {
-  let arr = [];
-  Object.keys(columns).forEach(type => {
-    Object.values(columns[type]).forEach(fighterCombats => {
-      arr = arr.concat(fighterCombats);
+  const allCombats = useMemo(() => {
+    let arr = [];
+    Object.keys(columns).forEach(type => {
+      Object.values(columns[type]).forEach(fighterCombats => {
+        arr = arr.concat(fighterCombats);
+      });
     });
-  });
-
-  if (combatTypeFilter !== "Tous") {
-    arr = arr.filter(c => (c.typeCombat || "").toLowerCase() === combatTypeFilter.toLowerCase());
-  }
-
-  return arr;
-}, [columns, combatTypeFilter]);
-
-
+    if (combatTypeFilter !== "Tous") {
+      arr = arr.filter(c => (c.typeCombat || "").toLowerCase() === combatTypeFilter.toLowerCase());
+    }
+    return arr;
+  }, [columns, combatTypeFilter]);
   const visibleColumns = useMemo(() => {
     const term = normalizeText(searchTerm.trim());
-    return ETAPES.map(etape => allCombats.filter(c => {
-      const participant = normalizeText(c.participant);
-      const adversaire = normalizeText(c.adversaire);
-      if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
-      if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
-      if (term && !(participant.includes(term) || adversaire.includes(term))) return false;
-      if (hasLostBefore(c.participant, etape)) return false;
-      return c.etape === etape;
-    }));
+    return ETAPES.map(etape =>
+      allCombats.filter(c => {
+        const participant = normalizeText(c.participant);
+        const adversaire = normalizeText(c.adversaire);
+        if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
+        if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
+        if (term && !(participant.includes(term) || adversaire.includes(term))) return false;
+        if (hasLostBefore(c.participant, etape)) return false;
+        return c.etape === etape;
+      })
+    );
   }, [allCombats, stepFilter, colorFilter, searchTerm, columns]);
 
   const visibleFlat = visibleColumns.flat();
@@ -124,15 +120,19 @@ const allCombats = useMemo(() => {
       });
   }, [visibleFlat]);
 
-  const countVisibleColor = color => visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
+  const countVisibleColor = color =>
+    visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
 
+  // Sauvegarde après édition
   const handleSave = async (participantId, num) => {
     if (!canEdit) return;
-    const newColumns = {...columns};
+    const newColumns = { ...columns };
     Object.keys(newColumns).forEach(type => {
       newColumns[type] = newColumns[type] || {};
       Object.keys(newColumns[type]).forEach(fighter => {
-        newColumns[type][fighter] = newColumns[type][fighter].map(c => c.num === num ? {...c, ...editValues} : c);
+        newColumns[type][fighter] = newColumns[type][fighter].map(c =>
+          c.num === num ? { ...c, ...editValues } : c
+        );
       });
     });
     setColumns(newColumns);
@@ -140,31 +140,39 @@ const allCombats = useMemo(() => {
     setEditValues({});
     try {
       const docRef = doc(db, "brackets", participantId);
-      const participantCombats = Object.values(newColumns).flatMap(t => Object.values(t).flat()).filter(c => c.participant === participantId);
+      const participantCombats = Object.values(newColumns)
+        .flatMap(t => Object.values(t).flat())
+        .filter(c => c.participant === participantId);
       await updateDoc(docRef, { combats: participantCombats });
     } catch (err) {
       console.error("Erreur updateDoc:", err);
     }
   };
 
+  // Changement de statut Gagné/Perdu
   const handleStatusChange = async (combat, statutValue) => {
     if (!canEdit) return;
-    const newColumns = {...columns};
+    const newColumns = { ...columns };
     Object.keys(newColumns).forEach(type => {
       Object.keys(newColumns[type]).forEach(fighter => {
-        newColumns[type][fighter] = newColumns[type][fighter].map(c => c.num === combat.num ? {...c, statut: statutValue} : c);
+        newColumns[type][fighter] = newColumns[type][fighter].map(c =>
+          c.num === combat.num ? { ...c, statut: statutValue } : c
+        );
       });
     });
     setColumns(newColumns);
     try {
       const docRef = doc(db, "brackets", combat.participant);
-      const participantCombats = Object.values(newColumns).flatMap(t => Object.values(t).flat()).filter(c => c.participant === combat.participant);
+      const participantCombats = Object.values(newColumns)
+        .flatMap(t => Object.values(t).flat())
+        .filter(c => c.participant === combat.participant);
       await updateDoc(docRef, { combats: participantCombats });
     } catch (err) {
       console.error("Erreur updateDoc statut:", err);
     }
   };
 
+  // Réinitialiser tous les statuts
   const handleResetStatuses = async () => {
     if (!canEdit) return;
     if (!window.confirm("Réinitialiser tous les statuts ?")) return;
@@ -177,7 +185,8 @@ const allCombats = useMemo(() => {
         updates.push(updateDoc(doc(db, "brackets", docSnap.id), { combats }));
       });
       await Promise.all(updates);
-      const newCols = {...columns};
+
+      const newCols = { ...columns };
       Object.keys(newCols).forEach(type => {
         Object.keys(newCols[type]).forEach(fighter => {
           newCols[type][fighter] = newCols[type][fighter].map(c => ({ ...c, statut: "non_joué" }));
@@ -191,6 +200,7 @@ const allCombats = useMemo(() => {
     }
   };
 
+  // Export PDF
   const handleExportPDF = () => {
     const doc = new jsPDF("p", "pt");
     const date = new Date().toLocaleDateString("fr-FR");
@@ -199,9 +209,14 @@ const allCombats = useMemo(() => {
     doc.setFontSize(10);
     doc.text(`Exporté le ${date}`, 40, 55);
     const rows = visibleFlat.map(c => [
-      c.participant, c.adversaire, c.categorie, c.couleur,
+      c.participant,
+      c.adversaire,
+      c.categorie,
+      c.couleur,
       c.statut === "gagné" ? "✅ Gagné" : c.statut === "perdu" ? "❌ Perdu" : "⏳ Non joué",
-      c.heure || "-", c.aire || "-", c.coach || "-"
+      c.heure || "-",
+      c.aire || "-",
+      c.coach || "-"
     ]);
     autoTable(doc, {
       head: [["Participant", "Adversaire", "Catégorie", "Couleur", "Statut", "Heure", "Aire", "Coach"]],
@@ -212,7 +227,6 @@ const allCombats = useMemo(() => {
     });
     doc.save(`bracket_${date}.pdf`);
   };
-
   return (
     <div className="bracket-wrapper">
       {/* Status Banner */}
@@ -221,117 +235,152 @@ const allCombats = useMemo(() => {
       </div>
 
       {/* Controls */}
-{/* Controls */}
-<div className="controls">
-  {/* Gauche : type de combat */}
-  <div className="controls-left">
-    <div className="combat-type-filter">
-      {TYPE_COMBATS.map(type => (
-        <button
-          key={type}
-          className={`${type} ${combatTypeFilter === type ? "active" : ""}`}
-          onClick={() => setCombatTypeFilter(type)}
-        >
-          {type}
-        </button>
-      ))}
-    </div>
-  </div>
+      <div className="controls">
+        {/* Gauche : type de combat */}
+        <div className="controls-left">
+          <div className="combat-type-filter">
+            {TYPE_COMBATS.map(type => (
+              <button
+                key={type}
+                className={`${type} ${combatTypeFilter === type ? "active" : ""}`}
+                onClick={() => setCombatTypeFilter(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
 
-  {/* Droite : filtres couleur, étape, recherche, reset/export */}
-<div className="controls-right">
-  <div className="color-filters">
-    <div className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}>
-      🔴 {countVisibleColor("Rouge")}
-    </div>
-    <div className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}>
-      🔵 {countVisibleColor("Bleu")}
-    </div>
-    <div className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`} onClick={() => setColorFilter(COLOR_ALL)}>
-      ⚪ Tous
-    </div>
-  </div>
+        {/* Droite : filtres couleur, étape, recherche, reset/export */}
+        <div className="controls-right">
+          <div className="color-filters">
+            <div
+              className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`}
+              onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}
+            >
+              🔴 {countVisibleColor("Rouge")}
+            </div>
+            <div
+              className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`}
+              onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}
+            >
+              🔵 {countVisibleColor("Bleu")}
+            </div>
+            <div
+              className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`}
+              onClick={() => setColorFilter(COLOR_ALL)}
+            >
+              ⚪ Tous
+            </div>
+          </div>
 
-  <div className="filter-wrapper">
-    <FaFilter className="icon" />
-    <select className="step-filter" value={stepFilter} onChange={e => setStepFilter(e.target.value)}>
-      <option value="Tous">Toutes les étapes</option>
-      {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
-    </select>
-  </div>
+          <div className="filter-wrapper">
+            <FaFilter className="icon" />
+            <select
+              className="step-filter"
+              value={stepFilter}
+              onChange={e => setStepFilter(e.target.value)}
+            >
+              <option value="Tous">Toutes les étapes</option>
+              {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
+            </select>
+          </div>
 
-  <div className="search-reset-wrapper">
-    <div className="search-wrapper">
-      <FaSearch className="icon" />
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Rechercher un participant ou adversaire"
-        value={searchTerm}
-        onChange={e => setSearchTerm(e.target.value)}
-      />
-    </div>
+          <div className="search-reset-wrapper">
+            <div className="search-wrapper">
+              <FaSearch className="icon" />
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Rechercher un participant ou adversaire"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+            </div>
 
-    <button className="reset-btn" onClick={handleResetStatuses} disabled={!canEdit || loadingReset}>
-      <FaRedo style={{marginRight:6}} />
-      {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
-    </button>
-  </div>
+            <button
+              className="reset-btn"
+              onClick={handleResetStatuses}
+              disabled={!canEdit || loadingReset}
+            >
+              <FaRedo style={{ marginRight: 6 }} />
+              {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
+            </button>
+          </div>
 
-  {canEdit && <button className="export-btn" onClick={handleExportPDF} disabled={!visibleFlat.length}>📄 Exporter en PDF</button>}
+          {canEdit && (
+            <button
+              className="export-btn"
+              onClick={handleExportPDF}
+              disabled={!visibleFlat.length}
+            >
+              📄 Exporter en PDF
+            </button>
+          )}
 
-  {/* Mobile : bouton orientation */}
-  {isMobile && (
-    <div className="toggle-orientation">
-      <button onClick={() => setIsVertical(prev => !prev)}>
-        {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
-      </button>
-    </div>
-  )}
-</div>
-</div>
+          {/* Mobile : bouton orientation */}
+          {isMobile && (
+            <div className="toggle-orientation">
+              <button onClick={() => setIsVertical(prev => !prev)}>
+                {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Main Bracket + Sidebar */}
       <div className="main-bracket-container" style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
 
+        {/* Sidebar toggle pour mobile */}
         {isVertical && (
-          <button 
-            onClick={() => setShowSidebar(prev => !prev)} 
-            style={{ marginBottom: "10px", padding: "6px 12px", borderRadius: "8px", border: "none", backgroundColor: "#2575fc", color: "#fff", cursor: "pointer" }}
+          <button
+            onClick={() => setShowSidebar(prev => !prev)}
+            style={{
+              marginBottom: "10px",
+              padding: "6px 12px",
+              borderRadius: "8px",
+              border: "none",
+              backgroundColor: "#2575fc",
+              color: "#fff",
+              cursor: "pointer"
+            }}
           >
             {showSidebar ? "Masquer les combats à venir" : "Afficher les combats à venir"}
           </button>
         )}
 
-{showSidebar && (
-  <div className="sidebar" style={{ width: "250px", flexShrink: 0 }}>
-    <h3>Combats à venir</h3>
+        {/* Sidebar */}
+        {showSidebar && (
+          <div className="sidebar" style={{ width: "250px", flexShrink: 0 }}>
+            <h3>Combats à venir</h3>
 
-    <div className="sidebar-search">
-      <input
-        type="text"
-        placeholder="Rechercher un participant"
-        value={searchUpcoming}
-        onChange={e => setSearchUpcoming(e.target.value)}
-      />
-    </div>
+            <div className="sidebar-search">
+              <input
+                type="text"
+                placeholder="Rechercher un participant"
+                value={searchUpcoming}
+                onChange={e => setSearchUpcoming(e.target.value)}
+              />
+            </div>
 
-    {upcomingCombats
-      .filter(c => !searchUpcoming || c.participant.toLowerCase().includes(searchUpcoming.toLowerCase()))
-      .map(c => (
-        <div key={`${c.participant}-${c.num}`} className="sidebar-combat">
-          <div>
-            <strong>{c.heure}</strong> - 
-            <span className={`helmet ${c.couleur?.toLowerCase()}`}></span>
-            {c.participant} vs {c.adversaire}
+            {upcomingCombats
+              .filter(c => !searchUpcoming || c.participant.toLowerCase().includes(searchUpcoming.toLowerCase()))
+              .map(c => (
+                <div key={`${c.participant}-${c.num}`} className="sidebar-combat">
+                  <div>
+                    <strong>{c.heure}</strong> - 
+                    <span className={`helmet ${c.couleur?.toLowerCase()}`}></span>
+                    {c.participant} vs {c.adversaire}
+                  </div>
+                  <div>Catégorie: {c.categorie} | Aire {c.aire}</div>
+                </div>
+              ))
+            }
           </div>
-          <div>Catégorie: {c.categorie} | Aire {c.aire}</div>
-        </div>
-      ))
-    }
-  </div>
-)}
+        )}
 
+        {/* Bracket */}
         <div className={`bracket-container ${isVertical ? "vertical" : "horizontal"}`} style={{ flex: 1 }}>
           {visibleColumns.map((col, colIdx) => {
             if (!col || col.length === 0) return null;
@@ -346,67 +395,64 @@ const allCombats = useMemo(() => {
                   const statutLower = (combat.statut || "").toLowerCase();
 
                   return (
-<div className={`combat-card-wrapper ${statutLower === "perdu" ? "dimmed" : ""}`} key={`${combat.participant}-${combat.num}-${idx}`}>
-  <div className={`combat-card ${(combat.couleur || "").toLowerCase() === "rouge" ? "rouge" : "bleu"} ${statutLower === "gagné" ? "gagné" : statutLower === "perdu" ? "perdu" : ""}`}>
-    
-    <div className="status-badge">{statutLower === "gagné" ? "✅ Gagné" : statutLower === "perdu" ? "❌ Perdu" : ""}</div>
-    <div className="etape-badge">{combat.etape}</div>
-    
-    {/* 🔹 Badge type combat */}
-{/* 🔹 Badge type combat */}
-<div className={`type-badge ${combat.typeCombat || ""}`}>
-  {combat.typeCombat === "LightContact" && "⚡ LightContact"}
-  {combat.typeCombat === "KickLight" && "🥷 KickLight"}
-  {combat.typeCombat === "K1Light" && "🔥 K1Light"}
-</div>
+                    <div className={`combat-card-wrapper ${statutLower === "perdu" ? "dimmed" : ""}`} key={`${combat.participant}-${combat.num}-${idx}`}>
+                      <div className={`combat-card ${(combat.couleur || "").toLowerCase() === "rouge" ? "rouge" : "bleu"} ${statutLower === "gagné" ? "gagné" : statutLower === "perdu" ? "perdu" : ""}`}>
+                        
+                        <div className="status-badge">{statutLower === "gagné" ? "✅ Gagné" : statutLower === "perdu" ? "❌ Perdu" : ""}</div>
+                        <div className="etape-badge">{combat.etape}</div>
+                        
+                        {/* Badge type combat */}
+                        <div className={`type-badge ${combat.typeCombat || ""}`}>
+                          {combat.typeCombat === "LightContact" && "⚡ LightContact"}
+                          {combat.typeCombat === "KickLight" && "🥷 KickLight"}
+                          {combat.typeCombat === "K1Light" && "🔥 K1Light"}
+                        </div>
 
+                        <div className="coach-badge">🎯 Coach : {combat.coach}</div>
+                        <div className="categorie-badge">🏷 {combat.categorie}</div>
 
-    <div className="coach-badge">🎯 Coach : {combat.coach}</div>
-    <div className="categorie-badge">🏷 {combat.categorie}</div>
-
-    {isEditing && canEdit ? (
-      <div className="editing-fields">
-        <input defaultValue={combat.participant} disabled />
-        <input defaultValue={combat.adversaire} onChange={e => setEditValues(s => ({ ...s, adversaire: e.target.value }))}/>
-        <input defaultValue={combat.num} onChange={e => setEditValues(s => ({ ...s, num: e.target.value }))}/>
-        <input defaultValue={combat.heure} onChange={e => setEditValues(s => ({ ...s, heure: e.target.value }))}/>
-        <input defaultValue={combat.aire} onChange={e => setEditValues(s => ({ ...s, aire: e.target.value }))}/>
-        <select defaultValue={combat.couleur} onChange={e => setEditValues(s => ({ ...s, couleur: e.target.value }))}>
-          <option value="Rouge">Rouge</option>
-          <option value="Bleu">Bleu</option>
-        </select>
-        <select defaultValue={combat.coach} onChange={e => setEditValues(s => ({ ...s, coach: e.target.value }))}>
-          {["Mélanie", "Nadège", "Christophe", "Guillaume"].map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-        <input list="categories" defaultValue={combat.categorie} onChange={e => setEditValues(s => ({ ...s, categorie: e.target.value }))}/>
-        <datalist id="categories">{categories.map(cat => <option key={cat} value={cat} />)}</datalist>
-        <div className="edit-buttons">
-          <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
-          <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
-        </div>
-      </div>
-    ) : (
-      <>
-        <div className="participant">{combat.participant}</div>
-        <div className="versus">vs {combat.adversaire}</div>
-        <div className="combat-info">#{combat.num} - {combat.heure} - Aire {combat.aire}</div>
-        <div className="status-buttons">
-          <button className={`btn-win ${statutLower === "gagné" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat,"gagné")}>Gagné</button>
-          <button className={`btn-lose ${statutLower === "perdu" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat,"perdu")}>Perdu</button>
-        </div>
-        {canEdit && <button className="edit-btn" onClick={() => { setEditingCard({participant:combat.participant,num:combat.num}); setEditValues({...combat}); }}>Modifier</button>}
-      </>
-    )}
-  </div>
-</div>
-
+                        {/* Edition */}
+                        {isEditing && canEdit ? (
+                          <div className="editing-fields">
+                            <input defaultValue={combat.participant} disabled />
+                            <input defaultValue={combat.adversaire} onChange={e => setEditValues(s => ({ ...s, adversaire: e.target.value }))}/>
+                            <input defaultValue={combat.num} onChange={e => setEditValues(s => ({ ...s, num: e.target.value }))}/>
+                            <input defaultValue={combat.heure} onChange={e => setEditValues(s => ({ ...s, heure: e.target.value }))}/>
+                            <input defaultValue={combat.aire} onChange={e => setEditValues(s => ({ ...s, aire: e.target.value }))}/>
+                            <select defaultValue={combat.couleur} onChange={e => setEditValues(s => ({ ...s, couleur: e.target.value }))}>
+                              <option value="Rouge">Rouge</option>
+                              <option value="Bleu">Bleu</option>
+                            </select>
+                            <select defaultValue={combat.coach} onChange={e => setEditValues(s => ({ ...s, coach: e.target.value }))}>
+                              {["Mélanie", "Nadège", "Christophe", "Guillaume"].map(c => <option key={c} value={c}>{c}</option>)}
+                            </select>
+                            <input list="categories" defaultValue={combat.categorie} onChange={e => setEditValues(s => ({ ...s, categorie: e.target.value }))}/>
+                            <datalist id="categories">{categories.map(cat => <option key={cat} value={cat} />)}</datalist>
+                            <div className="edit-buttons">
+                              <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
+                              <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="participant">{combat.participant}</div>
+                            <div className="versus">vs {combat.adversaire}</div>
+                            <div className="combat-info">#{combat.num} - {combat.heure} - Aire {combat.aire}</div>
+                            <div className="status-buttons">
+                              <button className={`btn-win ${statutLower === "gagné" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat,"gagné")}>Gagné</button>
+                              <button className={`btn-lose ${statutLower === "perdu" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat,"perdu")}>Perdu</button>
+                            </div>
+                            {canEdit && <button className="edit-btn" onClick={() => { setEditingCard({participant:combat.participant,num:combat.num}); setEditValues({...combat}); }}>Modifier</button>}
+                          </>
+                        )}
+                      </div>
+                    </div>
                   );
                 })}
               </div>
             );
           })}
         </div>
-
       </div>
     </div>
   );
