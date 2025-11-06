@@ -704,7 +704,6 @@
   /* ============================= */
   .top-banner-modern,
   .status-banner {
-    width: 100vw;
     margin-left: -20px;
     margin-right: -20px;
     border-radius: 8px; /* on garde les coins arrondis */
