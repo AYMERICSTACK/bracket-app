@@ -6,6 +6,7 @@ import "./Bracket.css";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
+const mobileQuery = window.matchMedia("(max-width: 768px)");
 const ETAPES = ["Tour2", "Tour1", "16ème", "8ème", "Quart", "Demi", "Finale"];
 const COLOR_ALL = "Tous";
 const TYPE_COMBATS = ["Tous", "LightContact", "KickLight", "K1Light"];
@@ -15,7 +16,7 @@ const ALLOWED_UIDS = [
 ];
 
 export default function Bracket({ user }) {
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState({}); // ⚠ objet participantId -> [combats]
   const [editingCard, setEditingCard] = useState(null);
   const [editValues, setEditValues] = useState({});
   const [stepFilter, setStepFilter] = useState("Tous");
@@ -23,51 +24,53 @@ export default function Bracket({ user }) {
   const [combatTypeFilter, setCombatTypeFilter] = useState("Tous");
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingReset, setLoadingReset] = useState(false);
-  const [isVertical, setIsVertical] = useState(window.innerWidth < 768);
+  const [isVertical, setIsVertical] = useState(mobileQuery.matches);
   const [userForcedOrientation, setUserForcedOrientation] = useState(false);
   const [categories, setCategories] = useState(["-37kg","-50kg","-55kg","-60kg","-65kg","-70kg","-75kg"]);
   const [showSidebar, setShowSidebar] = useState(window.innerWidth >= 768);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(mobileQuery.matches);
   const [searchUpcoming, setSearchUpcoming] = useState("");
+  
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
 
-  // Fetch data
-  useEffect(() => {
-    const fetchData = async () => {
-      const snapshot = await getDocs(collection(db, "brackets"));
-      const data = {};
-      snapshot.forEach(docSnap => {
-        data[docSnap.id] = docSnap.data().combats || [];
-      });
-      setColumns(data);
-    };
-    fetchData();
-  }, []);
+  // 🔹 Fetch data
+useEffect(() => {
+  const fetchData = async () => {
+    const snapshot = await getDocs(collection(db, "brackets"));
+    const data = {};
+    snapshot.forEach(docSnap => {
+      const combats = docSnap.data().combats || [];
+      // ⚡ Ajouter docId à chaque combat
+      const combatsWithDocId = combats.map(c => ({ ...c, docId: docSnap.id }));
+      data[docSnap.id] = combatsWithDocId;
+    });
+    setColumns(data);
+  };
+  fetchData();
+}, []);
 
-  // Responsive
+
+  // 🔹 Responsive
 useEffect(() => {
   const handleResize = () => {
+    if (userForcedOrientation) return; // ne rien faire si orientation forcée
     const mobile = window.innerWidth < 768;
-
-    // Si l'utilisateur n'a pas forcé l'orientation, on ajuste automatiquement
-    if (!userForcedOrientation) {
-      setIsVertical(mobile);
-    }
-
-    if (!mobile) setShowSidebar(true);
+    setIsVertical(mobile);
+    setIsMobile(mobile);
+    setShowSidebar(!mobile);
   };
 
-  window.addEventListener("resize", handleResize);
-  handleResize();
-  return () => window.removeEventListener("resize", handleResize);
-}, []); // ✅ Vide : ne change jamais de taille
+  // ⚙️ On n’ajoute le listener QUE si l'utilisateur n'a pas forcé
+  if (!userForcedOrientation) {
+    window.addEventListener("resize", handleResize);
+    handleResize();
+  }
 
-// Lors du toggle par bouton
-const handleToggleOrientation = () => {
-  setIsVertical(prev => !prev);
-  setUserForcedOrientation(true); // marque que l'utilisateur a forcé l'orientation
-};
+  // 🧹 Si user force, on retire le listener immédiatement
+  return () => window.removeEventListener("resize", handleResize);
+}, [userForcedOrientation]);
+
 
 
   const normalizeText = str => (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -75,27 +78,33 @@ const handleToggleOrientation = () => {
   const hasLostBefore = (participant, currentEtape) => {
     const currentIndex = ETAPES.indexOf(currentEtape);
     if (currentIndex <= 0) return false;
+    const combats = columns[participant] || [];
     for (let i = 0; i < currentIndex; i++) {
-      const col = Object.values(columns).flat().filter(c => c.etape === ETAPES[i]);
-      for (const c of col) {
-        if (c.participant === participant && (c.statut || "").toLowerCase() === "perdu") return true;
+      if (combats.some(c => c.etape === ETAPES[i] && (c.statut || "").toLowerCase() === "perdu")) {
+        return true;
       }
     }
     return false;
   };
+const handleToggleOrientation = () => {
+  setIsVertical(prev => !prev);
+  setUserForcedOrientation(true); // ⚡ On indique que l’utilisateur force le mode
+};
 
+
+  // 🔹 Tous les combats aplatis
   const allCombats = useMemo(() => {
     let arr = [];
-    Object.keys(columns).forEach(type => {
-      Object.values(columns[type]).forEach(fighterCombats => {
-        arr = arr.concat(fighterCombats);
-      });
+    Object.values(columns).forEach(fighterCombats => {
+      arr = arr.concat(fighterCombats);
     });
     if (combatTypeFilter !== "Tous") {
       arr = arr.filter(c => (c.typeCombat || "").toLowerCase() === combatTypeFilter.toLowerCase());
     }
     return arr;
   }, [columns, combatTypeFilter]);
+
+  // 🔹 Colonnes visibles par étape
   const visibleColumns = useMemo(() => {
     const term = normalizeText(searchTerm.trim());
     return ETAPES.map(etape =>
@@ -106,6 +115,7 @@ const handleToggleOrientation = () => {
         if (colorFilter !== COLOR_ALL && (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()) return false;
         if (term && !(participant.includes(term) || adversaire.includes(term))) return false;
         if (hasLostBefore(c.participant, etape)) return false;
+        if (c.hiddenAfterLoss) return false;
         return c.etape === etape;
       })
     );
@@ -117,7 +127,6 @@ const handleToggleOrientation = () => {
     const now = new Date();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
     const oneHourLaterMinutes = nowMinutes + 60;
-
     return visibleFlat
       .filter(c => c.heure)
       .filter(c => {
@@ -136,56 +145,63 @@ const handleToggleOrientation = () => {
   const countVisibleColor = color =>
     visibleFlat.filter(c => (c.couleur || "").toLowerCase() === color.toLowerCase()).length;
 
-  // Sauvegarde après édition
-  const handleSave = async (participantId, num) => {
-    if (!canEdit) return;
-    const newColumns = { ...columns };
-    Object.keys(newColumns).forEach(type => {
-      newColumns[type] = newColumns[type] || {};
-      Object.keys(newColumns[type]).forEach(fighter => {
-        newColumns[type][fighter] = newColumns[type][fighter].map(c =>
-          c.num === num ? { ...c, ...editValues } : c
-        );
-      });
-    });
-    setColumns(newColumns);
-    setEditingCard(null);
-    setEditValues({});
-    try {
-      const docRef = doc(db, "brackets", participantId);
-      const participantCombats = Object.values(newColumns)
-        .flatMap(t => Object.values(t).flat())
-        .filter(c => c.participant === participantId);
-      await updateDoc(docRef, { combats: participantCombats });
-    } catch (err) {
-      console.error("Erreur updateDoc:", err);
-    }
-  };
+  // 🔹 Sauvegarde après édition
+const handleSave = async (docId, num) => {
+  if (!canEdit) return;
 
-  // Changement de statut Gagné/Perdu
-  const handleStatusChange = async (combat, statutValue) => {
-    if (!canEdit) return;
-    const newColumns = { ...columns };
-    Object.keys(newColumns).forEach(type => {
-      Object.keys(newColumns[type]).forEach(fighter => {
-        newColumns[type][fighter] = newColumns[type][fighter].map(c =>
-          c.num === combat.num ? { ...c, statut: statutValue } : c
-        );
-      });
-    });
-    setColumns(newColumns);
-    try {
-      const docRef = doc(db, "brackets", combat.participant);
-      const participantCombats = Object.values(newColumns)
-        .flatMap(t => Object.values(t).flat())
-        .filter(c => c.participant === combat.participant);
-      await updateDoc(docRef, { combats: participantCombats });
-    } catch (err) {
-      console.error("Erreur updateDoc statut:", err);
-    }
-  };
+  const newColumns = { ...columns };
+  const combats = newColumns[docId] || [];
 
-  // Réinitialiser tous les statuts
+  newColumns[docId] = combats.map(c =>
+    c.num === num ? { ...c, ...editValues } : c
+  );
+
+  setColumns(newColumns);
+  setEditingCard(null);
+  setEditValues({});
+
+  try {
+    const docRef = doc(db, "brackets", docId); // 🔹 Utiliser docId ici
+    await updateDoc(docRef, { combats: newColumns[docId] });
+  } catch (err) {
+    console.error("Erreur updateDoc:", err);
+  }
+};
+
+  // 🔹 Changement de statut Gagné / Perdu
+const handleStatusChange = async (combat, statutValue) => {
+  if (!canEdit) return;
+
+  const newColumns = { ...columns };
+  const currentEtapeIndex = ETAPES.indexOf(combat.etape);
+  const combats = newColumns[combat.docId] || [];
+
+  newColumns[combat.docId] = combats.map(c => {
+    if (c.num === combat.num) c = { ...c, statut: statutValue };
+
+    if (c.participant === combat.participant && statutValue === "perdu") {
+      const etapeIndex = ETAPES.indexOf(c.etape);
+      if (etapeIndex > currentEtapeIndex) return { ...c, hiddenAfterLoss: true };
+    }
+
+    if (c.hiddenAfterLoss && statutValue !== "perdu") {
+      c = { ...c, hiddenAfterLoss: false };
+    }
+
+    return c;
+  });
+
+  setColumns(newColumns);
+
+  try {
+    const docRef = doc(db, "brackets", combat.docId); // 🔹 Utiliser docId ici
+    await updateDoc(docRef, { combats: newColumns[combat.docId] });
+  } catch (err) {
+    console.error("Erreur updateDoc statut:", err);
+  }
+};
+
+  // 🔹 Reset statuts
   const handleResetStatuses = async () => {
     if (!canEdit) return;
     if (!window.confirm("Réinitialiser tous les statuts ?")) return;
@@ -194,16 +210,13 @@ const handleToggleOrientation = () => {
       const snapshot = await getDocs(collection(db, "brackets"));
       const updates = [];
       snapshot.forEach(docSnap => {
-        const combats = (docSnap.data().combats || []).map(c => ({ ...c, statut: "non_joué" }));
+        const combats = (docSnap.data().combats || []).map(c => ({ ...c, statut: "non_joué", hiddenAfterLoss: false }));
         updates.push(updateDoc(doc(db, "brackets", docSnap.id), { combats }));
       });
       await Promise.all(updates);
-
       const newCols = { ...columns };
-      Object.keys(newCols).forEach(type => {
-        Object.keys(newCols[type]).forEach(fighter => {
-          newCols[type][fighter] = newCols[type][fighter].map(c => ({ ...c, statut: "non_joué" }));
-        });
+      Object.keys(newCols).forEach(p => {
+        newCols[p] = newCols[p].map(c => ({ ...c, statut: "non_joué", hiddenAfterLoss: false }));
       });
       setColumns(newCols);
     } catch (err) {
@@ -213,7 +226,8 @@ const handleToggleOrientation = () => {
     }
   };
 
-  // Export PDF
+
+  // 🔹 Export PDF
   const handleExportPDF = () => {
     const doc = new jsPDF("p", "pt");
     const date = new Date().toLocaleDateString("fr-FR");
@@ -221,16 +235,13 @@ const handleToggleOrientation = () => {
     doc.text("Bilan des combats - Bracket", 40, 40);
     doc.setFontSize(10);
     doc.text(`Exporté le ${date}`, 40, 55);
+
     const rows = visibleFlat.map(c => [
-      c.participant,
-      c.adversaire,
-      c.categorie,
-      c.couleur,
+      c.participant, c.adversaire, c.categorie, c.couleur,
       c.statut === "gagné" ? "✅ Gagné" : c.statut === "perdu" ? "❌ Perdu" : "⏳ Non joué",
-      c.heure || "-",
-      c.aire || "-",
-      c.coach || "-"
+      c.heure || "-", c.aire || "-", c.coach || "-"
     ]);
+
     autoTable(doc, {
       head: [["Participant", "Adversaire", "Catégorie", "Couleur", "Statut", "Heure", "Aire", "Coach"]],
       body: rows,
@@ -240,6 +251,7 @@ const handleToggleOrientation = () => {
     });
     doc.save(`bracket_${date}.pdf`);
   };
+
   return (
     <div className="bracket-wrapper">
       {/* Status Banner */}
@@ -248,106 +260,61 @@ const handleToggleOrientation = () => {
       </div>
 
       {/* Controls */}
-{/* Controls */}
-<div className="controls">
-  {/* Ligne filtres type combat (toujours visible) */}
-  <div className="controls-left">
-    <div className="combat-type-filter">
-      {TYPE_COMBATS.map(type => (
-        <button
-          key={type}
-          className={`${type} ${combatTypeFilter === type ? "active" : ""}`}
-          onClick={() => setCombatTypeFilter(type)}
-        >
-          {type}
-        </button>
-      ))}
-    </div>
-  </div>
+      <div className="controls">
+        <div className="controls-left">
+          <div className="combat-type-filter">
+            {TYPE_COMBATS.map(type => (
+              <button key={type} className={`${type} ${combatTypeFilter === type ? "active" : ""}`} onClick={() => setCombatTypeFilter(type)}>
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
 
-  {/* Ligne filtres couleur + étape + recherche + reset/export */}
-  <div className="controls-right">
-    {/* Filtres couleur */}
-    <div className="color-filters">
-      <div
-        className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`}
-        onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}
-      >
-        🔴 {countVisibleColor("Rouge")}
-      </div>
-      <div
-        className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`}
-        onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}
-      >
-        🔵 {countVisibleColor("Bleu")}
-      </div>
-      <div
-        className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`}
-        onClick={() => setColorFilter(COLOR_ALL)}
-      >
-        ⚪ Tous
-      </div>
-    </div>
+        <div className="controls-right">
+          <div className="color-filters">
+            <div className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}>🔴 {countVisibleColor("Rouge")}</div>
+            <div className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}>🔵 {countVisibleColor("Bleu")}</div>
+            <div className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`} onClick={() => setColorFilter(COLOR_ALL)}>⚪ Tous</div>
+          </div>
 
-    {/* Mobile layout: étape + recherche sur la même ligne */}
-    <div className="controls-row">
-      <div className="filter-wrapper">
-        <FaFilter className="icon" />
-        <select
-          className="step-filter"
-          value={stepFilter}
-          onChange={e => setStepFilter(e.target.value)}
-        >
-          <option value="Tous">Toutes les étapes</option>
-          {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
-        </select>
+          <div className="controls-row">
+            <div className="filter-wrapper">
+              <FaFilter className="icon" />
+              <select className="step-filter" value={stepFilter} onChange={e => setStepFilter(e.target.value)}>
+                <option value="Tous">Toutes les étapes</option>
+                {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
+              </select>
+            </div>
+
+            <div className="search-wrapper">
+              <FaSearch className="icon" />
+              <input type="text" className="search-input" placeholder="Rechercher un participant ou adversaire" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+            </div>
+          </div>
+
+          <div className="search-reset-wrapper">
+            <button className="reset-btn" onClick={handleResetStatuses} disabled={!canEdit || loadingReset}>
+              <FaRedo style={{ marginRight: 6 }} />
+              {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
+            </button>
+          </div>
+
+          {canEdit && (
+            <button className="export-btn" onClick={handleExportPDF} disabled={!visibleFlat.length}>
+              📄 Exporter en PDF
+            </button>
+          )}
+
+          {isMobile && (
+            <div className="toggle-orientation">
+              <button onClick={handleToggleOrientation}>
+                {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-
-      <div className="search-wrapper">
-        <FaSearch className="icon" />
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Rechercher un participant ou adversaire"
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-        />
-      </div>
-    </div>
-
-    {/* Bouton réinitialiser sur sa propre ligne */}
-    <div className="search-reset-wrapper">
-      <button
-        className="reset-btn"
-        onClick={handleResetStatuses}
-        disabled={!canEdit || loadingReset}
-      >
-        <FaRedo style={{ marginRight: 6 }} />
-        {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
-      </button>
-    </div>
-
-    {/* Bouton export PDF */}
-    {canEdit && (
-      <button
-        className="export-btn"
-        onClick={handleExportPDF}
-        disabled={!visibleFlat.length}
-      >
-        📄 Exporter en PDF
-      </button>
-    )}
-
-    {/* Mobile : bouton orientation */}
-    {isMobile && (
-      <div className="toggle-orientation">
-        <button onClick={() => setIsVertical(prev => !prev)}>
-          {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
-        </button>
-      </div>
-    )}
-  </div>
-</div>
 
       {/* Main Bracket + Sidebar */}
       <div className="main-bracket-container" style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
@@ -372,7 +339,7 @@ const handleToggleOrientation = () => {
 
         {/* Sidebar */}
         {showSidebar && (
-          <div className="sidebar" style={{ width: "250px", flexShrink: 0 }}>
+          <div className="sidebar" style={{ width: "225px", flexShrink: 0 }}>
             <h3>Combats à venir</h3>
 
             <div className="sidebar-search">
@@ -409,9 +376,10 @@ const handleToggleOrientation = () => {
                 <h3>{ETAPES[colIdx]}</h3>
                 {col.map((combat, idx) => {
                   const isEditing =
-                    editingCard &&
-                    editingCard.participant === combat.participant &&
-                    editingCard.num === combat.num;
+  editingCard &&
+  editingCard.docId === combat.docId &&
+  editingCard.num === combat.num;
+
                   const statutLower = (combat.statut || "").toLowerCase();
 
                   return (
@@ -449,7 +417,7 @@ const handleToggleOrientation = () => {
                             <input list="categories" defaultValue={combat.categorie} onChange={e => setEditValues(s => ({ ...s, categorie: e.target.value }))}/>
                             <datalist id="categories">{categories.map(cat => <option key={cat} value={cat} />)}</datalist>
                             <div className="edit-buttons">
-                              <button onClick={() => handleSave(combat.participant, combat.num)}>✅ Valider</button>
+                              <button onClick={() => handleSave(combat.docId, combat.num)}>✅ Valider</button>
                               <button onClick={() => { setEditingCard(null); setEditValues({}); }}>❌ Annuler</button>
                             </div>
                           </div>
@@ -462,7 +430,7 @@ const handleToggleOrientation = () => {
                               <button className={`btn-win ${statutLower === "gagné" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat,"gagné")}>Gagné</button>
                               <button className={`btn-lose ${statutLower === "perdu" ? "active" : ""}`} onClick={() => canEdit && handleStatusChange(combat,"perdu")}>Perdu</button>
                             </div>
-                            {canEdit && <button className="edit-btn" onClick={() => { setEditingCard({participant:combat.participant,num:combat.num}); setEditValues({...combat}); }}>Modifier</button>}
+                            {canEdit && <button className="edit-btn" onClick={() => { setEditingCard({ docId: combat.docId, num: combat.num }); setEditValues({...combat}); }}>Modifier</button>}
                           </>
                         )}
                       </div>
