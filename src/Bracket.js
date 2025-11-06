@@ -259,62 +259,94 @@ const handleStatusChange = async (combat, statutValue) => {
         {user ? (canEdit ? "✅ Connecté et autorisé" : "⚠️ Connecté en lecture seule") : "🔒 Non connecté"}
       </div>
 
-      {/* Controls */}
-      <div className="controls">
-        <div className="controls-left">
-          <div className="combat-type-filter">
-            {TYPE_COMBATS.map(type => (
-              <button key={type} className={`${type} ${combatTypeFilter === type ? "active" : ""}`} onClick={() => setCombatTypeFilter(type)}>
-                {type}
-              </button>
-            ))}
-          </div>
+{/* Controls */}
+<div className="controls">
+  <div className="controls-left">
+    <div className="combat-type-filter">
+      {TYPE_COMBATS.map(type => (
+        <button
+          key={type}
+          className={`${type} ${combatTypeFilter === type ? "active" : ""}`}
+          onClick={() => setCombatTypeFilter(type)}
+        >
+          {type}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div className="controls-right">
+    {/* Wrapper pour filtres couleur + toggle */}
+    <div className="color-toggle-wrapper">
+      <div className="color-filters">
+        <div
+          className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`}
+          onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}
+        >
+          🔴 {countVisibleColor("Rouge")}
         </div>
-
-        <div className="controls-right">
-          <div className="color-filters">
-            <div className={`color-box rouge ${colorFilter === "Rouge" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")}>🔴 {countVisibleColor("Rouge")}</div>
-            <div className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`} onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}>🔵 {countVisibleColor("Bleu")}</div>
-            <div className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`} onClick={() => setColorFilter(COLOR_ALL)}>⚪ Tous</div>
-          </div>
-
-          <div className="controls-row">
-            <div className="filter-wrapper">
-              <FaFilter className="icon" />
-              <select className="step-filter" value={stepFilter} onChange={e => setStepFilter(e.target.value)}>
-                <option value="Tous">Toutes les étapes</option>
-                {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
-              </select>
-            </div>
-
-            <div className="search-wrapper">
-              <FaSearch className="icon" />
-              <input type="text" className="search-input" placeholder="Rechercher un participant ou adversaire" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-            </div>
-          </div>
-
-          <div className="search-reset-wrapper">
-            <button className="reset-btn" onClick={handleResetStatuses} disabled={!canEdit || loadingReset}>
-              <FaRedo style={{ marginRight: 6 }} />
-              {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
-            </button>
-          </div>
-
-          {canEdit && (
-            <button className="export-btn" onClick={handleExportPDF} disabled={!visibleFlat.length}>
-              📄 Exporter en PDF
-            </button>
-          )}
-
-          {isMobile && (
-            <div className="toggle-orientation">
-              <button onClick={handleToggleOrientation}>
-                {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
-              </button>
-            </div>
-          )}
+        <div
+          className={`color-box bleu ${colorFilter === "Bleu" ? "active" : ""}`}
+          onClick={() => setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")}
+        >
+          🔵 {countVisibleColor("Bleu")}
+        </div>
+        <div
+          className={`color-box tous ${colorFilter === COLOR_ALL ? "active" : ""}`}
+          onClick={() => setColorFilter(COLOR_ALL)}
+        >
+          ⚪ Tous
         </div>
       </div>
+
+      {isMobile && (
+        <div className="toggle-orientation">
+          <button onClick={handleToggleOrientation}>
+            {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+          </button>
+        </div>
+      )}
+    </div>
+
+    <div className="controls-row">
+      <div className="filter-wrapper">
+        <FaFilter className="icon" />
+        <select
+          className="step-filter"
+          value={stepFilter}
+          onChange={e => setStepFilter(e.target.value)}
+        >
+          <option value="Tous">Toutes les étapes</option>
+          {ETAPES.map(et => <option key={et} value={et}>{et}</option>)}
+        </select>
+      </div>
+
+      <div className="search-wrapper">
+        <FaSearch className="icon" />
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Rechercher un participant ou adversaire"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
+      </div>
+    </div>
+
+    <div className="search-reset-wrapper">
+      <button className="reset-btn" onClick={handleResetStatuses} disabled={!canEdit || loadingReset}>
+        <FaRedo style={{ marginRight: 6 }} />
+        {loadingReset ? "Réinitialisation..." : "Réinitialiser les statuts"}
+      </button>
+    </div>
+
+    {canEdit && (
+      <button className="export-btn" onClick={handleExportPDF} disabled={!visibleFlat.length}>
+        📄 Exporter en PDF
+      </button>
+    )}
+  </div>
+</div>
 
       {/* Main Bracket + Sidebar */}
       <div className="main-bracket-container" style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>

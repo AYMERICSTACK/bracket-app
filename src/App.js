@@ -13,6 +13,8 @@ const ALLOWED_UIDS = [
 export default function App() {
   const [user, setUser] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
   const auth = getAuth();
   const nodeRef = useRef(null);
 
@@ -23,10 +25,28 @@ export default function App() {
     return () => unsubscribe();
   }, [auth]);
 
+  // Gestion du scroll pour le bouton "Back to Top"
+  const handleScroll = () => {
+    if (window.scrollY > 300) {
+      setShowScrollTop(true);
+    } else {
+      setShowScrollTop(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleLogout = async () => {
     await signOut(auth);
     setUser(null);
-    setShowLogin(false); // fermeture automatique de la pop-up
+    setShowLogin(false);
   };
 
   const isAuthorized = user && ALLOWED_UIDS.includes(user.uid);
@@ -34,40 +54,37 @@ export default function App() {
   return (
     <div>
       {/* Bandeau connexion */}
-<div className="top-banner-modern">
-  <div className="banner-left">
-    {user ? (
-      isAuthorized ? (
-        <span className="status authorized">✅ Connecté & autorisé</span>
-      ) : (
-        <span className="status connected">⚠️ Connecté</span>
-      )
-    ) : (
-      <span className="status guest">👋 Bienvenue</span>
-    )}
-  </div>
+      <div className="top-banner-modern">
+        <div className="banner-left">
+          {user ? (
+            isAuthorized ? (
+              <span className="status authorized">✅ Connecté & autorisé</span>
+            ) : (
+              <span className="status connected">⚠️ Connecté</span>
+            )
+          ) : (
+            <span className="status guest">👋 Bienvenue</span>
+          )}
+        </div>
 
-  <div className="banner-center">
-    <span>🏆 Tableau des combats</span>
-  </div>
+        <div className="banner-center">
+          <span>🏆 Tableau des combats</span>
+        </div>
 
-  <div className="banner-right">
-    {user ? (
-      <button className="btn-logout" onClick={handleLogout}>
-        🔒 Déconnexion
-      </button>
-    ) : (
-      <button className="btn-login" onClick={() => setShowLogin(true)}>
-        🔑 Connexion coach
-      </button>
-    )}
-  </div>
-</div>
+        <div className="banner-right">
+          {user ? (
+            <button className="btn-logout" onClick={handleLogout}>
+              🔒 Déconnexion
+            </button>
+          ) : (
+            <button className="btn-login" onClick={() => setShowLogin(true)}>
+              🔑 Connexion coach
+            </button>
+          )}
+        </div>
+      </div>
 
-
-
-
-      {/* Affichage d’un lien Retour si pas connecté */}
+      {/* Lien Retour */}
       {!user && showLogin && (
         <div style={{ textAlign: "center", marginBottom: "10px" }}>
           🔙{" "}
@@ -146,6 +163,14 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Bouton "Back to Top" animé */}
+      {showScrollTop && (
+        <button className="scroll-to-top" onClick={scrollToTop}>
+          ⬆️
+          <span className="pulse"></span>
+        </button>
       )}
     </div>
   );
