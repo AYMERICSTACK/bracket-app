@@ -167,10 +167,20 @@ export default function App() {
 
       {/* Bouton "Back to Top" animé */}
       {showScrollTop && (
-        <button className="scroll-to-top" onClick={scrollToTop}>
-          ⬆️
-          <span className="pulse"></span>
-        </button>
+<button className="scroll-to-top" onClick={scrollToTop}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="scroll-icon"
+  >
+    <polyline points="18 15 12 9 6 15" />
+  </svg>
+</button>
       )}
     </div>
   );

@@ -389,7 +389,11 @@ const handleStatusChange = async (combat, statutValue) => {
                 <div key={`${c.participant}-${c.num}`} className="sidebar-combat">
                   <div>
                     <strong>{c.heure}</strong> - 
-                    <span className={`helmet ${c.couleur?.toLowerCase()}`}></span>
+                    <img
+  src={c.couleur === "Rouge" ? "/images/casque_rouge.png" : "/images/casque_bleu.png"}
+  alt={c.couleur}
+  className="helmet-icon"
+/>
                     {c.participant} vs {c.adversaire}
                   </div>
                   <div>Catégorie: {c.categorie} | Aire {c.aire}</div>
@@ -437,7 +441,11 @@ const handleStatusChange = async (combat, statutValue) => {
                             <input defaultValue={combat.participant} disabled />
                             <input defaultValue={combat.adversaire} onChange={e => setEditValues(s => ({ ...s, adversaire: e.target.value }))}/>
                             <input defaultValue={combat.num} onChange={e => setEditValues(s => ({ ...s, num: e.target.value }))}/>
-                            <input defaultValue={combat.heure} onChange={e => setEditValues(s => ({ ...s, heure: e.target.value }))}/>
+                            <input
+  type="time"
+  defaultValue={combat.heure}
+  onChange={e => setEditValues(s => ({ ...s, heure: e.target.value }))}
+/>
                             <input defaultValue={combat.aire} onChange={e => setEditValues(s => ({ ...s, aire: e.target.value }))}/>
                             <select defaultValue={combat.couleur} onChange={e => setEditValues(s => ({ ...s, couleur: e.target.value }))}>
                               <option value="Rouge">Rouge</option>

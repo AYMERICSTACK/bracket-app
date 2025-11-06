@@ -766,3 +766,14 @@
     -moz-appearance: none;
   }
 }
+/* Casques ou pastilles de couleur dans la sidebar */
+.helmet-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+  margin-right: 8px;
+  vertical-align: middle;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
