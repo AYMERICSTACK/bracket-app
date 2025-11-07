@@ -645,7 +645,7 @@ export default function Bracket({ user }) {
                               }
                             >
                               {[
-                                "Mélanie",
+                                "Julien",
                                 "Nadège",
                                 "Christophe",
                                 "Guillaume",
