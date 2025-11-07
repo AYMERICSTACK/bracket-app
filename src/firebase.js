@@ -1,11 +1,7 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { 
-  getAuth, 
-  GoogleAuthProvider,
-  EmailAuthProvider 
-} from "firebase/auth";
+import { getAuth, GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqmV4cGPR5ukBSQvormWognk6YwMVmAYY",
@@ -13,7 +9,7 @@ const firebaseConfig = {
   projectId: "bracketapp-48387",
   storageBucket: "bracketapp-48387.firebasestorage.app",
   messagingSenderId: "968998996438",
-  appId: "1:968998996438:web:0bb15e61b7ebfe2eeabc77"
+  appId: "1:968998996438:web:0bb15e61b7ebfe2eeabc77",
 };
 
 const app = initializeApp(firebaseConfig);

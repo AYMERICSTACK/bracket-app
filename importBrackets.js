@@ -10,7 +10,7 @@ const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
 
 // 🔹 Initialisation Admin
 initializeApp({
-  credential: cert(serviceAccount)
+  credential: cert(serviceAccount),
 });
 
 const db = getFirestore();
@@ -19,14 +19,14 @@ const db = getFirestore();
 const bracketsDataPath = path.resolve("public/brackets.json");
 const bracketsData = JSON.parse(fs.readFileSync(bracketsDataPath, "utf8"));
 
-// 🔹 Sauvegarde avant import (sécurité)
+// 🔹 Sauvegarde de la collection actuelle
 async function backupBrackets() {
   console.log("💾 Sauvegarde de la collection 'brackets'...");
 
   const snapshot = await db.collection("brackets").get();
   const backupData = {};
 
-  snapshot.forEach(docSnap => {
+  snapshot.forEach((docSnap) => {
     backupData[docSnap.id] = docSnap.data();
   });
 
@@ -36,9 +36,22 @@ async function backupBrackets() {
   console.log(`✅ Sauvegarde créée → ${backupPath}`);
 }
 
+// 🔹 Suppression de tous les documents existants
+async function clearBrackets() {
+  console.log("🗑 Suppression de tous les documents de 'brackets'...");
+  const snapshot = await db.collection("brackets").get();
+  const batch = db.batch();
+
+  snapshot.forEach((docSnap) => batch.delete(docSnap.ref));
+
+  await batch.commit();
+  console.log("✅ Tous les documents existants ont été supprimés.");
+}
+
 // 🔹 Import principal
 async function importBrackets() {
   await backupBrackets();
+  await clearBrackets();
 
   console.log("🔄 Import des données des brackets...");
 
@@ -48,17 +61,15 @@ async function importBrackets() {
     for (const participant in participants) {
       const combats = participants[participant];
 
-      // On sauvegarde dans une sous-collection structurée
-      await db
-        .collection("brackets")
-        .doc(`${discipline}_${participant}`) // ex: KickLight_Alban
-        .set({
-          discipline,
-          participant,
-          combats
-        });
+      await db.collection("brackets").doc(`${discipline}_${participant}`).set({
+        discipline,
+        participant,
+        combats,
+      });
 
-      console.log(`✅ ${participant} importé dans ${discipline}`);
+      console.log(
+        `✅ ${participant} importé dans ${discipline} (${combats.length} combats)`
+      );
     }
   }
 
@@ -66,4 +77,6 @@ async function importBrackets() {
 }
 
 // 🔹 Exécution
-importBrackets().catch(err => console.error("❌ Erreur lors de l’import :", err));
+importBrackets().catch((err) =>
+  console.error("❌ Erreur lors de l’import :", err)
+);
