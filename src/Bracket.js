@@ -44,7 +44,6 @@ export default function Bracket({ user }) {
   const [showSidebar, setShowSidebar] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(mobileQuery.matches);
   const [searchUpcoming, setSearchUpcoming] = useState("");
-  const now = new Date(); // Déclare `now` en dehors de la boucle
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
 
@@ -507,7 +506,6 @@ export default function Bracket({ user }) {
               : "Afficher les combats à venir"}
           </button>
         )}
-
         {/* Sidebar */}
         {showSidebar && (
           <div className="sidebar" style={{ width: "225px", flexShrink: 0 }}>
@@ -522,61 +520,66 @@ export default function Bracket({ user }) {
               />
             </div>
 
-            {upcomingCombats
-              .filter((c) => {
-                const now = new Date();
-                const [hour, minute] = c.time.split(":").map(Number);
-                const combatTime = new Date(c.date);
-                combatTime.setHours(hour);
-                combatTime.setMinutes(minute);
+            {/* Déclaration de `now` une seule fois en haut de la logique */}
+            {(() => {
+              const now = new Date(); // Date actuelle
 
-                // Vérifie si l'heure du combat est déjà passée (en retard)
-                const isLate = combatTime < now;
+              return upcomingCombats
+                .filter((c) => {
+                  const [hour, minute] = c.time.split(":").map(Number);
+                  const combatTime = new Date(c.date);
+                  combatTime.setHours(hour);
+                  combatTime.setMinutes(minute);
 
-                // On exclut les combats avec un statut 'gagné' ou 'perdu'
-                return (
-                  (!searchUpcoming ||
-                    c.participant
-                      .toLowerCase()
-                      .includes(searchUpcoming.toLowerCase())) &&
-                  c.statut !== "gagné" &&
-                  c.statut !== "perdu" // Filtrer les combats terminés
-                );
-              })
-              .map((c) => {
-                const now = new Date();
-                const [hour, minute] = c.time.split(":").map(Number);
-                const combatTime = new Date(c.date);
-                combatTime.setHours(hour);
-                combatTime.setMinutes(minute);
+                  // Vérifie si l'heure du combat est déjà passée (en retard)
+                  const isLate = combatTime < now;
 
-                // Vérifie si l'heure du combat est déjà passée (en retard)
-                const isLate = combatTime < now;
+                  // Exclure les combats "gagné" ou "perdu" et filtrer par participant
+                  return (
+                    (!searchUpcoming ||
+                      c.participant
+                        .toLowerCase()
+                        .includes(searchUpcoming.toLowerCase())) &&
+                    c.statut !== "gagné" &&
+                    c.statut !== "perdu"
+                  );
+                })
+                .map((c) => {
+                  const [hour, minute] = c.time.split(":").map(Number);
+                  const combatTime = new Date(c.date);
+                  combatTime.setHours(hour);
+                  combatTime.setMinutes(minute);
 
-                return (
-                  <div
-                    key={`${c.participant}-${c.num}`}
-                    className={`sidebar-combat ${isLate ? "late-combat" : ""}`} // Classe pour les combats en retard
-                  >
-                    <div>
-                      <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
-                      <img
-                        src={
-                          c.couleur === "Rouge"
-                            ? "/images/casque_rouge.png"
-                            : "/images/casque_bleu.png"
-                        }
-                        alt={c.couleur}
-                        className="helmet-icon"
-                      />
-                      {c.participant} vs {c.adversaire}
+                  // Vérifie si le combat est en retard
+                  const isLate = combatTime < now;
+
+                  return (
+                    <div
+                      key={`${c.participant}-${c.num}`}
+                      className={`sidebar-combat ${
+                        isLate ? "late-combat" : ""
+                      }`} // Classe pour les combats en retard
+                    >
+                      <div>
+                        <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
+                        <img
+                          src={
+                            c.couleur === "Rouge"
+                              ? "/images/casque_rouge.png"
+                              : "/images/casque_bleu.png"
+                          }
+                          alt={c.couleur}
+                          className="helmet-icon"
+                        />
+                        {c.participant} vs {c.adversaire}
+                      </div>
+                      <div>
+                        Catégorie: {c.categorie} | Aire {c.aire}
+                      </div>
                     </div>
-                    <div>
-                      Catégorie: {c.categorie} | Aire {c.aire}
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                });
+            })()}
           </div>
         )}
 
