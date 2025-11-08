@@ -1,0 +1,975 @@
+{
+  "K1Light_Alban": {
+    "discipline": "K1Light",
+    "participant": "Alban",
+    "combats": [
+      {
+        "etape": "Demi",
+        "num": "combat 29",
+        "typeCombat": "K1Light",
+        "adversaire": "Szemendera Willy",
+        "couleur": "Rouge",
+        "aire": "9",
+        "participant": "Alban",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-74kg",
+        "date": "2025-11-09",
+        "time": "13:36"
+      },
+      {
+        "etape": "Finale",
+        "num": "combat 39",
+        "typeCombat": "K1Light",
+        "adversaire": "Vainqueur combat 28",
+        "couleur": "Bleu",
+        "aire": "9",
+        "participant": "Alban",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-74kg",
+        "date": "2025-11-09",
+        "time": "15:17"
+      }
+    ]
+  },
+  "K1Light_Gabriel": {
+    "discipline": "K1Light",
+    "participant": "Gabriel",
+    "combats": [
+      {
+        "etape": "Finale",
+        "num": "combat 30",
+        "typeCombat": "K1Light",
+        "adversaire": "Zeghoual Mouhamed",
+        "couleur": "Bleu",
+        "aire": "7",
+        "participant": "Gabriel",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-42kg",
+        "date": "2025-11-09",
+        "time": "14:09"
+      }
+    ]
+  },
+  "K1Light_Joris": {
+    "discipline": "K1Light",
+    "participant": "Joris",
+    "combats": [
+      {
+        "aire": "9",
+        "date": "2025-11-09",
+        "categorie": "-69kg",
+        "etape": "Demi",
+        "coach": "Julien",
+        "adversaire": "Blanchard Solal",
+        "num": "combat 27",
+        "statut": "perdu",
+        "typeCombat": "K1Light",
+        "couleur": "Rouge",
+        "participant": "Joris",
+        "time": "13:11",
+        "docId": "K1Light_Joris"
+      },
+      {
+        "participant": "Joris",
+        "typeCombat": "K1Light",
+        "aire": "9",
+        "adversaire": "Vainqueur combat 26",
+        "num": "combat 38",
+        "categorie": "-69kg",
+        "date": "2025-11-09",
+        "etape": "Finale",
+        "statut": "En attente",
+        "couleur": "Bleu",
+        "time": "15:04",
+        "coach": "Julien",
+        "docId": "K1Light_Joris",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "K1Light_Léony": {
+    "discipline": "K1Light",
+    "participant": "Léony",
+    "combats": [
+      {
+        "etape": "Demi",
+        "num": "combat 22",
+        "typeCombat": "K1Light",
+        "adversaire": "Bouriala Hind",
+        "couleur": "Bleu",
+        "aire": "9",
+        "participant": "Léony",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-37kg",
+        "date": "2025-11-09",
+        "time": "12:23"
+      },
+      {
+        "etape": "Finale",
+        "num": "combat 36",
+        "typeCombat": "K1Light",
+        "adversaire": "Vainqueur combat 23",
+        "couleur": "Rouge",
+        "aire": "9",
+        "participant": "Léony",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-37kg",
+        "date": "2025-11-09",
+        "time": "14:46"
+      }
+    ]
+  },
+  "K1Light_Nadège": {
+    "discipline": "K1Light",
+    "participant": "Nadège",
+    "combats": [
+      {
+        "couleur": "Rouge",
+        "typeCombat": "K1Light",
+        "aire": "6",
+        "participant": "Nadège",
+        "statut": "perdu",
+        "etape": "Demi",
+        "time": "11:09",
+        "adversaire": "Barathay Laetitia",
+        "coach": "Christophe",
+        "num": "combat 15",
+        "date": "2025-11-09",
+        "docId": "K1Light_Nadège",
+        "categorie": "-60kg"
+      },
+      {
+        "categorie": "-60kg",
+        "typeCombat": "K1Light",
+        "docId": "K1Light_Nadège",
+        "adversaire": "Palladino Emilie",
+        "coach": "Nadège",
+        "num": "combat 34",
+        "participant": "Nadège",
+        "date": "2025-11-09",
+        "aire": "6",
+        "couleur": "Rouge",
+        "time": "14:11",
+        "etape": "Finale",
+        "statut": "En attente",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "K1Light_Valentin": {
+    "discipline": "K1Light",
+    "participant": "Valentin",
+    "combats": [
+      {
+        "participant": "Valentin",
+        "etape": "Demi",
+        "couleur": "Bleu",
+        "time": "10:57",
+        "statut": "perdu",
+        "typeCombat": "K1Light",
+        "coach": "Julien",
+        "aire": "6",
+        "adversaire": "Bouraghda Younes",
+        "categorie": "-63kg",
+        "num": "combat 14",
+        "date": "2025-11-09",
+        "docId": "K1Light_Valentin"
+      },
+      {
+        "num": "combat 33",
+        "time": "13:58",
+        "typeCombat": "K1Light",
+        "participant": "Valentin",
+        "statut": "En attente",
+        "etape": "Finale",
+        "date": "2025-11-09",
+        "categorie": "-63kg",
+        "coach": "Julien",
+        "adversaire": "Jury Julien",
+        "aire": "6",
+        "couleur": "Rouge",
+        "docId": "K1Light_Valentin",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Alban": {
+    "discipline": "KickLight",
+    "participant": "Alban",
+    "combats": [
+      {
+        "coach": "Guillaume",
+        "couleur": "Rouge",
+        "time": "11:22",
+        "adversaire": "Lachenal Edouard",
+        "categorie": "-79kg",
+        "statut": "perdu",
+        "num": "combat 9",
+        "typeCombat": "KickLight",
+        "aire": "2",
+        "date": "2025-11-08",
+        "participant": "Alban",
+        "etape": "Quart",
+        "docId": "KickLight_Alban"
+      },
+      {
+        "statut": "En attente",
+        "typeCombat": "KickLight",
+        "aire": "2",
+        "coach": "Guillaume",
+        "time": "15:44",
+        "etape": "Demi",
+        "adversaire": "Jiquel Gérard",
+        "participant": "Alban",
+        "categorie": "-79kg",
+        "date": "2025-11-08",
+        "couleur": "Rouge",
+        "num": "combat 33",
+        "docId": "KickLight_Alban",
+        "hiddenAfterLoss": true
+      },
+      {
+        "date": "2025-11-08",
+        "statut": "En attente",
+        "couleur": "Rouge",
+        "categorie": "-79kg",
+        "aire": "2",
+        "participant": "Alban",
+        "coach": "Guillaume",
+        "time": "19:37",
+        "num": "combat 55",
+        "typeCombat": "KickLight",
+        "etape": "Finale",
+        "adversaire": "Vainqueur combat 34",
+        "docId": "KickLight_Alban",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Alicia": {
+    "discipline": "KickLight",
+    "participant": "Alicia",
+    "combats": [
+      {
+        "aire": "5",
+        "statut": "gagné",
+        "typeCombat": "KickLight",
+        "date": "2025-11-08",
+        "adversaire": "Kilic Ilem",
+        "etape": "Finale",
+        "participant": "Alicia",
+        "categorie": "-42kg",
+        "time": "18:00",
+        "docId": "KickLight_Alicia",
+        "couleur": "Rouge",
+        "num": "combat 54",
+        "coach": "Nadège"
+      }
+    ]
+  },
+  "KickLight_Arthur": {
+    "discipline": "KickLight",
+    "participant": "Arthur",
+    "combats": [
+      {
+        "couleur": "Bleu",
+        "typeCombat": "KickLight",
+        "aire": "5",
+        "num": "combat 36",
+        "participant": "Arthur",
+        "date": "2025-11-08",
+        "time": "15:15",
+        "etape": "Demi",
+        "coach": "Christophe",
+        "docId": "KickLight_Arthur",
+        "adversaire": "Benafitou Slimen",
+        "statut": "gagné",
+        "categorie": "-57kg"
+      },
+      {
+        "date": "2025-11-08",
+        "aire": "5",
+        "docId": "KickLight_Arthur",
+        "etape": "Finale",
+        "adversaire": "Belhoucine Fahim",
+        "num": "combat 60",
+        "participant": "Arthur",
+        "statut": "gagné",
+        "typeCombat": "KickLight",
+        "time": "19:14",
+        "coach": "Christophe",
+        "couleur": "Rouge",
+        "categorie": "-57kg"
+      }
+    ]
+  },
+  "KickLight_Bilel": {
+    "discipline": "KickLight",
+    "participant": "Bilel",
+    "combats": [
+      {
+        "etape": "8ème",
+        "docId": "KickLight_Bilel",
+        "adversaire": "Hachoum Rayan",
+        "participant": "Bilel",
+        "coach": "Guillaume",
+        "aire": "5",
+        "time": "10:27",
+        "statut": "gagné",
+        "num": "combat 4",
+        "typeCombat": "KickLight",
+        "date": "2025-11-08",
+        "couleur": "Bleu",
+        "categorie": "-52kg"
+      },
+      {
+        "num": "combat 27",
+        "typeCombat": "KickLight",
+        "adversaire": "Djelloud Younes",
+        "coach": "Guillaume",
+        "aire": "5",
+        "participant": "Bilel",
+        "couleur": "Rouge",
+        "docId": "KickLight_Bilel",
+        "categorie": "-52kg",
+        "time": "13:54",
+        "etape": "Quart",
+        "statut": "perdu",
+        "date": "2025-11-08"
+      },
+      {
+        "typeCombat": "KickLight",
+        "aire": "5",
+        "couleur": "Bleu",
+        "statut": "En attente",
+        "num": "combat 49",
+        "participant": "Bilel",
+        "coach": "Guillaume",
+        "etape": "Demi",
+        "time": "17h15",
+        "date": "2025-11-08",
+        "adversaire": "Vainqueur combat 26",
+        "categorie": "-52kg",
+        "docId": "KickLight_Bilel",
+        "hiddenAfterLoss": true
+      },
+      {
+        "etape": "Finale",
+        "couleur": "Rouge",
+        "categorie": "-52kg",
+        "time": "20:21",
+        "aire": "5",
+        "docId": "KickLight_Bilel",
+        "typeCombat": "KickLight",
+        "participant": "Bilel",
+        "statut": "En attente",
+        "date": "2025-11-08",
+        "coach": "Guillaume",
+        "num": "combat 67",
+        "adversaire": "Vainqueur combat 50",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Gabriel": {
+    "discipline": "KickLight",
+    "participant": "Gabriel",
+    "combats": [
+      {
+        "date": "2025-11-08",
+        "categorie": "-57kg",
+        "num": "combat 25",
+        "typeCombat": "KickLight",
+        "etape": "Quart",
+        "coach": "Guillaume",
+        "statut": "perdu",
+        "time": "13:36",
+        "couleur": "Bleu",
+        "aire": "4",
+        "participant": "Gabriel",
+        "adversaire": "Vainqueur combat 4",
+        "docId": "KickLight_Gabriel"
+      },
+      {
+        "date": "2025-11-08",
+        "time": "17:08",
+        "etape": "Demi",
+        "aire": "4",
+        "statut": "En attente",
+        "couleur": "Bleu",
+        "typeCombat": "KickLight",
+        "coach": "Guillaume",
+        "num": "combat 47",
+        "categorie": "-57kg",
+        "adversaire": "Vainqueur combat 24",
+        "participant": "Gabriel",
+        "docId": "KickLight_Gabriel",
+        "hiddenAfterLoss": true
+      },
+      {
+        "categorie": "-57kg",
+        "couleur": "Rouge",
+        "num": "combat 66",
+        "time": "20:16",
+        "etape": "Finale",
+        "coach": "Guillaume",
+        "participant": "Gabriel",
+        "date": "2025-11-08",
+        "typeCombat": "KickLight",
+        "statut": "En attente",
+        "aire": "4",
+        "adversaire": "Vainqueur combat 48",
+        "docId": "KickLight_Gabriel",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Iona": {
+    "discipline": "KickLight",
+    "participant": "Iona",
+    "combats": [
+      {
+        "typeCombat": "KickLight",
+        "date": "2025-11-08",
+        "time": "15:43",
+        "categorie": "+70kg",
+        "adversaire": "Dellinger Kimberly",
+        "num": "combat 38",
+        "aire": "4",
+        "coach": "Nadège",
+        "participant": "Iona",
+        "statut": "perdu",
+        "couleur": "Bleu",
+        "etape": "Demi",
+        "docId": "KickLight_Iona"
+      },
+      {
+        "statut": "En attente",
+        "categorie": "+70kg",
+        "date": "2025-11-08",
+        "time": "19:28",
+        "adversaire": "Vainqueur combat 37",
+        "aire": "4",
+        "etape": "Finale",
+        "coach": "Nadège",
+        "participant": "Iona",
+        "couleur": "Bleu",
+        "num": "combat 61",
+        "typeCombat": "KickLight",
+        "docId": "KickLight_Iona",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Joris": {
+    "discipline": "KickLight",
+    "participant": "Joris",
+    "combats": [
+      {
+        "etape": "8ème",
+        "statut": "gagné",
+        "couleur": "Bleu",
+        "docId": "KickLight_Joris",
+        "aire": "2",
+        "time": "10:00",
+        "coach": "Julien",
+        "date": "2025-11-08",
+        "categorie": "-69kg",
+        "participant": "Joris",
+        "typeCombat": "KickLight",
+        "adversaire": "Nardiello Lucio",
+        "num": "combat 1"
+      },
+      {
+        "num": "combat 16",
+        "date": "2025-11-08",
+        "categorie": "-69kg",
+        "statut": "gagné",
+        "docId": "KickLight_Joris",
+        "aire": "2",
+        "participant": "Joris",
+        "adversaire": "Bouraghda Ilyesse",
+        "coach": "Julien",
+        "etape": "Quart",
+        "couleur": "Rouge",
+        "time": "12:43",
+        "typeCombat": "KickLight"
+      },
+      {
+        "num": "combat 39",
+        "adversaire": "Vainqueur combat 17",
+        "coach": "Julien",
+        "categorie": "-69kg",
+        "docId": "KickLight_Joris",
+        "participant": "Joris",
+        "couleur": "Rouge",
+        "date": "2025-11-08",
+        "typeCombat": "KickLight",
+        "statut": "perdu",
+        "aire": "2",
+        "time": "16:52",
+        "etape": "Demi"
+      },
+      {
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 40",
+        "date": "2025-11-08",
+        "docId": "KickLight_Joris",
+        "time": "20:11",
+        "num": "combat 58",
+        "couleur": "Rouge",
+        "participant": "Joris",
+        "etape": "Finale",
+        "coach": "Julien",
+        "aire": "2",
+        "categorie": "-69kg",
+        "statut": "En attente",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Léony": {
+    "discipline": "KickLight",
+    "participant": "Léony",
+    "combats": [
+      {
+        "participant": "Léony",
+        "etape": "Quart",
+        "coach": "Christophe",
+        "num": "combat 14",
+        "couleur": "Bleu",
+        "aire": "5",
+        "typeCombat": "KickLight",
+        "categorie": "-37kg",
+        "statut": "perdu",
+        "date": "2025-11-08",
+        "adversaire": "Bouriala Hind",
+        "time": "11:57",
+        "docId": "KickLight_Léony"
+      },
+      {
+        "categorie": "-37kg",
+        "coach": "Christophe",
+        "couleur": "Rouge",
+        "statut": "En attente",
+        "typeCombat": "KickLight",
+        "etape": "Demi",
+        "participant": "Léony",
+        "date": "2025-11-08",
+        "adversaire": "Tanriverdi Zeynep",
+        "aire": "5",
+        "time": "15:45",
+        "num": "combat 39",
+        "docId": "KickLight_Léony",
+        "hiddenAfterLoss": true
+      },
+      {
+        "date": "2025-11-08",
+        "aire": "5",
+        "couleur": "Rouge",
+        "categorie": "-37kg",
+        "time": "19:36",
+        "adversaire": "Vainqueur combat 40",
+        "typeCombat": "KickLight",
+        "etape": "Finale",
+        "statut": "En attente",
+        "num": "combat 62",
+        "participant": "Léony",
+        "coach": "Christophe",
+        "docId": "KickLight_Léony",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Mathis": {
+    "discipline": "KickLight",
+    "participant": "Mathis",
+    "combats": [
+      {
+        "docId": "KickLight_Mathis",
+        "coach": "Guillaume",
+        "typeCombat": "KickLight",
+        "participant": "Mathis",
+        "couleur": "Bleu",
+        "date": "2025-11-08",
+        "adversaire": "Collion Emilien",
+        "time": "12:43",
+        "categorie": "-74kg",
+        "statut": "gagné",
+        "etape": "Quart",
+        "aire": "3",
+        "num": "combat 16"
+      },
+      {
+        "aire": "3",
+        "statut": "perdu",
+        "date": "2025-11-08",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 15",
+        "etape": "Demi",
+        "categorie": "-74kg",
+        "participant": "Mathis",
+        "docId": "KickLight_Mathis",
+        "time": "16:50",
+        "couleur": "Bleu",
+        "num": "combat 40",
+        "coach": "Guillaume"
+      },
+      {
+        "date": "2025-11-08",
+        "participant": "Mathis",
+        "typeCombat": "KickLight",
+        "couleur": "Bleu",
+        "categorie": "-74kg",
+        "num": "combat 58",
+        "docId": "KickLight_Mathis",
+        "aire": "3",
+        "adversaire": "Vainqueur combat 39",
+        "coach": "Guillaume",
+        "etape": "Finale",
+        "statut": "En attente",
+        "time": "20:15",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Rémy": {
+    "discipline": "KickLight",
+    "participant": "Rémy",
+    "combats": [
+      {
+        "time": "13:24",
+        "docId": "KickLight_Rémy",
+        "statut": "gagné",
+        "date": "2025-11-08",
+        "aire": "1",
+        "categorie": "-63kg",
+        "num": "combat 20",
+        "adversaire": "Souzy Paul",
+        "participant": "Rémy",
+        "coach": "Christophe",
+        "couleur": "Bleu",
+        "etape": "Quart",
+        "typeCombat": "KickLight"
+      },
+      {
+        "participant": "Rémy",
+        "statut": "gagné",
+        "docId": "KickLight_Rémy",
+        "adversaire": "Vainqueur combat 19",
+        "coach": "Christophe",
+        "date": "2025-11-08",
+        "aire": "1",
+        "etape": "Demi",
+        "time": "17:02",
+        "num": "combat 42",
+        "couleur": "Bleu",
+        "typeCombat": "KickLight",
+        "categorie": "-63kg"
+      },
+      {
+        "date": "2025-11-08",
+        "num": "combat 60",
+        "couleur": "Rouge",
+        "aire": "1",
+        "statut": "gagné",
+        "categorie": "-63kg",
+        "coach": "Christophe",
+        "time": "20:29",
+        "typeCombat": "KickLight",
+        "etape": "Finale",
+        "docId": "KickLight_Rémy",
+        "adversaire": "Vainqueur combat 43",
+        "participant": "Rémy"
+      }
+    ]
+  },
+  "KickLight_Sacha": {
+    "discipline": "KickLight",
+    "participant": "Sacha",
+    "combats": [
+      {
+        "docId": "KickLight_Sacha",
+        "couleur": "Bleu",
+        "typeCombat": "KickLight",
+        "categorie": "-69kg",
+        "aire": "3",
+        "coach": "Julien",
+        "statut": "gagné",
+        "etape": "Quart",
+        "time": "13:56",
+        "num": "combat 23",
+        "participant": "Sacha",
+        "date": "2025-11-08",
+        "adversaire": "Vainqueur combat 5"
+      },
+      {
+        "aire": "3",
+        "participant": "Sacha",
+        "statut": "perdu",
+        "date": "2025-11-08",
+        "num": "combat 44",
+        "adversaire": "Vainqueur combat 24",
+        "categorie": "-69kg",
+        "typeCombat": "KickLight",
+        "coach": "Julien",
+        "docId": "KickLight_Sacha",
+        "etape": "Demi",
+        "time": "17:33",
+        "couleur": "Rouge"
+      },
+      {
+        "coach": "Guillaume",
+        "couleur": "Bleu",
+        "aire": "3",
+        "num": "combat 60",
+        "docId": "KickLight_Sacha",
+        "participant": "Sacha",
+        "typeCombat": "KickLight",
+        "statut": "En attente",
+        "etape": "Finale",
+        "categorie": "-69kg",
+        "date": "2025-11-08",
+        "time": "20:37",
+        "adversaire": "Vainqueur combat 43",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Samra": {
+    "discipline": "KickLight",
+    "participant": "Samra",
+    "combats": [
+      {
+        "participant": "Samra",
+        "date": "2025-11-08",
+        "categorie": "-55kg",
+        "time": "11:28",
+        "aire": "1",
+        "etape": "Quart",
+        "num": "combat 10",
+        "coach": "Nadège",
+        "couleur": "Bleu",
+        "statut": "perdu",
+        "typeCombat": "KickLight",
+        "adversaire": "Bouriala Aya Dina",
+        "docId": "KickLight_Samra"
+      },
+      {
+        "etape": "Demi",
+        "time": "16:01",
+        "date": "2025-11-08",
+        "adversaire": "Debarge Léane",
+        "num": "combat 36",
+        "typeCombat": "KickLight",
+        "couleur": "Rouge",
+        "participant": "Samra",
+        "coach": "Nadège",
+        "statut": "En attente",
+        "aire": "1",
+        "categorie": "-55kg",
+        "docId": "KickLight_Samra",
+        "hiddenAfterLoss": true
+      },
+      {
+        "num": "combat 37",
+        "typeCombat": "KickLight",
+        "couleur": "Rouge",
+        "etape": "Finale",
+        "adversaire": "Vainqueur combat 37",
+        "aire": "1",
+        "participant": "Samra",
+        "time": "19:59",
+        "statut": "En attente",
+        "categorie": "-55kg",
+        "coach": "Nadège",
+        "date": "2025-11-08",
+        "docId": "KickLight_Samra",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Sohan": {
+    "discipline": "KickLight",
+    "participant": "Sohan",
+    "combats": [
+      {
+        "statut": "gagné",
+        "docId": "KickLight_Sohan",
+        "coach": "Christophe",
+        "date": "2025-11-08",
+        "time": "12:41",
+        "categorie": "-42kg",
+        "participant": "Sohan",
+        "typeCombat": "KickLight",
+        "etape": "Quart",
+        "aire": "1",
+        "num": "combat 17",
+        "adversaire": "Nelli Tino",
+        "couleur": "Bleu"
+      },
+      {
+        "adversaire": "Vainqueur combat 18",
+        "categorie": "-42kg",
+        "time": "16:53",
+        "typeCombat": "KickLight",
+        "coach": "Christophe",
+        "couleur": "Rouge",
+        "date": "2025-11-08",
+        "statut": "perdu",
+        "etape": "Demi",
+        "participant": "Sohan",
+        "num": "combat 41",
+        "aire": "1",
+        "docId": "KickLight_Sohan"
+      },
+      {
+        "categorie": "-42kg",
+        "adversaire": "Vainqueur combat 40",
+        "couleur": "Bleu",
+        "coach": "Christophe",
+        "typeCombat": "KickLight",
+        "statut": "En attente",
+        "etape": "Finale",
+        "num": "combat 59",
+        "aire": "1",
+        "time": "20:20",
+        "docId": "KickLight_Sohan",
+        "participant": "Sohan",
+        "date": "2025-11-08",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Valentin": {
+    "discipline": "KickLight",
+    "participant": "Valentin",
+    "combats": [
+      {
+        "num": "combat 14",
+        "typeCombat": "KickLight",
+        "coach": "Julien",
+        "participant": "Valentin",
+        "categorie": "-63kg",
+        "aire": "1",
+        "time": "12:11",
+        "etape": "Quart",
+        "adversaire": "Le Denmat Lilian",
+        "date": "2025-11-08",
+        "statut": "perdu",
+        "couleur": "Rouge",
+        "docId": "KickLight_Valentin"
+      },
+      {
+        "typeCombat": "KickLight",
+        "time": "16:31",
+        "aire": "1",
+        "statut": "En attente",
+        "date": "2025-11-08",
+        "couleur": "Rouge",
+        "adversaire": "Bentamouch Walid",
+        "participant": "Valentin",
+        "categorie": "-63kg",
+        "coach": "Julien",
+        "etape": "Demi",
+        "num": "combat 39",
+        "docId": "KickLight_Valentin",
+        "hiddenAfterLoss": true
+      },
+      {
+        "adversaire": "Vainqueur combat 38",
+        "categorie": "-63kg",
+        "typeCombat": "KickLight",
+        "statut": "En attente",
+        "coach": "Julien",
+        "aire": "1",
+        "num": "combat 58",
+        "time": "20:08",
+        "participant": "Valentin",
+        "etape": "Finale",
+        "date": "2025-11-08",
+        "couleur": "Bleu",
+        "docId": "KickLight_Valentin",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "KickLight_Zakaria": {
+    "discipline": "KickLight",
+    "participant": "Zakaria",
+    "combats": [
+      {
+        "num": "combat 21",
+        "docId": "KickLight_Zakaria",
+        "couleur": "Bleu",
+        "coach": "Julien",
+        "categorie": "-69kg",
+        "aire": "2",
+        "date": "2025-11-08",
+        "adversaire": "Bouraghda Ismael",
+        "participant": "Zakaria",
+        "statut": "gagné",
+        "etape": "Quart",
+        "time": "13:14",
+        "typeCombat": "KickLight"
+      },
+      {
+        "coach": "Nadège",
+        "adversaire": "Vainqueur combat 20",
+        "num": "combat 43",
+        "couleur": "Rouge",
+        "participant": "Zakaria",
+        "categorie": "-69kg",
+        "time": "17:12",
+        "typeCombat": "KickLight",
+        "statut": "perdu",
+        "aire": "2",
+        "docId": "KickLight_Zakaria",
+        "date": "2025-11-08",
+        "etape": "Demi"
+      },
+      {
+        "docId": "KickLight_Zakaria",
+        "num": "combat 63",
+        "categorie": "-69kg",
+        "couleur": "Bleu",
+        "adversaire": "Vainqueur combat 44",
+        "etape": "Finale",
+        "time": "20:45",
+        "date": "2025-11-08",
+        "statut": "En attente",
+        "coach": "Julien",
+        "aire": "2",
+        "participant": "Zakaria",
+        "typeCombat": "KickLight",
+        "hiddenAfterLoss": true
+      }
+    ]
+  },
+  "LightContact_Rémy": {
+    "discipline": "LightContact",
+    "participant": "Rémy",
+    "combats": [
+      {
+        "typeCombat": "LightContact",
+        "etape": "Finale",
+        "participant": "Rémy",
+        "couleur": "Bleu",
+        "date": "2025-11-08",
+        "num": "combat 48",
+        "statut": "gagné",
+        "adversaire": "Besancon Matthieu",
+        "time": "18:20",
+        "categorie": "-63kg",
+        "aire": "2",
+        "coach": "Christophe",
+        "docId": "LightContact_Rémy"
+      }
+    ]
+  }
+}

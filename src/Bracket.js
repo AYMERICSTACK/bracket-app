@@ -191,7 +191,7 @@ export default function Bracket({ user }) {
     const nowMinutes = now.getHours() * 60 + now.getMinutes(); // temps actuel en minutes
 
     return visibleFlat
-      .filter((c) => c.date === todayStr) // Combats du jour
+      .filter((c) => c.date >= todayStr) // Combats à venir (y compris aujourd'hui)
       .filter((c) => c.time) // Les combats doivent avoir une heure définie
       .filter((c) => !["gagné", "perdu"].includes(c.status)) // Exclure les combats gagnés ou perdus
       .filter((c) => {
