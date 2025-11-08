@@ -32,7 +32,7 @@ export default function Bracket({ user }) {
   const [loadingReset, setLoadingReset] = useState(false);
   const [isVertical, setIsVertical] = useState(mobileQuery.matches);
   const [userForcedOrientation, setUserForcedOrientation] = useState(false);
-  const [categories, setCategories] = useState([
+  const [categories] = useState([
     "-37kg",
     "-50kg",
     "-55kg",
@@ -148,7 +148,7 @@ export default function Bracket({ user }) {
         return c.etape === etape;
       })
     );
-  }, [allCombats, stepFilter, colorFilter, searchTerm, columns]);
+  }, [allCombats, stepFilter, colorFilter, searchTerm, columns, hasLostBefore]);
 
   const visibleFlat = visibleColumns.flat();
 
