@@ -520,7 +520,7 @@ export default function Bracket({ user }) {
               />
             </div>
 
-            {/* Déclaration de `now` une seule fois en haut de la logique */}
+            {/* Déclaration de `now` une seule fois */}
             {(() => {
               const now = new Date(); // Date actuelle
 
@@ -553,6 +553,7 @@ export default function Bracket({ user }) {
                   // Vérifie si le combat est en retard
                   const isLate = combatTime < now;
 
+                  // Applique la classe "late-combat" si le combat est en retard
                   return (
                     <div
                       key={`${c.participant}-${c.num}`}
