@@ -2,7 +2,7 @@
   "KickLight": {
     "Alban": [
       {
-        "etape": "Quart",
+        "etape": "Quart de finale",
         "num": "combat 9",
         "typeCombat": "KickLight",
         "adversaire": "Lachenal Edouard",
@@ -10,12 +10,12 @@
         "couleur": "Rouge",
         "aire": "2",
         "participant": "Alban",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-79kg"
       },
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 33",
         "typeCombat": "KickLight",
         "adversaire": "Jiquel Gérard",
@@ -23,9 +23,9 @@
         "couleur": "Rouge",
         "aire": "2",
         "participant": "Alban",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
-        "categorie": "79kg"
+        "categorie": "-79kg"
       },
       {
         "etape": "Finale",
@@ -36,7 +36,7 @@
         "couleur": "Rouge",
         "aire": "2",
         "participant": "Alban",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-79kg"
       }
@@ -58,7 +58,7 @@
     ],
     "Arthur": [
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 36",
         "typeCombat": "KickLight",
         "adversaire": "Benafitou Slimen",
@@ -86,7 +86,7 @@
     ],
     "Gabriel": [
       {
-        "etape": "Quart",
+        "etape": "Quart de finale",
         "num": "combat 25",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 4",
@@ -99,7 +99,7 @@
         "categorie": "-57kg"
       },
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 47",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 24",
@@ -127,7 +127,7 @@
     ],
     "Iona": [
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 38",
         "typeCombat": "KickLight",
         "adversaire": "Dellinger Kimberly",
@@ -155,7 +155,7 @@
     ],
     "Joris": [
       {
-        "etape": "8ème",
+        "etape": "Huitième de finale",
         "num": "combat 1",
         "typeCombat": "KickLight",
         "adversaire": "Nardiello Lucio",
@@ -168,7 +168,7 @@
         "categorie": "-69kg"
       },
       {
-        "etape": "Quart",
+        "etape": "Quart de finale",
         "num": "combat 16",
         "typeCombat": "KickLight",
         "adversaire": "Bouraghda Ilyesse",
@@ -181,7 +181,7 @@
         "categorie": "-69kg"
       },
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 39",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 17",
@@ -209,7 +209,7 @@
     ],
     "Léony": [
       {
-        "etape": "Quart",
+        "etape": "Quart de finale",
         "num": "combat 14",
         "typeCombat": "KickLight",
         "adversaire": "Bouriala Hind",
@@ -217,12 +217,12 @@
         "couleur": "Bleu",
         "aire": "5",
         "participant": "Léony",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-37kg"
       },
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 39",
         "typeCombat": "KickLight",
         "adversaire": "Tanriverdi Zeynep",
@@ -230,7 +230,7 @@
         "couleur": "Rouge",
         "aire": "5",
         "participant": "Léony",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-37kg"
       },
@@ -243,14 +243,14 @@
         "couleur": "Rouge",
         "aire": "5",
         "participant": "Léony",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-37kg"
       }
     ],
     "Mathis": [
       {
-        "etape": "Quart",
+        "etape": "Quart de finale",
         "num": "combat 16",
         "typeCombat": "KickLight",
         "adversaire": "Collion Emilien",
@@ -258,12 +258,12 @@
         "couleur": "Bleu",
         "aire": "3",
         "participant": "Mathis",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-74kg"
       },
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 40",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 15",
@@ -271,7 +271,7 @@
         "couleur": "Bleu",
         "aire": "3",
         "participant": "Mathis",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-74kg"
       },
@@ -284,14 +284,14 @@
         "couleur": "Bleu",
         "aire": "3",
         "participant": "Mathis",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-74kg"
       }
     ],
     "Rémy": [
       {
-        "etape": "Quart",
+        "etape": "Quart de finale",
         "num": "combat 20",
         "typeCombat": "KickLight",
         "adversaire": "Souzy Paul",
@@ -304,7 +304,7 @@
         "categorie": "-63kg"
       },
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 42",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 19",
@@ -318,23 +318,228 @@
       },
       {
         "etape": "Finale",
+        "num": "combat 48",
+        "typeCombat": "Light Contact",
+        "adversaire": "Besancon Matthieu",
+        "heure": "08/11 18h20",
+        "couleur": "Bleu",
+        "aire": "2",
+        "participant": "Rémy",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-63kg"
+      }
+    ],
+    "Samra": [
+      {
+        "etape": "Quart de finale",
+        "num": "combat 10",
+        "typeCombat": "KickLight",
+        "adversaire": "Bouriala Aya Dina",
+        "heure": "08/11 11h28",
+        "couleur": "Bleu",
+        "aire": "1",
+        "participant": "Samra",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-55kg"
+      },
+      {
+        "etape": "Demi-finale",
+        "num": "combat 36",
+        "typeCombat": "KickLight",
+        "adversaire": "Debarge Léane",
+        "heure": "08/11 16h01",
+        "couleur": "Rouge",
+        "aire": "1",
+        "participant": "Samra",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-55kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "combat 37",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 37",
+        "heure": "08/11 19h59",
+        "couleur": "Rouge",
+        "aire": "1",
+        "participant": "Samra",
+        "coach": "Mélanie",
+        "statut": "En attente",
+        "categorie": "-55kg"
+      }
+    ],
+    "Sacha": [
+      {
+        "etape": "Quart de finale",
+        "num": "combat 23",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 5",
+        "heure": "08/11 13h56",
+        "couleur": "Bleu",
+        "aire": "1",
+        "participant": "Sacha",
+        "coach": "Nadège",
+        "statut": "En attente",
+        "categorie": "-69kg"
+      },
+      {
+        "etape": "Demi-finale",
+        "num": "combat 44",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 24",
+        "heure": "08/11 17h33",
+        "couleur": "Rouge",
+        "aire": "1",
+        "participant": "Sacha",
+        "coach": "Nadège",
+        "statut": "En attente",
+        "categorie": "-69kg"
+      },
+      {
+        "etape": "Finale",
         "num": "combat 60",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 43",
-        "heure": "08/11 20h29",
-        "couleur": "Rouge",
+        "heure": "08/11 20h37",
+        "couleur": "Bleu",
         "aire": "1",
-        "participant": "Rémy",
+        "participant": "Sacha",
+        "coach": "Nadège",
+        "statut": "En attente",
+        "categorie": "-69kg"
+      }
+    ],
+    "Sohan": [
+      {
+        "etape": "Quart de finale",
+        "num": "combat 17",
+        "typeCombat": "KickLight",
+        "adversaire": "Nelli Tino",
+        "heure": "08/11 12h41",
+        "couleur": "Bleu",
+        "aire": "1",
+        "participant": "Sohan",
         "coach": "Guillaume",
         "statut": "En attente",
+        "categorie": "-42kg"
+      },
+      {
+        "etape": "Demi-finale",
+        "num": "combat 41",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 18",
+        "heure": "08/11 16h53",
+        "couleur": "Rouge",
+        "aire": "1",
+        "participant": "Sohan",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-42kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "combat 59",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 40",
+        "heure": "08/11 20h20",
+        "couleur": "Bleu",
+        "aire": "1",
+        "participant": "Sohan",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-42kg"
+      }
+    ],
+    "Valentin": [
+      {
+        "etape": "Quart de finale",
+        "num": "combat 14",
+        "typeCombat": "KickLight",
+        "adversaire": "Le Denmat Lilian",
+        "heure": "08/11 12h11",
+        "couleur": "Rouge",
+        "aire": "1",
+        "participant": "Valentin",
+        "coach": "Christophe",
+        "statut": "En attente",
         "categorie": "-63kg"
+      },
+      {
+        "etape": "Demi-finale",
+        "num": "combat 39",
+        "typeCombat": "KickLight",
+        "adversaire": "Bentamouch Walid",
+        "heure": "08/11 16h31",
+        "couleur": "Rouge",
+        "aire": "1",
+        "participant": "Valentin",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-63kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "combat 58",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 38",
+        "heure": "08/11 20h08",
+        "couleur": "Bleu",
+        "aire": "1",
+        "participant": "Valentin",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-63kg"
+      }
+    ],
+    "Zakaria": [
+      {
+        "etape": "Quart de finale",
+        "num": "combat 21",
+        "typeCombat": "KickLight",
+        "adversaire": "Bouraghda Ismael",
+        "heure": "08/11 13h14",
+        "couleur": "Bleu",
+        "aire": "3",
+        "participant": "Zakaria",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-69kg"
+      },
+      {
+        "etape": "Demi-finale",
+        "num": "combat 43",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 20",
+        "heure": "08/11 17h12",
+        "couleur": "Rouge",
+        "aire": "3",
+        "participant": "Zakaria",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-69kg"
+      },
+      {
+        "etape": "Finale",
+        "num": "combat 63",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 44",
+        "heure": "08/11 20h45",
+        "couleur": "Bleu",
+        "aire": "3",
+        "participant": "Zakaria",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-69kg"
       }
     ]
   },
   "K1Light": {
     "Alban": [
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 29",
         "typeCombat": "K1Light",
         "adversaire": "Szemendera Willy",
@@ -342,7 +547,7 @@
         "couleur": "Rouge",
         "aire": "9",
         "participant": "Alban",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-74kg"
       },
@@ -355,7 +560,7 @@
         "couleur": "Bleu",
         "aire": "9",
         "participant": "Alban",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-74kg"
       }
@@ -377,7 +582,7 @@
     ],
     "Joris": [
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 27",
         "typeCombat": "K1Light",
         "adversaire": "Blanchard Solal",
@@ -405,7 +610,7 @@
     ],
     "Léony": [
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 22",
         "typeCombat": "K1Light",
         "adversaire": "Bouriala Hind",
@@ -413,7 +618,7 @@
         "couleur": "Bleu",
         "aire": "9",
         "participant": "Léony",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-37kg"
       },
@@ -426,14 +631,14 @@
         "couleur": "Rouge",
         "aire": "9",
         "participant": "Léony",
-        "coach": "Julien",
+        "coach": "Mélanie",
         "statut": "En attente",
         "categorie": "-37kg"
       }
     ],
     "Nadège": [
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 15",
         "typeCombat": "K1Light",
         "adversaire": "Barathay Laetitia",
@@ -461,7 +666,7 @@
     ],
     "Valentin": [
       {
-        "etape": "Demi",
+        "etape": "Demi-finale",
         "num": "combat 14",
         "typeCombat": "K1Light",
         "adversaire": "Bouraghda Younes",
@@ -482,6 +687,23 @@
         "couleur": "Rouge",
         "aire": "6",
         "participant": "Valentin",
+        "coach": "Christophe",
+        "statut": "En attente",
+        "categorie": "-63kg"
+      }
+    ]
+  },
+  "LightContact": {
+    "Rémy": [
+      {
+        "etape": "Finale",
+        "num": "combat 48",
+        "typeCombat": "Light Contact",
+        "adversaire": "Besancon Matthieu",
+        "heure": "08/11 18h20",
+        "couleur": "Bleu",
+        "aire": "2",
+        "participant": "Rémy",
         "coach": "Christophe",
         "statut": "En attente",
         "categorie": "-63kg"
