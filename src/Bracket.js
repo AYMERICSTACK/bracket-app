@@ -135,11 +135,11 @@ export default function Bracket({ user }) {
     return arr;
   }, [columns, combatTypeFilter]);
 
-  // 🔹 Colonnes visibles par étape
+  // 🔹 Colonnes visibles par étape avec tri par date + heure
   const visibleColumns = useMemo(() => {
     const term = normalizeText(searchTerm.trim());
     return ETAPES.map((etape) => {
-      const col = allCombats.filter((c) => {
+      const filtered = allCombats.filter((c) => {
         const participant = normalizeText(c.participant);
         const adversaire = normalizeText(c.adversaire);
         if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
@@ -155,14 +155,15 @@ export default function Bracket({ user }) {
         return c.etape === etape;
       });
 
-      // 🔹 Trier par heure croissante
-      col.sort((a, b) => {
+      // Tri par date puis par heure
+      filtered.sort((a, b) => {
+        if (a.date !== b.date) return a.date.localeCompare(b.date);
         const [ah, am] = (a.time || "00:00").split(":").map(Number);
         const [bh, bm] = (b.time || "00:00").split(":").map(Number);
         return ah * 60 + am - (bh * 60 + bm);
       });
 
-      return col;
+      return filtered;
     });
   }, [allCombats, stepFilter, colorFilter, searchTerm, hasLostBefore]);
 
