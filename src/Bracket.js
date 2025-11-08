@@ -44,6 +44,7 @@ export default function Bracket({ user }) {
   const [showSidebar, setShowSidebar] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(mobileQuery.matches);
   const [searchUpcoming, setSearchUpcoming] = useState("");
+  const now = new Date(); // Déclare `now` en dehors de la boucle
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
 
@@ -169,33 +170,38 @@ export default function Bracket({ user }) {
 
   const visibleFlat = visibleColumns.flat();
 
-  // 🔹 Combats à venir (inclut les combats en retard non terminés)
+  // 🔹 Combats à venir
   const upcomingCombats = useMemo(() => {
     const now = new Date();
     const todayStr = now.toISOString().slice(0, 10); // yyyy-mm-dd
-    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    const nowMinutes = now.getHours() * 60 + now.getMinutes(); // temps actuel en minutes
 
     return visibleFlat
-      .filter((c) => c.date === todayStr) // combats du jour
-      .filter((c) => c.time) // doivent avoir une heure
+      .filter((c) => c.date === todayStr) // Combats du jour
+      .filter((c) => c.time) // Les combats doivent avoir une heure définie
+      .filter((c) => !["gagné", "perdu"].includes(c.status)) // Exclure les combats gagnés ou perdus
       .filter((c) => {
-        const statut = (c.statut || "").toLowerCase();
-
-        // ❌ Exclure les combats déjà terminés
-        if (["gagné", "perdu"].includes(statut)) return false;
-
-        const [h, m] = c.time.split(":").map(Number);
-        if (isNaN(h) || isNaN(m)) return false;
-
+        const [h, m] = c.time.split(":").map(Number); // Conversion de l'heure en minutes
+        if (isNaN(h) || isNaN(m)) return false; // Si l'heure est invalide, ignorer ce combat
         const combatMinutes = h * 60 + m;
-
-        // ✅ Conserver les combats encore à venir OU déjà passés mais pas terminés
-        return combatMinutes >= nowMinutes - 120; // marge de 2h de "retard" visible
+        return combatMinutes >= nowMinutes && combatMinutes <= nowMinutes + 60; // Combats dans l'heure à venir
       })
       .sort((a, b) => {
         const [ah, am] = a.time.split(":").map(Number);
         const [bh, bm] = b.time.split(":").map(Number);
-        return ah * 60 + am - (bh * 60 + bm);
+        return ah * 60 + am - (bh * 60 + bm); // Tri par heure
+      })
+      .map((combat) => {
+        const [h, m] = combat.time.split(":").map(Number);
+        const combatMinutes = h * 60 + m;
+
+        // Détection du retard
+        const isLate = combatMinutes < nowMinutes; // Combat en retard si l'heure est déjà passée
+
+        return {
+          ...combat,
+          isLate, // Ajout de la propriété "isLate"
+        };
       });
   }, [visibleFlat]);
 
@@ -516,59 +522,44 @@ export default function Bracket({ user }) {
               />
             </div>
 
-            {visibleFlat
+            {upcomingCombats
               .filter((c) => {
                 const now = new Date();
-                const todayStr = now.toISOString().slice(0, 10); // format yyyy-mm-dd
-                const nowMinutes = now.getHours() * 60 + now.getMinutes();
+                const [hour, minute] = c.time.split(":").map(Number);
+                const combatTime = new Date(c.date);
+                combatTime.setHours(hour);
+                combatTime.setMinutes(minute);
 
-                if (c.date !== todayStr) return false; // 🔸 Seulement les combats du jour
-                if (!c.time) return false;
+                // Vérifie si l'heure du combat est déjà passée (en retard)
+                const isLate = combatTime < now;
 
-                const [h, m] = c.time.split(":").map(Number);
-                if (isNaN(h) || isNaN(m)) return false;
-                const combatMinutes = h * 60 + m;
-
-                const isInNextHour =
-                  combatMinutes >= nowMinutes &&
-                  combatMinutes <= nowMinutes + 60;
-                const isLate = combatMinutes < nowMinutes;
-
-                const statut = (c.statut || "").toLowerCase();
-                const notFinished = statut !== "gagné" && statut !== "perdu";
-
-                // 🔸 Afficher uniquement si combat non terminé
-                // et dans l'heure à venir OU en retard
-                return notFinished && (isInNextHour || isLate);
-              })
-              .filter(
-                (c) =>
-                  !searchUpcoming ||
-                  c.participant
-                    .toLowerCase()
-                    .includes(searchUpcoming.toLowerCase())
-              )
-              .sort((a, b) => {
-                const [ah, am] = a.time.split(":").map(Number);
-                const [bh, bm] = b.time.split(":").map(Number);
-                return ah * 60 + am - (bh * 60 + bm);
+                // On exclut les combats avec un statut 'gagné' ou 'perdu'
+                return (
+                  (!searchUpcoming ||
+                    c.participant
+                      .toLowerCase()
+                      .includes(searchUpcoming.toLowerCase())) &&
+                  c.statut !== "gagné" &&
+                  c.statut !== "perdu" // Filtrer les combats terminés
+                );
               })
               .map((c) => {
-                const [h, m] = c.time ? c.time.split(":").map(Number) : [0, 0];
                 const now = new Date();
-                const nowMinutes = now.getHours() * 60 + now.getMinutes();
-                const combatMinutes = h * 60 + m;
-                const isLate = combatMinutes < nowMinutes;
+                const [hour, minute] = c.time.split(":").map(Number);
+                const combatTime = new Date(c.date);
+                combatTime.setHours(hour);
+                combatTime.setMinutes(minute);
+
+                // Vérifie si l'heure du combat est déjà passée (en retard)
+                const isLate = combatTime < now;
 
                 return (
                   <div
                     key={`${c.participant}-${c.num}`}
-                    className={`sidebar-combat ${isLate ? "late-combat" : ""}`}
+                    className={`sidebar-combat ${isLate ? "late-combat" : ""}`} // Classe pour les combats en retard
                   >
                     <div>
-                      <strong>{c.time}</strong>{" "}
-                      {isLate && <span className="late-icon">⚠️</span>} -{" "}
-                      {formatDate(c.date)}{" "}
+                      <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
                       <img
                         src={
                           c.couleur === "Rouge"
