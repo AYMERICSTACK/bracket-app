@@ -44,6 +44,64 @@
         "time": "19:37"
       }
     ],
+    "Bilel": [
+      {
+        "etape": "8ème",
+        "num": "combat 4",
+        "typeCombat": "KickLight",
+        "adversaire": "Hachoum Rayan",
+        "couleur": "Bleu",
+        "aire": "5",
+        "participant": "Bilel",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-52kg",
+        "date": "2025-11-08",
+        "time": "10:27"
+      },
+      {
+        "etape": "Quart",
+        "num": "combat 27",
+        "typeCombat": "KickLight",
+        "adversaire": "Djelloud Younes",
+        "couleur": "Rouge",
+        "aire": "5",
+        "participant": "Bilel",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-52kg",
+        "date": "2025-11-08",
+        "time": "13:54"
+      },
+      {
+        "etape": "Demi",
+        "num": "combat 49",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 26",
+        "couleur": "Bleu",
+        "aire": "5",
+        "participant": "Bilel",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-52kg",
+        "date": "2025-11-08",
+        "time": "17h15"
+      },
+      {
+        "etape": "Finale",
+        "num": "combat 67",
+        "typeCombat": "KickLight",
+        "adversaire": "Vainqueur combat 50",
+        "couleur": "Rouge",
+        "aire": "5",
+        "participant": "Bilel",
+        "coach": "Guillaume",
+        "statut": "En attente",
+        "categorie": "-52kg",
+        "date": "2025-11-08",
+        "time": "20:21"
+      }
+    ],
     "Alicia": [
       {
         "etape": "Finale",
