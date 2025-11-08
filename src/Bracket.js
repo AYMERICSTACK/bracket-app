@@ -532,7 +532,7 @@ export default function Bracket({ user }) {
                   combatTime.setMinutes(minute);
 
                   // Vérifie si l'heure du combat est déjà passée (en retard)
-                  const isLate = combatTime < now;
+                  const isLate = combatTime < now; // Utilisation de `isLate`
 
                   // Exclure les combats "gagné" ou "perdu" et filtrer par participant
                   return (
@@ -551,15 +551,14 @@ export default function Bracket({ user }) {
                   combatTime.setMinutes(minute);
 
                   // Vérifie si le combat est en retard
-                  const isLate = combatTime < now;
+                  const isLate = combatTime < now; // Utilisation de `isLate`
 
-                  // Applique la classe "late-combat" si le combat est en retard
                   return (
                     <div
                       key={`${c.participant}-${c.num}`}
                       className={`sidebar-combat ${
                         isLate ? "late-combat" : ""
-                      }`} // Classe pour les combats en retard
+                      }`} // Applique la classe "late-combat" si le combat est en retard
                     >
                       <div>
                         <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
@@ -583,7 +582,6 @@ export default function Bracket({ user }) {
             })()}
           </div>
         )}
-
         {/* Bracket */}
         <div
           className={`bracket-container ${
