@@ -142,16 +142,30 @@ export default function Bracket({ user }) {
       const filtered = allCombats.filter((c) => {
         const participant = normalizeText(c.participant);
         const adversaire = normalizeText(c.adversaire);
+
+        // Filtre par étape
         if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
+
+        // Filtre par couleur
         if (
           colorFilter !== COLOR_ALL &&
           (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()
         )
           return false;
+
+        // Filtre par recherche de terme
         if (term && !(participant.includes(term) || adversaire.includes(term)))
           return false;
+
+        // Filtrer les combats perdus
+        if (c.statut === "perdu") return false;
+
+        // Filtrer les combats déjà perdus avant cette étape (fonction personnalisée)
         if (hasLostBefore(c.participant, etape)) return false;
+
+        // Combats cachés après une défaite
         if (c.hiddenAfterLoss) return false;
+
         return c.etape === etape;
       });
 
@@ -167,6 +181,7 @@ export default function Bracket({ user }) {
     });
   }, [allCombats, stepFilter, colorFilter, searchTerm, hasLostBefore]);
 
+  // Combats visibles dans un tableau plat
   const visibleFlat = visibleColumns.flat();
 
   // 🔹 Combats à venir
