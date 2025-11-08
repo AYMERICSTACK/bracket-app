@@ -278,13 +278,31 @@ export default function Bracket({ user }) {
   // 🔹 Export PDF
   const handleExportPDF = () => {
     const doc = new jsPDF("p", "pt");
-    const date = new Date().toLocaleDateString("fr-FR");
+    const dateNow = new Date().toLocaleDateString("fr-FR");
     doc.setFontSize(16);
     doc.text("Bilan des combats - Bracket", 40, 40);
     doc.setFontSize(10);
-    doc.text(`Exporté le ${date}`, 40, 55);
+    doc.text(`Exporté le ${dateNow}`, 40, 55);
 
-    const rows = visibleFlat.map((c) => [
+    // 🔹 Trier les combats par date, puis typeCombat, puis heure
+    const sortedCombats = [...visibleFlat].sort((a, b) => {
+      // 1️⃣ Par date (plus ancien au plus récent)
+      if (a.date && b.date && a.date !== b.date) {
+        return new Date(a.date) - new Date(b.date);
+      }
+
+      // 2️⃣ Par typeCombat
+      if (a.typeCombat && b.typeCombat && a.typeCombat !== b.typeCombat) {
+        return a.typeCombat.localeCompare(b.typeCombat);
+      }
+
+      // 3️⃣ Par heure
+      const [ah, am] = (a.time || "00:00").split(":").map(Number);
+      const [bh, bm] = (b.time || "00:00").split(":").map(Number);
+      return ah * 60 + am - (bh * 60 + bm);
+    });
+
+    const rows = sortedCombats.map((c) => [
       c.participant,
       c.adversaire,
       c.categorie,
@@ -294,7 +312,7 @@ export default function Bracket({ user }) {
         : c.statut === "perdu"
         ? "❌ Perdu"
         : "⏳ Non joué",
-      c.heure || "-",
+      `${formatDate(c.date)} ${c.time || "-"}`,
       c.aire || "-",
       c.coach || "-",
     ]);
@@ -307,7 +325,7 @@ export default function Bracket({ user }) {
           "Catégorie",
           "Couleur",
           "Statut",
-          "Heure",
+          "Date / Heure",
           "Aire",
           "Coach",
         ],
@@ -317,7 +335,8 @@ export default function Bracket({ user }) {
       styles: { fontSize: 8, cellPadding: 4 },
       headStyles: { fillColor: [80, 128, 255] },
     });
-    doc.save(`bracket_${date}.pdf`);
+
+    doc.save(`bracket_${dateNow}.pdf`);
   };
 
   return (
