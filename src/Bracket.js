@@ -53,6 +53,12 @@ export default function Bracket({ user }) {
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const [year, month, day] = dateStr.split("-");
+    return `${day}/${month}`;
+  };
+
   // 🔹 Fetch data
   useEffect(() => {
     const fetchData = async () => {
@@ -132,8 +138,8 @@ export default function Bracket({ user }) {
   // 🔹 Colonnes visibles par étape
   const visibleColumns = useMemo(() => {
     const term = normalizeText(searchTerm.trim());
-    return ETAPES.map((etape) =>
-      allCombats.filter((c) => {
+    return ETAPES.map((etape) => {
+      const col = allCombats.filter((c) => {
         const participant = normalizeText(c.participant);
         const adversaire = normalizeText(c.adversaire);
         if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
@@ -147,30 +153,39 @@ export default function Bracket({ user }) {
         if (hasLostBefore(c.participant, etape)) return false;
         if (c.hiddenAfterLoss) return false;
         return c.etape === etape;
-      })
-    );
-  }, [allCombats, stepFilter, colorFilter, searchTerm, hasLostBefore]); // ✅ plus columns ici
+      });
+
+      // 🔹 Trier par heure croissante
+      col.sort((a, b) => {
+        const [ah, am] = (a.time || "00:00").split(":").map(Number);
+        const [bh, bm] = (b.time || "00:00").split(":").map(Number);
+        return ah * 60 + am - (bh * 60 + bm);
+      });
+
+      return col;
+    });
+  }, [allCombats, stepFilter, colorFilter, searchTerm, hasLostBefore]);
 
   const visibleFlat = visibleColumns.flat();
 
   // 🔹 Combats à venir
   const upcomingCombats = useMemo(() => {
     const now = new Date();
-    const nowMinutes = now.getHours() * 60 + now.getMinutes();
-    const oneHourLaterMinutes = nowMinutes + 60;
+    const todayStr = now.toISOString().slice(0, 10); // yyyy-mm-dd
+    const nowMinutes = now.getHours() * 60 + now.getMinutes(); // <-- défini ici
+
     return visibleFlat
-      .filter((c) => c.heure)
+      .filter((c) => c.date === todayStr) // combats du jour
+      .filter((c) => c.time) // doivent avoir une heure
       .filter((c) => {
-        const [h, m] = c.heure.split(":").map(Number);
+        const [h, m] = c.time.split(":").map(Number);
         if (isNaN(h) || isNaN(m)) return false;
         const combatMinutes = h * 60 + m;
-        return (
-          combatMinutes >= nowMinutes && combatMinutes <= oneHourLaterMinutes
-        );
+        return combatMinutes >= nowMinutes && combatMinutes <= nowMinutes + 60; // futur + 1h
       })
       .sort((a, b) => {
-        const [ah, am] = a.heure.split(":").map(Number);
-        const [bh, bm] = b.heure.split(":").map(Number);
+        const [ah, am] = a.time.split(":").map(Number);
+        const [bh, bm] = b.time.split(":").map(Number);
         return ah * 60 + am - (bh * 60 + bm);
       });
   }, [visibleFlat]);
@@ -487,7 +502,7 @@ export default function Bracket({ user }) {
                   className="sidebar-combat"
                 >
                   <div>
-                    <strong>{c.heure}</strong> -
+                    <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
                     <img
                       src={
                         c.couleur === "Rouge"
@@ -577,6 +592,7 @@ export default function Bracket({ user }) {
                         {isEditing && canEdit ? (
                           <div className="editing-fields">
                             <input defaultValue={combat.participant} disabled />
+
                             <input
                               defaultValue={combat.adversaire}
                               onChange={(e) =>
@@ -586,6 +602,7 @@ export default function Bracket({ user }) {
                                 }))
                               }
                             />
+
                             <input
                               defaultValue={combat.num}
                               onChange={(e) =>
@@ -595,16 +612,31 @@ export default function Bracket({ user }) {
                                 }))
                               }
                             />
+
+                            {/* Date input */}
                             <input
-                              type="time"
-                              defaultValue={combat.heure}
+                              type="date"
+                              defaultValue={combat.date || ""}
                               onChange={(e) =>
                                 setEditValues((s) => ({
                                   ...s,
-                                  heure: e.target.value,
+                                  date: e.target.value,
                                 }))
                               }
                             />
+
+                            {/* Time input */}
+                            <input
+                              type="time"
+                              defaultValue={combat.time || ""}
+                              onChange={(e) =>
+                                setEditValues((s) => ({
+                                  ...s,
+                                  time: e.target.value,
+                                }))
+                              }
+                            />
+
                             <input
                               defaultValue={combat.aire}
                               onChange={(e) =>
@@ -614,6 +646,7 @@ export default function Bracket({ user }) {
                                 }))
                               }
                             />
+
                             <select
                               defaultValue={combat.couleur}
                               onChange={(e) =>
@@ -626,6 +659,7 @@ export default function Bracket({ user }) {
                               <option value="Rouge">Rouge</option>
                               <option value="Bleu">Bleu</option>
                             </select>
+
                             <select
                               defaultValue={combat.coach}
                               onChange={(e) =>
@@ -646,6 +680,7 @@ export default function Bracket({ user }) {
                                 </option>
                               ))}
                             </select>
+
                             <input
                               list="categories"
                               defaultValue={combat.categorie}
@@ -661,6 +696,7 @@ export default function Bracket({ user }) {
                                 <option key={cat} value={cat} />
                               ))}
                             </datalist>
+
                             <div className="edit-buttons">
                               <button
                                 onClick={() =>
@@ -686,8 +722,8 @@ export default function Bracket({ user }) {
                             </div>
                             <div className="versus">vs {combat.adversaire}</div>
                             <div className="combat-info">
-                              #{combat.num} - {combat.heure} - Aire{" "}
-                              {combat.aire}
+                              #{combat.num} - {formatDate(combat.date) || "-"}{" "}
+                              {combat.time || "-"} - Aire {combat.aire}
                             </div>
                             <div className="status-buttons">
                               <button
