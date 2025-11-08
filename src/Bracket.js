@@ -169,20 +169,28 @@ export default function Bracket({ user }) {
 
   const visibleFlat = visibleColumns.flat();
 
-  // 🔹 Combats à venir
+  // 🔹 Combats à venir (inclut les combats en retard non terminés)
   const upcomingCombats = useMemo(() => {
     const now = new Date();
     const todayStr = now.toISOString().slice(0, 10); // yyyy-mm-dd
-    const nowMinutes = now.getHours() * 60 + now.getMinutes(); // <-- défini ici
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     return visibleFlat
       .filter((c) => c.date === todayStr) // combats du jour
       .filter((c) => c.time) // doivent avoir une heure
       .filter((c) => {
+        const statut = (c.statut || "").toLowerCase();
+
+        // ❌ Exclure les combats déjà terminés
+        if (["gagné", "perdu"].includes(statut)) return false;
+
         const [h, m] = c.time.split(":").map(Number);
         if (isNaN(h) || isNaN(m)) return false;
+
         const combatMinutes = h * 60 + m;
-        return combatMinutes >= nowMinutes && combatMinutes <= nowMinutes + 60; // futur + 1h
+
+        // ✅ Conserver les combats encore à venir OU déjà passés mais pas terminés
+        return combatMinutes >= nowMinutes - 120; // marge de 2h de "retard" visible
       })
       .sort((a, b) => {
         const [ah, am] = a.time.split(":").map(Number);
@@ -508,7 +516,31 @@ export default function Bracket({ user }) {
               />
             </div>
 
-            {upcomingCombats
+            {visibleFlat
+              .filter((c) => {
+                const now = new Date();
+                const todayStr = now.toISOString().slice(0, 10); // format yyyy-mm-dd
+                const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+                if (c.date !== todayStr) return false; // 🔸 Seulement les combats du jour
+                if (!c.time) return false;
+
+                const [h, m] = c.time.split(":").map(Number);
+                if (isNaN(h) || isNaN(m)) return false;
+                const combatMinutes = h * 60 + m;
+
+                const isInNextHour =
+                  combatMinutes >= nowMinutes &&
+                  combatMinutes <= nowMinutes + 60;
+                const isLate = combatMinutes < nowMinutes;
+
+                const statut = (c.statut || "").toLowerCase();
+                const notFinished = statut !== "gagné" && statut !== "perdu";
+
+                // 🔸 Afficher uniquement si combat non terminé
+                // et dans l'heure à venir OU en retard
+                return notFinished && (isInNextHour || isLate);
+              })
               .filter(
                 (c) =>
                   !searchUpcoming ||
@@ -516,29 +548,44 @@ export default function Bracket({ user }) {
                     .toLowerCase()
                     .includes(searchUpcoming.toLowerCase())
               )
-              .map((c) => (
-                <div
-                  key={`${c.participant}-${c.num}`}
-                  className="sidebar-combat"
-                >
-                  <div>
-                    <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
-                    <img
-                      src={
-                        c.couleur === "Rouge"
-                          ? "/images/casque_rouge.png"
-                          : "/images/casque_bleu.png"
-                      }
-                      alt={c.couleur}
-                      className="helmet-icon"
-                    />
-                    {c.participant} vs {c.adversaire}
+              .sort((a, b) => {
+                const [ah, am] = a.time.split(":").map(Number);
+                const [bh, bm] = b.time.split(":").map(Number);
+                return ah * 60 + am - (bh * 60 + bm);
+              })
+              .map((c) => {
+                const [h, m] = c.time ? c.time.split(":").map(Number) : [0, 0];
+                const now = new Date();
+                const nowMinutes = now.getHours() * 60 + now.getMinutes();
+                const combatMinutes = h * 60 + m;
+                const isLate = combatMinutes < nowMinutes;
+
+                return (
+                  <div
+                    key={`${c.participant}-${c.num}`}
+                    className={`sidebar-combat ${isLate ? "late-combat" : ""}`}
+                  >
+                    <div>
+                      <strong>{c.time}</strong>{" "}
+                      {isLate && <span className="late-icon">⚠️</span>} -{" "}
+                      {formatDate(c.date)}{" "}
+                      <img
+                        src={
+                          c.couleur === "Rouge"
+                            ? "/images/casque_rouge.png"
+                            : "/images/casque_bleu.png"
+                        }
+                        alt={c.couleur}
+                        className="helmet-icon"
+                      />
+                      {c.participant} vs {c.adversaire}
+                    </div>
+                    <div>
+                      Catégorie: {c.categorie} | Aire {c.aire}
+                    </div>
                   </div>
-                  <div>
-                    Catégorie: {c.categorie} | Aire {c.aire}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         )}
 

@@ -40,7 +40,7 @@
   align-items: center;
   gap: 8px; /* espace entre filtres et toggle */
   margin-bottom: 8px; /* optionnel sur mobile */
-  padding: 5px
+  padding: 5px;
 }
 
 .toggle-orientation button {
@@ -54,7 +54,6 @@
   align-items: center;
   justify-content: center;
 }
-
 
 /* Color filters */
 .color-filters {
@@ -72,24 +71,31 @@
   transition: all 0.25s ease;
 }
 
-.color-box.rouge { background: #ff5050; }
-.color-box.bleu { background: #5080ff; }
-.color-box.tous { background: #999; }
+.color-box.rouge {
+  background: #ff5050;
+}
+.color-box.bleu {
+  background: #5080ff;
+}
+.color-box.tous {
+  background: #999;
+}
 
 .color-box.active {
-  box-shadow: 0 0 10px rgba(0,0,0,0.35);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
   transform: scale(1.1);
 }
 
 /* Select / Recherche */
 
 .controls-row {
-  display: flex;           /* côte à côte */
-  align-items: center;     /* alignement vertical */
-  gap: 10px;               /* espace entre eux */
-  flex-wrap: nowrap;       /* empêche le retour à la ligne */
+  display: flex; /* côte à côte */
+  align-items: center; /* alignement vertical */
+  gap: 10px; /* espace entre eux */
+  flex-wrap: nowrap; /* empêche le retour à la ligne */
 }
-.filter-wrapper, .search-wrapper {
+.filter-wrapper,
+.search-wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -107,8 +113,8 @@
   border-radius: 12px;
   border: 1px solid #ccc;
   font-size: 14px;
-  background: rgba(255,255,255,0.9);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.25s ease;
   min-width: 160px;
   appearance: none;
@@ -116,9 +122,10 @@
   -moz-appearance: none;
 }
 
-.step-filter:hover, .step-filter:focus {
+.step-filter:hover,
+.step-filter:focus {
   border-color: #888;
-  background: rgba(255,255,255,1);
+  background: rgba(255, 255, 255, 1);
 }
 
 .search-input {
@@ -126,16 +133,17 @@
   border-radius: 12px;
   border: 1px solid #ccc;
   font-size: 14px;
-  background: rgba(255,255,255,0.9);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.25s ease;
   width: 100%;
   min-width: 160px;
 }
 
-.search-input:hover, .search-input:focus {
+.search-input:hover,
+.search-input:focus {
   border-color: #888;
-  background: rgba(255,255,255,1);
+  background: rgba(255, 255, 255, 1);
 }
 
 .reset-btn {
@@ -151,14 +159,13 @@
   transition: all 0.25s ease;
 }
 
-.reset-btn:hover { 
-  background-color: #ffaa33; 
+.reset-btn:hover {
+  background-color: #ffaa33;
 }
 /* ============================= */
 /*  Desktop - agencement précis  */
 /* ============================= */
 @media (min-width: 769px) {
-
   /* On regroupe les filtres couleur + les contrôles de droite */
   .controls {
     display: flex;
@@ -213,15 +220,13 @@
   }
 }
 
-
-
 /* ============================= */
 /*       Container Bracket       */
 /* ============================= */
 .bracket-container {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 25px;
   padding: 20px;
@@ -233,8 +238,12 @@
   overflow-y: hidden;
 }
 
-.bracket-container.horizontal { flex-direction: row; }
-.bracket-container.vertical { flex-direction: column; }
+.bracket-container.horizontal {
+  flex-direction: row;
+}
+.bracket-container.vertical {
+  flex-direction: column;
+}
 
 .bracket-column {
   display: flex;
@@ -252,20 +261,26 @@
   border-radius: 10px;
   margin-bottom: 10px;
   font-weight: 600;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ============================= */
 /*       Cartes de combat        */
 /* ============================= */
-.combat-card-wrapper { position: relative; transition: all 0.25s ease; }
-.combat-card-wrapper.dimmed { opacity: 0.5; filter: grayscale(0.7); }
+.combat-card-wrapper {
+  position: relative;
+  transition: all 0.25s ease;
+}
+.combat-card-wrapper.dimmed {
+  opacity: 0.5;
+  filter: grayscale(0.7);
+}
 
 .combat-card {
   border-radius: 10px;
   padding: 12px;
   color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   min-width: 180px;
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -273,12 +288,16 @@
 
 .combat-card:hover {
   transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.45);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
   z-index: 2;
 }
 
-.combat-card.rouge { background-color: #ff5050; }
-.combat-card.bleu { background-color: #5080ff; }
+.combat-card.rouge {
+  background-color: #ff5050;
+}
+.combat-card.bleu {
+  background-color: #5080ff;
+}
 
 .combat-card.gagné {
   box-shadow: 0 0 12px 3px rgba(76, 175, 80, 0.6);
@@ -293,13 +312,23 @@
 }
 
 @keyframes glowWin {
-  0%, 100% { box-shadow: 0 0 10px 2px rgba(76, 175, 80, 0.4); }
-  50% { box-shadow: 0 0 20px 5px rgba(76, 175, 80, 0.7); }
+  0%,
+  100% {
+    box-shadow: 0 0 10px 2px rgba(76, 175, 80, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(76, 175, 80, 0.7);
+  }
 }
 
 @keyframes glowLose {
-  0%, 100% { box-shadow: 0 0 10px 2px rgba(244, 67, 54, 0.4); }
-  50% { box-shadow: 0 0 20px 5px rgba(244, 67, 54, 0.7); }
+  0%,
+  100% {
+    box-shadow: 0 0 10px 2px rgba(244, 67, 54, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(244, 67, 54, 0.7);
+  }
 }
 
 /* Badges d'étape et statut */
@@ -307,7 +336,7 @@
   position: absolute;
   top: -10px;
   right: 10px;
-  background: rgba(0,0,0,0.75);
+  background: rgba(0, 0, 0, 0.75);
   color: #fff;
   font-size: 10px;
   padding: 2px 6px;
@@ -340,23 +369,38 @@
   transition: all 0.25s ease;
 }
 
-.type-badge.LightContact { background-color: #ffd700; color: #222; }
-.type-badge.KickLight { background-color: #1e90ff; color: #fff; }
-.type-badge.K1Light { background-color: #ff7f50; color: #fff; }
+.type-badge.LightContact {
+  background-color: #ffd700;
+  color: #222;
+}
+.type-badge.KickLight {
+  background-color: #1e90ff;
+  color: #fff;
+}
+.type-badge.K1Light {
+  background-color: #ff7f50;
+  color: #fff;
+}
 
-.combat-card.rouge .type-badge.K1Light { background-color: #ffb08c; color: #000; }
-.combat-card.bleu .type-badge.KickLight { background-color: #80bfff; color: #000; }
+.combat-card.rouge .type-badge.K1Light {
+  background-color: #ffb08c;
+  color: #000;
+}
+.combat-card.bleu .type-badge.KickLight {
+  background-color: #80bfff;
+  color: #000;
+}
 
 .type-badge:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Boutons type combat */
 .combat-type-filter {
   display: flex;
   flex-wrap: nowrap; /* empêche le retour à la ligne */
-  overflow-x: visible;  /* permet de scroller si ça déborde */
+  overflow-x: visible; /* permet de scroller si ça déborde */
   gap: 2px;
 }
 
@@ -370,20 +414,32 @@
   font-size: 14px;
   transition: all 0.25s ease;
   margin-right: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-.combat-type-filter button.LightContact { background-color: #ffd700; color: #222; }
-.combat-type-filter button.KickLight    { background-color: #1e90ff; color: #fff; }
-.combat-type-filter button.K1Light      { background-color: #ff7f50; color: #fff; }
-.combat-type-filter button.Tous         { background-color: #999; color: #fff; }
+.combat-type-filter button.LightContact {
+  background-color: #ffd700;
+  color: #222;
+}
+.combat-type-filter button.KickLight {
+  background-color: #1e90ff;
+  color: #fff;
+}
+.combat-type-filter button.K1Light {
+  background-color: #ff7f50;
+  color: #fff;
+}
+.combat-type-filter button.Tous {
+  background-color: #999;
+  color: #fff;
+}
 
 .combat-type-filter button.active {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .combat-type-filter button:hover {
@@ -397,7 +453,7 @@
 .coach-badge,
 .categorie-badge {
   text-align: center;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   padding: 2px 6px;
   border-radius: 8px;
   margin-bottom: 6px;
@@ -408,9 +464,22 @@
 /* ============================= */
 /*      Texte et infos combat    */
 /* ============================= */
-.participant { font-weight: bold; font-size: 14px; text-align: center; }
-.versus { font-size: 12px; margin-top: 3px; text-align: center; }
-.combat-info { font-size: 11px; margin-top: 5px; color: #eee; text-align: center; }
+.participant {
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+}
+.versus {
+  font-size: 12px;
+  margin-top: 3px;
+  text-align: center;
+}
+.combat-info {
+  font-size: 11px;
+  margin-top: 5px;
+  color: #eee;
+  text-align: center;
+}
 
 /* ============================= */
 /*      Boutons Gagné / Perdu    */
@@ -421,7 +490,8 @@
   margin-top: 5px;
 }
 
-.btn-win, .btn-lose {
+.btn-win,
+.btn-lose {
   flex: 1;
   padding: 4px 6px;
   margin: 2px;
@@ -432,10 +502,17 @@
   transition: all 0.25s ease;
 }
 
-.btn-win { background: rgba(76, 175, 80, 0.7); color: #fff; }
-.btn-lose { background: rgba(244, 67, 54, 0.7); color: #fff; }
+.btn-win {
+  background: rgba(76, 175, 80, 0.7);
+  color: #fff;
+}
+.btn-lose {
+  background: rgba(244, 67, 54, 0.7);
+  color: #fff;
+}
 
-.btn-win.active, .btn-lose.active {
+.btn-win.active,
+.btn-lose.active {
   background: #fff;
   color: #000;
   font-weight: bold;
@@ -451,13 +528,13 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
-  background-color: rgba(255,255,255,0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   color: #fff;
   transition: all 0.25s ease;
 }
 
 .edit-btn:hover {
-  background-color: rgba(255,255,255,0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   transform: scale(1.05);
 }
 
@@ -475,13 +552,13 @@
   border-radius: 8px;
   padding: 10px;
   min-width: 180px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .participant-card:hover {
   transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
 .participant-name {
@@ -507,7 +584,7 @@
   color: #fff;
   padding: 14px 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .top-banner-modern > div {
@@ -515,12 +592,27 @@
 }
 
 /* Bannière gauche / centre / droite */
-.banner-left .status { font-weight: 600; padding: 4px 10px; border-radius: 8px; }
-.banner-left .authorized { background: #4caf50; }
-.banner-left .connected  { background: #ffb74d; }
-.banner-left .guest      { background: #e74c3c; }
+.banner-left .status {
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+.banner-left .authorized {
+  background: #4caf50;
+}
+.banner-left .connected {
+  background: #ffb74d;
+}
+.banner-left .guest {
+  background: #e74c3c;
+}
 
-.banner-center span { font-weight: 700; font-size: 1.25em; text-align: center; display: block; }
+.banner-center span {
+  font-weight: 700;
+  font-size: 1.25em;
+  text-align: center;
+  display: block;
+}
 
 .banner-right button {
   background: #fff;
@@ -533,10 +625,15 @@
   transition: all 0.25s ease;
 }
 
-.banner-right button:hover { transform: scale(1.05); }
+.banner-right button:hover {
+  transform: scale(1.05);
+}
 
 @media (min-width: 768px) {
-  .top-banner-modern > div { flex: unset; margin: 0; }
+  .top-banner-modern > div {
+    flex: unset;
+    margin: 0;
+  }
 }
 
 /* ============================= */
@@ -548,7 +645,7 @@
   margin: 10px 0;
   text-align: center;
   font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .status-banner.authorized {
@@ -573,31 +670,37 @@
   background: #f0f4f8;
   padding: 15px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
   max-height: 90vh;
   overflow-y: auto;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
-.sidebar h3 { text-align: center; font-size: 16px; margin-bottom: 12px; }
+.sidebar h3 {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
 
 .sidebar-combat {
   background: #fff;
   padding: 10px 12px;
   margin-bottom: 10px;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.25s ease;
 }
 
 .sidebar-combat:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-.sidebar-combat strong { color: #2575fc; }
+.sidebar-combat strong {
+  color: #2575fc;
+}
 
 .sidebar-search {
   margin-bottom: 12px;
@@ -613,7 +716,7 @@
   border: 1px solid #ccc;
   font-size: 14px;
   background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.25s ease;
 }
 
@@ -630,7 +733,6 @@
 /*      Responsive / Mobile       */
 /* ============================= */
 @media (max-width: 768px) {
-
   /* Toggle orientation */
   .toggle-orientation {
     display: block;
@@ -646,9 +748,20 @@
     margin-left: 75px;
   }
 
-  .sidebar-toggle { display: block; }
-  .sidebar-hidden { display: none; opacity: 0; transform: translateY(-10px); }
-  .sidebar-visible { display: block; opacity: 1; transform: translateY(0); transition: all 0.3s ease; }
+  .sidebar-toggle {
+    display: block;
+  }
+  .sidebar-hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  .sidebar-visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+  }
 
   .main-bracket-container {
     display: flex;
@@ -678,8 +791,14 @@
   }
 
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Controls responsive */
@@ -760,7 +879,7 @@
     font-size: 14px;
     transition: all 0.25s ease;
     margin-right: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -774,6 +893,17 @@
   object-fit: cover;
   margin-right: 8px;
   vertical-align: middle;
-  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+/* 🔸 Combat en retard (affiché en rouge clair) */
+.late-combat {
+  background-color: #ffe6e6;
+  border-left: 4px solid #ff6b6b;
+  transition: background-color 0.3s ease;
 }
 
+.late-icon {
+  color: #d9534f;
+  font-weight: bold;
+  margin-right: 4px;
+}
