@@ -1,0 +1,842 @@
+{
+  "K1Light_Alban": {
+    "discipline": "K1Light",
+    "participant": "Alban",
+    "combats": [
+      {
+        "num": "combat 29",
+        "participant": "Alban",
+        "typeCombat": "K1Light",
+        "adversaire": "Szemendera Willy",
+        "categorie": "-74kg",
+        "couleur": "Rouge",
+        "aire": "9",
+        "heure": "09/11 13h36",
+        "etape": "Demi-finale",
+        "statut": "non_joué",
+        "coach": "Mélanie",
+        "hiddenAfterLoss": false
+      },
+      {
+        "statut": "non_joué",
+        "coach": "Mélanie",
+        "participant": "Alban",
+        "categorie": "-74kg",
+        "adversaire": "Vainqueur combat 28",
+        "couleur": "Bleu",
+        "num": "combat 39",
+        "aire": "9",
+        "heure": "09/11 15h17",
+        "etape": "Finale",
+        "typeCombat": "K1Light",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "K1Light_Gabriel": {
+    "discipline": "K1Light",
+    "participant": "Gabriel",
+    "combats": [
+      {
+        "coach": "Christophe",
+        "heure": "09/11 14h09",
+        "statut": "non_joué",
+        "etape": "Finale",
+        "aire": "7",
+        "participant": "Gabriel",
+        "categorie": "-42kg",
+        "typeCombat": "K1Light",
+        "num": "combat 30",
+        "couleur": "Bleu",
+        "adversaire": "Zeghoual Mouhamed",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "K1Light_Joris": {
+    "discipline": "K1Light",
+    "participant": "Joris",
+    "combats": [
+      {
+        "statut": "non_joué",
+        "categorie": "-69kg",
+        "heure": "09/11 13h11",
+        "num": "combat 27",
+        "couleur": "Rouge",
+        "adversaire": "Blanchard Solal",
+        "coach": "Christophe",
+        "aire": "9",
+        "participant": "Joris",
+        "typeCombat": "K1Light",
+        "etape": "Demi-finale",
+        "hiddenAfterLoss": false
+      },
+      {
+        "coach": "Christophe",
+        "participant": "Joris",
+        "aire": "9",
+        "typeCombat": "K1Light",
+        "statut": "non_joué",
+        "categorie": "-69kg",
+        "heure": "09/11 15h04",
+        "couleur": "Bleu",
+        "etape": "Finale",
+        "adversaire": "Vainqueur combat 26",
+        "num": "combat 38",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "K1Light_Léony": {
+    "discipline": "K1Light",
+    "participant": "Léony",
+    "combats": [
+      {
+        "adversaire": "Bouriala Hind",
+        "participant": "Léony",
+        "typeCombat": "K1Light",
+        "heure": "09/11 12h23",
+        "couleur": "Bleu",
+        "categorie": "-37kg",
+        "aire": "9",
+        "coach": "Mélanie",
+        "statut": "non_joué",
+        "num": "combat 22",
+        "etape": "Demi-finale",
+        "hiddenAfterLoss": false
+      },
+      {
+        "participant": "Léony",
+        "heure": "09/11 14h46",
+        "num": "combat 36",
+        "categorie": "-37kg",
+        "aire": "9",
+        "etape": "Finale",
+        "typeCombat": "K1Light",
+        "statut": "non_joué",
+        "couleur": "Rouge",
+        "adversaire": "Vainqueur combat 23",
+        "coach": "Mélanie",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "K1Light_Nadège": {
+    "discipline": "K1Light",
+    "participant": "Nadège",
+    "combats": [
+      {
+        "categorie": "-60kg",
+        "adversaire": "Barathay Laetitia",
+        "typeCombat": "K1Light",
+        "etape": "Demi-finale",
+        "num": "combat 15",
+        "heure": "09/11 11h09",
+        "coach": "Guillaume",
+        "couleur": "Rouge",
+        "statut": "non_joué",
+        "aire": "6",
+        "participant": "Nadège",
+        "hiddenAfterLoss": false
+      },
+      {
+        "typeCombat": "K1Light",
+        "categorie": "-60kg",
+        "etape": "Finale",
+        "participant": "Nadège",
+        "statut": "non_joué",
+        "adversaire": "Palladino Emilie",
+        "coach": "Guillaume",
+        "aire": "6",
+        "num": "combat 34",
+        "heure": "09/11 14h11",
+        "couleur": "Rouge",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "K1Light_Valentin": {
+    "discipline": "K1Light",
+    "participant": "Valentin",
+    "combats": [
+      {
+        "typeCombat": "K1Light",
+        "etape": "Demi-finale",
+        "heure": "09/11 10h57",
+        "adversaire": "Bouraghda Younes",
+        "categorie": "-63kg",
+        "statut": "non_joué",
+        "aire": "6",
+        "participant": "Valentin",
+        "num": "combat 14",
+        "coach": "Christophe",
+        "couleur": "Bleu",
+        "hiddenAfterLoss": false
+      },
+      {
+        "coach": "Christophe",
+        "etape": "Finale",
+        "typeCombat": "K1Light",
+        "heure": "09/11 13h58",
+        "participant": "Valentin",
+        "couleur": "Rouge",
+        "statut": "non_joué",
+        "adversaire": "Jury Julien",
+        "categorie": "-63kg",
+        "num": "combat 33",
+        "aire": "6",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Alban": {
+    "discipline": "KickLight",
+    "participant": "Alban",
+    "combats": [
+      {
+        "etape": "Quart de finale",
+        "categorie": "-79kg",
+        "typeCombat": "KickLight",
+        "couleur": "Rouge",
+        "heure": "08/11 11h22",
+        "num": "combat 9",
+        "statut": "non_joué",
+        "adversaire": "Lachenal Edouard",
+        "participant": "Alban",
+        "coach": "Mélanie",
+        "aire": "2",
+        "hiddenAfterLoss": false
+      },
+      {
+        "etape": "Demi-finale",
+        "participant": "Alban",
+        "statut": "non_joué",
+        "couleur": "Rouge",
+        "coach": "Mélanie",
+        "aire": "2",
+        "num": "combat 33",
+        "typeCombat": "KickLight",
+        "adversaire": "Jiquel Gérard",
+        "heure": "08/11 15h44",
+        "categorie": "-79kg",
+        "hiddenAfterLoss": false
+      },
+      {
+        "categorie": "-79kg",
+        "couleur": "Rouge",
+        "etape": "Finale",
+        "participant": "Alban",
+        "aire": "2",
+        "num": "combat 55",
+        "typeCombat": "KickLight",
+        "statut": "non_joué",
+        "coach": "Mélanie",
+        "heure": "08/11 19h37",
+        "adversaire": "Vainqueur combat 34",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Alicia": {
+    "discipline": "KickLight",
+    "participant": "Alicia",
+    "combats": [
+      {
+        "heure": "08/11 18h00",
+        "num": "combat 54",
+        "typeCombat": "KickLight",
+        "couleur": "Rouge",
+        "etape": "Finale",
+        "participant": "Alicia",
+        "adversaire": "Kilic Ilem",
+        "statut": "non_joué",
+        "categorie": "-42kg",
+        "aire": "5",
+        "coach": "Nadège",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Arthur": {
+    "discipline": "KickLight",
+    "participant": "Arthur",
+    "combats": [
+      {
+        "participant": "Arthur",
+        "typeCombat": "KickLight",
+        "heure": "08/11 15h15",
+        "couleur": "Bleu",
+        "aire": "5",
+        "statut": "non_joué",
+        "num": "combat 36",
+        "adversaire": "Benafitou Slimen",
+        "coach": "Guillaume",
+        "etape": "Demi-finale",
+        "categorie": "-57kg",
+        "hiddenAfterLoss": false
+      },
+      {
+        "categorie": "-57kg",
+        "couleur": "Rouge",
+        "typeCombat": "KickLight",
+        "heure": "08/11 19h14",
+        "etape": "Finale",
+        "coach": "Guillaume",
+        "aire": "5",
+        "participant": "Arthur",
+        "num": "combat 60",
+        "adversaire": "Belhoucine Fahim",
+        "statut": "non_joué",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Gabriel": {
+    "discipline": "KickLight",
+    "participant": "Gabriel",
+    "combats": [
+      {
+        "aire": "4",
+        "categorie": "-57kg",
+        "typeCombat": "KickLight",
+        "participant": "Gabriel",
+        "num": "combat 25",
+        "adversaire": "Vainqueur combat 4",
+        "etape": "Quart de finale",
+        "coach": "Christophe",
+        "heure": "08/11 13h36",
+        "statut": "non_joué",
+        "couleur": "Bleu",
+        "hiddenAfterLoss": false
+      },
+      {
+        "etape": "Demi-finale",
+        "coach": "Christophe",
+        "adversaire": "Vainqueur combat 24",
+        "aire": "4",
+        "typeCombat": "KickLight",
+        "statut": "non_joué",
+        "participant": "Gabriel",
+        "heure": "08/11 17h08",
+        "categorie": "-57kg",
+        "couleur": "Bleu",
+        "num": "combat 47",
+        "hiddenAfterLoss": false
+      },
+      {
+        "typeCombat": "KickLight",
+        "categorie": "-57kg",
+        "adversaire": "Vainqueur combat 48",
+        "heure": "08/11 20h16",
+        "aire": "4",
+        "statut": "non_joué",
+        "participant": "Gabriel",
+        "couleur": "Rouge",
+        "num": "combat 66",
+        "coach": "Christophe",
+        "etape": "Finale",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Iona": {
+    "discipline": "KickLight",
+    "participant": "Iona",
+    "combats": [
+      {
+        "coach": "Christophe",
+        "aire": "4",
+        "statut": "non_joué",
+        "categorie": "+70kg",
+        "adversaire": "Dellinger Kimberly",
+        "etape": "Demi-finale",
+        "num": "combat 38",
+        "couleur": "Bleu",
+        "typeCombat": "KickLight",
+        "heure": "08/11 15h43",
+        "participant": "Iona",
+        "hiddenAfterLoss": false
+      },
+      {
+        "num": "combat 61",
+        "categorie": "+70kg",
+        "adversaire": "Vainqueur combat 37",
+        "heure": "08/11 19h28",
+        "statut": "non_joué",
+        "couleur": "Bleu",
+        "participant": "Iona",
+        "etape": "Finale",
+        "coach": "Christophe",
+        "typeCombat": "KickLight",
+        "aire": "4",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Joris": {
+    "discipline": "KickLight",
+    "participant": "Joris",
+    "combats": [
+      {
+        "etape": "Huitième de finale",
+        "aire": "2",
+        "participant": "Joris",
+        "coach": "Christophe",
+        "categorie": "-69kg",
+        "heure": "08/11 10h00",
+        "adversaire": "Nardiello Lucio",
+        "statut": "non_joué",
+        "typeCombat": "KickLight",
+        "num": "combat 1",
+        "couleur": "Bleu",
+        "hiddenAfterLoss": false
+      },
+      {
+        "coach": "Christophe",
+        "typeCombat": "KickLight",
+        "participant": "Joris",
+        "categorie": "-69kg",
+        "etape": "Quart de finale",
+        "aire": "2",
+        "couleur": "Rouge",
+        "num": "combat 16",
+        "heure": "08/11 12h43",
+        "adversaire": "Bouraghda Ilyesse",
+        "statut": "non_joué",
+        "hiddenAfterLoss": false
+      },
+      {
+        "adversaire": "Vainqueur combat 17",
+        "coach": "Christophe",
+        "couleur": "Rouge",
+        "num": "combat 39",
+        "typeCombat": "KickLight",
+        "heure": "08/11 16h52",
+        "participant": "Joris",
+        "aire": "2",
+        "etape": "Demi-finale",
+        "statut": "non_joué",
+        "categorie": "-69kg",
+        "hiddenAfterLoss": false
+      },
+      {
+        "typeCombat": "KickLight",
+        "categorie": "-69kg",
+        "adversaire": "Vainqueur combat 40",
+        "heure": "08/11 20h11",
+        "aire": "2",
+        "statut": "non_joué",
+        "participant": "Joris",
+        "couleur": "Rouge",
+        "num": "combat 58",
+        "coach": "Christophe",
+        "etape": "Finale",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Léony": {
+    "discipline": "KickLight",
+    "participant": "Léony",
+    "combats": [
+      {
+        "num": "combat 14",
+        "coach": "Mélanie",
+        "typeCombat": "KickLight",
+        "couleur": "Bleu",
+        "etape": "Quart de finale",
+        "heure": "08/11 11h57",
+        "statut": "non_joué",
+        "categorie": "-37kg",
+        "adversaire": "Bouriala Hind",
+        "aire": "5",
+        "participant": "Léony",
+        "hiddenAfterLoss": false
+      },
+      {
+        "heure": "08/11 15h45",
+        "num": "combat 39",
+        "etape": "Demi-finale",
+        "typeCombat": "KickLight",
+        "couleur": "Rouge",
+        "participant": "Léony",
+        "adversaire": "Tanriverdi Zeynep",
+        "statut": "non_joué",
+        "categorie": "-37kg",
+        "aire": "5",
+        "coach": "Mélanie",
+        "hiddenAfterLoss": false
+      },
+      {
+        "adversaire": "Vainqueur combat 40",
+        "coach": "Mélanie",
+        "etape": "Finale",
+        "heure": "08/11 19h36",
+        "num": "combat 62",
+        "typeCombat": "KickLight",
+        "couleur": "Rouge",
+        "aire": "5",
+        "participant": "Léony",
+        "categorie": "-37kg",
+        "statut": "non_joué",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Mathis": {
+    "discipline": "KickLight",
+    "participant": "Mathis",
+    "combats": [
+      {
+        "etape": "Quart de finale",
+        "participant": "Mathis",
+        "statut": "non_joué",
+        "couleur": "Bleu",
+        "coach": "Mélanie",
+        "aire": "3",
+        "num": "combat 16",
+        "typeCombat": "KickLight",
+        "heure": "08/11 12h43",
+        "adversaire": "Collion Emilien",
+        "categorie": "-74kg",
+        "hiddenAfterLoss": false
+      },
+      {
+        "coach": "Mélanie",
+        "aire": "3",
+        "statut": "non_joué",
+        "categorie": "-74kg",
+        "adversaire": "Vainqueur combat 15",
+        "etape": "Demi-finale",
+        "num": "combat 40",
+        "couleur": "Bleu",
+        "typeCombat": "KickLight",
+        "heure": "08/11 16h50",
+        "participant": "Mathis",
+        "hiddenAfterLoss": false
+      },
+      {
+        "categorie": "-74kg",
+        "couleur": "Bleu",
+        "heure": "08/11 20h15",
+        "typeCombat": "KickLight",
+        "etape": "Finale",
+        "coach": "Mélanie",
+        "aire": "3",
+        "participant": "Mathis",
+        "adversaire": "Vainqueur combat 39",
+        "num": "combat 58",
+        "statut": "non_joué",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Rémy": {
+    "discipline": "KickLight",
+    "participant": "Rémy",
+    "combats": [
+      {
+        "adversaire": "Souzy Paul",
+        "aire": "1",
+        "couleur": "Bleu",
+        "heure": "08/11 13h24",
+        "typeCombat": "KickLight",
+        "categorie": "-63kg",
+        "etape": "Quart de finale",
+        "coach": "Guillaume",
+        "num": "combat 20",
+        "participant": "Rémy",
+        "statut": "non_joué",
+        "hiddenAfterLoss": false
+      },
+      {
+        "aire": "1",
+        "categorie": "-63kg",
+        "typeCombat": "KickLight",
+        "statut": "non_joué",
+        "etape": "Demi-finale",
+        "adversaire": "Vainqueur combat 19",
+        "heure": "08/11 17h02",
+        "couleur": "Bleu",
+        "participant": "Rémy",
+        "num": "combat 42",
+        "coach": "Guillaume",
+        "hiddenAfterLoss": false
+      },
+      {
+        "couleur": "Bleu",
+        "num": "combat 48",
+        "adversaire": "Besancon Matthieu",
+        "aire": "2",
+        "participant": "Rémy",
+        "statut": "non_joué",
+        "coach": "Christophe",
+        "heure": "08/11 18h20",
+        "typeCombat": "Light Contact",
+        "etape": "Finale",
+        "categorie": "-63kg",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Sacha": {
+    "discipline": "KickLight",
+    "participant": "Sacha",
+    "combats": [
+      {
+        "categorie": "-69kg",
+        "adversaire": "Vainqueur combat 5",
+        "coach": "Nadège",
+        "aire": "1",
+        "statut": "non_joué",
+        "heure": "08/11 13h56",
+        "typeCombat": "KickLight",
+        "etape": "Quart de finale",
+        "couleur": "Bleu",
+        "participant": "Sacha",
+        "num": "combat 23",
+        "hiddenAfterLoss": false
+      },
+      {
+        "coach": "Nadège",
+        "typeCombat": "KickLight",
+        "participant": "Sacha",
+        "aire": "1",
+        "statut": "non_joué",
+        "etape": "Demi-finale",
+        "num": "combat 44",
+        "categorie": "-69kg",
+        "heure": "08/11 17h33",
+        "couleur": "Rouge",
+        "adversaire": "Vainqueur combat 24",
+        "hiddenAfterLoss": false
+      },
+      {
+        "adversaire": "Vainqueur combat 43",
+        "categorie": "-69kg",
+        "statut": "non_joué",
+        "typeCombat": "KickLight",
+        "heure": "08/11 20h37",
+        "etape": "Finale",
+        "coach": "Nadège",
+        "aire": "1",
+        "num": "combat 60",
+        "couleur": "Bleu",
+        "participant": "Sacha",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Samra": {
+    "discipline": "KickLight",
+    "participant": "Samra",
+    "combats": [
+      {
+        "aire": "1",
+        "coach": "Mélanie",
+        "typeCombat": "KickLight",
+        "num": "combat 10",
+        "participant": "Samra",
+        "couleur": "Bleu",
+        "etape": "Quart de finale",
+        "categorie": "-55kg",
+        "heure": "08/11 11h28",
+        "statut": "non_joué",
+        "adversaire": "Bouriala Aya Dina",
+        "hiddenAfterLoss": false
+      },
+      {
+        "typeCombat": "KickLight",
+        "participant": "Samra",
+        "couleur": "Rouge",
+        "etape": "Demi-finale",
+        "aire": "1",
+        "categorie": "-55kg",
+        "num": "combat 36",
+        "coach": "Mélanie",
+        "heure": "08/11 16h01",
+        "statut": "non_joué",
+        "adversaire": "Debarge Léane",
+        "hiddenAfterLoss": false
+      },
+      {
+        "participant": "Samra",
+        "couleur": "Rouge",
+        "etape": "Finale",
+        "aire": "1",
+        "num": "combat 37",
+        "typeCombat": "KickLight",
+        "coach": "Mélanie",
+        "adversaire": "Vainqueur combat 37",
+        "heure": "08/11 19h59",
+        "statut": "non_joué",
+        "categorie": "-55kg",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Sohan": {
+    "discipline": "KickLight",
+    "participant": "Sohan",
+    "combats": [
+      {
+        "adversaire": "Nelli Tino",
+        "coach": "Guillaume",
+        "etape": "Quart de finale",
+        "heure": "08/11 12h41",
+        "num": "combat 17",
+        "typeCombat": "KickLight",
+        "couleur": "Bleu",
+        "aire": "1",
+        "categorie": "-42kg",
+        "participant": "Sohan",
+        "statut": "non_joué",
+        "hiddenAfterLoss": false
+      },
+      {
+        "etape": "Demi-finale",
+        "num": "combat 41",
+        "couleur": "Rouge",
+        "statut": "non_joué",
+        "categorie": "-42kg",
+        "aire": "1",
+        "heure": "08/11 16h53",
+        "adversaire": "Vainqueur combat 18",
+        "participant": "Sohan",
+        "typeCombat": "KickLight",
+        "coach": "Guillaume",
+        "hiddenAfterLoss": false
+      },
+      {
+        "heure": "08/11 20h20",
+        "etape": "Finale",
+        "participant": "Sohan",
+        "categorie": "-42kg",
+        "couleur": "Bleu",
+        "aire": "1",
+        "adversaire": "Vainqueur combat 40",
+        "num": "combat 59",
+        "typeCombat": "KickLight",
+        "coach": "Guillaume",
+        "statut": "non_joué",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Valentin": {
+    "discipline": "KickLight",
+    "participant": "Valentin",
+    "combats": [
+      {
+        "etape": "Quart de finale",
+        "statut": "non_joué",
+        "adversaire": "Le Denmat Lilian",
+        "aire": "1",
+        "categorie": "-63kg",
+        "couleur": "Rouge",
+        "heure": "08/11 12h11",
+        "coach": "Christophe",
+        "participant": "Valentin",
+        "num": "combat 14",
+        "typeCombat": "KickLight",
+        "hiddenAfterLoss": false
+      },
+      {
+        "heure": "08/11 16h31",
+        "num": "combat 39",
+        "etape": "Demi-finale",
+        "typeCombat": "KickLight",
+        "couleur": "Rouge",
+        "participant": "Valentin",
+        "adversaire": "Bentamouch Walid",
+        "statut": "non_joué",
+        "categorie": "-63kg",
+        "aire": "1",
+        "coach": "Christophe",
+        "hiddenAfterLoss": false
+      },
+      {
+        "num": "combat 58",
+        "coach": "Christophe",
+        "typeCombat": "KickLight",
+        "couleur": "Bleu",
+        "etape": "Finale",
+        "heure": "08/11 20h08",
+        "statut": "non_joué",
+        "adversaire": "Vainqueur combat 38",
+        "aire": "1",
+        "categorie": "-63kg",
+        "participant": "Valentin",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "KickLight_Zakaria": {
+    "discipline": "KickLight",
+    "participant": "Zakaria",
+    "combats": [
+      {
+        "num": "combat 21",
+        "etape": "Quart de finale",
+        "participant": "Zakaria",
+        "coach": "Guillaume",
+        "heure": "08/11 13h14",
+        "statut": "non_joué",
+        "categorie": "-69kg",
+        "couleur": "Bleu",
+        "aire": "3",
+        "adversaire": "Bouraghda Ismael",
+        "typeCombat": "KickLight",
+        "hiddenAfterLoss": false
+      },
+      {
+        "participant": "Zakaria",
+        "heure": "08/11 17h12",
+        "etape": "Demi-finale",
+        "statut": "non_joué",
+        "adversaire": "Vainqueur combat 20",
+        "aire": "3",
+        "typeCombat": "KickLight",
+        "categorie": "-69kg",
+        "coach": "Guillaume",
+        "couleur": "Rouge",
+        "num": "combat 43",
+        "hiddenAfterLoss": false
+      },
+      {
+        "coach": "Guillaume",
+        "typeCombat": "KickLight",
+        "etape": "Finale",
+        "couleur": "Bleu",
+        "num": "combat 63",
+        "statut": "non_joué",
+        "aire": "3",
+        "adversaire": "Vainqueur combat 44",
+        "heure": "08/11 20h45",
+        "participant": "Zakaria",
+        "categorie": "-69kg",
+        "hiddenAfterLoss": false
+      }
+    ]
+  },
+  "LightContact_Rémy": {
+    "discipline": "LightContact",
+    "participant": "Rémy",
+    "combats": [
+      {
+        "statut": "non_joué",
+        "aire": "2",
+        "adversaire": "Besancon Matthieu",
+        "heure": "08/11 18h20",
+        "num": "combat 48",
+        "couleur": "Bleu",
+        "participant": "Rémy",
+        "etape": "Finale",
+        "typeCombat": "Light Contact",
+        "coach": "Christophe",
+        "categorie": "-63kg",
+        "hiddenAfterLoss": false
+      }
+    ]
+  }
+}

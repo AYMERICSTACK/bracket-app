@@ -2,7 +2,7 @@
   "KickLight": {
     "Alban": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 9",
         "typeCombat": "KickLight",
         "adversaire": "Lachenal Edouard",
@@ -15,7 +15,7 @@
         "categorie": "-79kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 33",
         "typeCombat": "KickLight",
         "adversaire": "Jiquel Gérard",
@@ -58,7 +58,7 @@
     ],
     "Arthur": [
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 36",
         "typeCombat": "KickLight",
         "adversaire": "Benafitou Slimen",
@@ -86,7 +86,7 @@
     ],
     "Gabriel": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 25",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 4",
@@ -99,7 +99,7 @@
         "categorie": "-57kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 47",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 24",
@@ -127,7 +127,7 @@
     ],
     "Iona": [
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 38",
         "typeCombat": "KickLight",
         "adversaire": "Dellinger Kimberly",
@@ -155,7 +155,7 @@
     ],
     "Joris": [
       {
-        "etape": "Huitième de finale",
+        "etape": "8ème",
         "num": "combat 1",
         "typeCombat": "KickLight",
         "adversaire": "Nardiello Lucio",
@@ -168,7 +168,7 @@
         "categorie": "-69kg"
       },
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 16",
         "typeCombat": "KickLight",
         "adversaire": "Bouraghda Ilyesse",
@@ -181,7 +181,7 @@
         "categorie": "-69kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 39",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 17",
@@ -209,7 +209,7 @@
     ],
     "Léony": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 14",
         "typeCombat": "KickLight",
         "adversaire": "Bouriala Hind",
@@ -222,7 +222,7 @@
         "categorie": "-37kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 39",
         "typeCombat": "KickLight",
         "adversaire": "Tanriverdi Zeynep",
@@ -250,7 +250,7 @@
     ],
     "Mathis": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 16",
         "typeCombat": "KickLight",
         "adversaire": "Collion Emilien",
@@ -263,7 +263,7 @@
         "categorie": "-74kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 40",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 15",
@@ -291,7 +291,7 @@
     ],
     "Rémy": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 20",
         "typeCombat": "KickLight",
         "adversaire": "Souzy Paul",
@@ -304,7 +304,7 @@
         "categorie": "-63kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 42",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 19",
@@ -332,7 +332,7 @@
     ],
     "Samra": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 10",
         "typeCombat": "KickLight",
         "adversaire": "Bouriala Aya Dina",
@@ -345,7 +345,7 @@
         "categorie": "-55kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 36",
         "typeCombat": "KickLight",
         "adversaire": "Debarge Léane",
@@ -373,7 +373,7 @@
     ],
     "Sacha": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 23",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 5",
@@ -386,7 +386,7 @@
         "categorie": "-69kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 44",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 24",
@@ -414,7 +414,7 @@
     ],
     "Sohan": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 17",
         "typeCombat": "KickLight",
         "adversaire": "Nelli Tino",
@@ -427,7 +427,7 @@
         "categorie": "-42kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 41",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 18",
@@ -455,7 +455,7 @@
     ],
     "Valentin": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 14",
         "typeCombat": "KickLight",
         "adversaire": "Le Denmat Lilian",
@@ -468,7 +468,7 @@
         "categorie": "-63kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 39",
         "typeCombat": "KickLight",
         "adversaire": "Bentamouch Walid",
@@ -496,7 +496,7 @@
     ],
     "Zakaria": [
       {
-        "etape": "Quart de finale",
+        "etape": "Quart",
         "num": "combat 21",
         "typeCombat": "KickLight",
         "adversaire": "Bouraghda Ismael",
@@ -509,7 +509,7 @@
         "categorie": "-69kg"
       },
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 43",
         "typeCombat": "KickLight",
         "adversaire": "Vainqueur combat 20",
@@ -539,7 +539,7 @@
   "K1Light": {
     "Alban": [
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 29",
         "typeCombat": "K1Light",
         "adversaire": "Szemendera Willy",
@@ -582,7 +582,7 @@
     ],
     "Joris": [
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 27",
         "typeCombat": "K1Light",
         "adversaire": "Blanchard Solal",
@@ -610,7 +610,7 @@
     ],
     "Léony": [
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 22",
         "typeCombat": "K1Light",
         "adversaire": "Bouriala Hind",
@@ -638,7 +638,7 @@
     ],
     "Nadège": [
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 15",
         "typeCombat": "K1Light",
         "adversaire": "Barathay Laetitia",
@@ -666,7 +666,7 @@
     ],
     "Valentin": [
       {
-        "etape": "Demi-finale",
+        "etape": "Demi",
         "num": "combat 14",
         "typeCombat": "K1Light",
         "adversaire": "Bouraghda Younes",
