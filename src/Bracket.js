@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import {
@@ -22,7 +22,7 @@ const ALLOWED_UIDS = [
 ];
 
 export default function Bracket({ user }) {
-  const [columns, setColumns] = useState({}); // ⚠ objet participantId -> [combats]
+  const [columns, setColumns] = useState({});
   const [editingCard, setEditingCard] = useState(null);
   const [editValues, setEditValues] = useState({});
   const [stepFilter, setStepFilter] = useState("Tous");
@@ -47,6 +47,12 @@ export default function Bracket({ user }) {
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
 
+  const normalizeText = (str) =>
+    (str || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
   // 🔹 Fetch data
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +60,6 @@ export default function Bracket({ user }) {
       const data = {};
       snapshot.forEach((docSnap) => {
         const combats = docSnap.data().combats || [];
-        // ⚡ Ajouter docId à chaque combat
         const combatsWithDocId = combats.map((c) => ({
           ...c,
           docId: docSnap.id,
@@ -69,48 +74,44 @@ export default function Bracket({ user }) {
   // 🔹 Responsive
   useEffect(() => {
     const handleResize = () => {
-      if (userForcedOrientation) return; // ne rien faire si orientation forcée
+      if (userForcedOrientation) return;
       const mobile = window.innerWidth < 768;
       setIsVertical(mobile);
       setIsMobile(mobile);
       setShowSidebar(!mobile);
     };
-
-    // ⚙️ On n’ajoute le listener QUE si l'utilisateur n'a pas forcé
     if (!userForcedOrientation) {
       window.addEventListener("resize", handleResize);
       handleResize();
     }
-
-    // 🧹 Si user force, on retire le listener immédiatement
     return () => window.removeEventListener("resize", handleResize);
   }, [userForcedOrientation]);
 
-  const normalizeText = (str) =>
-    (str || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-
-  const hasLostBefore = (participant, currentEtape) => {
-    const currentIndex = ETAPES.indexOf(currentEtape);
-    if (currentIndex <= 0) return false;
-    const combats = columns[participant] || [];
-    for (let i = 0; i < currentIndex; i++) {
-      if (
-        combats.some(
-          (c) =>
-            c.etape === ETAPES[i] && (c.statut || "").toLowerCase() === "perdu"
-        )
-      ) {
-        return true;
+  // 🔹 useCallback pour hasLostBefore
+  const hasLostBefore = useCallback(
+    (participant, currentEtape) => {
+      const currentIndex = ETAPES.indexOf(currentEtape);
+      if (currentIndex <= 0) return false;
+      const combats = columns[participant] || [];
+      for (let i = 0; i < currentIndex; i++) {
+        if (
+          combats.some(
+            (c) =>
+              c.etape === ETAPES[i] &&
+              (c.statut || "").toLowerCase() === "perdu"
+          )
+        ) {
+          return true;
+        }
       }
-    }
-    return false;
-  };
+      return false;
+    },
+    [columns]
+  );
+
   const handleToggleOrientation = () => {
     setIsVertical((prev) => !prev);
-    setUserForcedOrientation(true); // ⚡ On indique que l’utilisateur force le mode
+    setUserForcedOrientation(true);
   };
 
   // 🔹 Tous les combats aplatis
@@ -148,10 +149,11 @@ export default function Bracket({ user }) {
         return c.etape === etape;
       })
     );
-  }, [allCombats, stepFilter, colorFilter, searchTerm, columns, hasLostBefore]);
+  }, [allCombats, stepFilter, colorFilter, searchTerm, hasLostBefore]); // ✅ plus columns ici
 
   const visibleFlat = visibleColumns.flat();
 
+  // 🔹 Combats à venir
   const upcomingCombats = useMemo(() => {
     const now = new Date();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
@@ -181,55 +183,44 @@ export default function Bracket({ user }) {
   // 🔹 Sauvegarde après édition
   const handleSave = async (docId, num) => {
     if (!canEdit) return;
-
     const newColumns = { ...columns };
     const combats = newColumns[docId] || [];
-
     newColumns[docId] = combats.map((c) =>
       c.num === num ? { ...c, ...editValues } : c
     );
-
     setColumns(newColumns);
     setEditingCard(null);
     setEditValues({});
-
     try {
-      const docRef = doc(db, "brackets", docId); // 🔹 Utiliser docId ici
-      await updateDoc(docRef, { combats: newColumns[docId] });
+      await updateDoc(doc(db, "brackets", docId), {
+        combats: newColumns[docId],
+      });
     } catch (err) {
       console.error("Erreur updateDoc:", err);
     }
   };
 
-  // 🔹 Changement de statut Gagné / Perdu
   const handleStatusChange = async (combat, statutValue) => {
     if (!canEdit) return;
-
     const newColumns = { ...columns };
     const currentEtapeIndex = ETAPES.indexOf(combat.etape);
     const combats = newColumns[combat.docId] || [];
-
     newColumns[combat.docId] = combats.map((c) => {
       if (c.num === combat.num) c = { ...c, statut: statutValue };
-
       if (c.participant === combat.participant && statutValue === "perdu") {
         const etapeIndex = ETAPES.indexOf(c.etape);
         if (etapeIndex > currentEtapeIndex)
           return { ...c, hiddenAfterLoss: true };
       }
-
-      if (c.hiddenAfterLoss && statutValue !== "perdu") {
+      if (c.hiddenAfterLoss && statutValue !== "perdu")
         c = { ...c, hiddenAfterLoss: false };
-      }
-
       return c;
     });
-
     setColumns(newColumns);
-
     try {
-      const docRef = doc(db, "brackets", combat.docId); // 🔹 Utiliser docId ici
-      await updateDoc(docRef, { combats: newColumns[combat.docId] });
+      await updateDoc(doc(db, "brackets", combat.docId), {
+        combats: newColumns[combat.docId],
+      });
     } catch (err) {
       console.error("Erreur updateDoc statut:", err);
     }
