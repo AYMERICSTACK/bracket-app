@@ -523,39 +523,19 @@ export default function Bracket({ user }) {
             {/* Combats filtrés */}
             {upcomingCombats
               .filter((c) => {
-                // Convertir l'heure du combat en objet Date
-                const [hour, minute] = c.time.split(":").map(Number);
-                const combatTime = new Date(c.date);
-                combatTime.setHours(hour);
-                combatTime.setMinutes(minute);
-
-                // Vérifie si l'heure du combat est déjà passée (en retard)
-                const isLate = combatTime < new Date(); // Cette logique détermine si le combat est en retard
-
-                // Retourne les combats non terminés et qui correspondent à la recherche
-                return (
-                  (!searchUpcoming ||
-                    c.participant
-                      .toLowerCase()
-                      .includes(searchUpcoming.toLowerCase())) &&
-                  c.statut !== "gagné" &&
-                  c.statut !== "perdu"
-                );
+                // Exclure les combats terminés (gagné ou perdu)
+                return !["gagné", "perdu"].includes(c.statut);
               })
               .map((c) => {
-                // Convertir l'heure du combat en objet Date
-                const [hour, minute] = c.time.split(":").map(Number);
-                const combatTime = new Date(c.date);
-                combatTime.setHours(hour);
-                combatTime.setMinutes(minute);
-
-                // Vérifie si l'heure du combat est en retard
-                const isLate = combatTime < new Date(); // On met cette logique ici
+                // Application de la classe "late-combat" si le combat est en retard
+                const combatClass = c.isLate
+                  ? "sidebar-combat late-combat"
+                  : "sidebar-combat";
 
                 return (
                   <div
                     key={`${c.participant}-${c.num}`}
-                    className={`sidebar-combat ${isLate ? "late-combat" : ""}`} // Applique la classe pour les combats en retard
+                    className={combatClass}
                   >
                     <div>
                       <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
