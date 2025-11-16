@@ -14,21 +14,7 @@ export default function AdminBracket() {
   const [brackets, setBrackets] = useState({});
   const [discipline, setDiscipline] = useState("");
   const [participant, setParticipant] = useState("");
-  const [combats, setCombats] = useState([
-    {
-      etape: "",
-      num: "",
-      typeCombat: "",
-      adversaire: "",
-      couleur: "",
-      aire: "",
-      coach: "",
-      statut: "En attente",
-      categorie: "",
-      date: "",
-      time: "",
-    },
-  ]);
+  const [combats, setCombats] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // 🔹 Charger les brackets existants
@@ -45,8 +31,14 @@ export default function AdminBracket() {
     fetchBrackets();
   }, []);
 
-  // 🔹 Ajouter un combat vide
+  // 🔹 Ajouter un combat vide (avec participant et discipline)
   const addCombat = () => {
+    if (!participant || !discipline) {
+      alert(
+        "Veuillez remplir Discipline et Participant avant d'ajouter un combat."
+      );
+      return;
+    }
     setCombats([
       ...combats,
       {
@@ -61,6 +53,7 @@ export default function AdminBracket() {
         categorie: "",
         date: "",
         time: "",
+        participant, // <- important !
       },
     ]);
   };
@@ -80,15 +73,22 @@ export default function AdminBracket() {
     }
     setLoading(true);
     try {
+      const combatsWithParticipant = combats.map((c) => ({
+        ...c,
+        participant,
+        discipline,
+      }));
+
       await setDoc(doc(db, "brackets", `${discipline}_${participant}`), {
         discipline,
         participant,
-        combats,
+        combats: combatsWithParticipant,
       });
       alert(
         `✅ ${participant} importé dans ${discipline} (${combats.length} combats)`
       );
       fetchBrackets();
+      setCombats([]); // vider les combats après sauvegarde
     } catch (err) {
       console.error(err);
       alert("❌ Erreur lors de la sauvegarde");
@@ -111,6 +111,26 @@ export default function AdminBracket() {
     } catch (err) {
       console.error(err);
       alert("❌ Erreur lors de la suppression");
+    }
+    setLoading(false);
+  };
+
+  // 🔹 Supprimer un participant spécifique
+  const deleteParticipant = async (docId) => {
+    if (!window.confirm("Voulez-vous vraiment supprimer ce participant ?"))
+      return;
+    setLoading(true);
+    try {
+      await deleteDoc(doc(db, "brackets", docId));
+      setBrackets((prev) => {
+        const newBrackets = { ...prev };
+        delete newBrackets[docId];
+        return newBrackets;
+      });
+      alert(`✅ Participant supprimé`);
+    } catch (err) {
+      console.error(err);
+      alert("❌ Erreur lors de la suppression du participant");
     }
     setLoading(false);
   };
@@ -141,13 +161,18 @@ export default function AdminBracket() {
         for (const disciplineName in json) {
           const participants = json[disciplineName];
           for (const participantName in participants) {
-            const participantCombats = participants[participantName];
+            const participantData = participants[participantName];
+            const combats = (participantData.combats || []).map((c) => ({
+              ...c,
+              participant: c.participant || participantName,
+              discipline: c.discipline || disciplineName,
+            }));
             await setDoc(
               doc(db, "brackets", `${disciplineName}_${participantName}`),
               {
                 discipline: disciplineName,
                 participant: participantName,
-                combats: participantCombats,
+                combats,
               }
             );
           }
@@ -242,10 +267,44 @@ export default function AdminBracket() {
         </div>
       </div>
 
-      {/* 🔹 Liste des brackets existants */}
+      {/* 🔹 Liste des brackets existants avec bouton supprimer par participant */}
       <div>
         <h3>📋 Brackets existants</h3>
-        <pre>{JSON.stringify(brackets, null, 2)}</pre>
+        {Object.keys(brackets).map((docId) => (
+          <div
+            key={docId}
+            style={{
+              position: "relative",
+              marginBottom: "20px",
+              border: "1px solid #ddd",
+              padding: "10px",
+              borderRadius: "6px",
+              background: "#f9f9f9",
+            }}
+          >
+            <button
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "10px",
+                background: "#ff4d4f",
+                color: "white",
+                border: "none",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+              onClick={() => deleteParticipant(docId)}
+              disabled={loading}
+            >
+              ❌ Supprimer
+            </button>
+
+            <pre style={{ overflowX: "auto", marginTop: "30px" }}>
+              {JSON.stringify(brackets[docId], null, 2)}
+            </pre>
+          </div>
+        ))}
       </div>
     </div>
   );

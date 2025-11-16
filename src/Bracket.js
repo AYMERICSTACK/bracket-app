@@ -15,7 +15,13 @@ import autoTable from "jspdf-autotable";
 const mobileQuery = window.matchMedia("(max-width: 768px)");
 const ETAPES = ["Tour2", "Tour1", "16ème", "8ème", "Quart", "Demi", "Finale"];
 const COLOR_ALL = "Tous";
-const TYPE_COMBATS = ["Tous", "LightContact", "KickLight", "K1Light"];
+const TYPE_COMBATS = [
+  "Tous",
+  "LightContact",
+  "KickLight",
+  "K1Light",
+  "FullContact",
+];
 const ALLOWED_UIDS = [
   "2VqoJdZpE6NOtSWx3ko7OtzXBFk1",
   "BLqmftqFsgSKtceNI3c76jrdE0p1",
@@ -634,6 +640,8 @@ export default function Bracket({ user }) {
                             "⚡ LightContact"}
                           {combat.typeCombat === "KickLight" && "🥷 KickLight"}
                           {combat.typeCombat === "K1Light" && "🔥 K1Light"}
+                          {combat.typeCombat === "FullContact" &&
+                            "💥 FullContact"}
                         </div>
 
                         <div className="coach-badge">

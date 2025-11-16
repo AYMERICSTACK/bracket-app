@@ -381,6 +381,26 @@
   background-color: #ff7f50;
   color: #fff;
 }
+.type-badge.FullContact {
+  background-color: #8b0000; /* rouge foncé pour FullContact */
+  color: #fff;
+}
+
+/* Optionnel : adapter si couleur de la carte rouge/bleue */
+.combat-card.rouge .type-badge.FullContact {
+  background-color: #a52a2a; /* un peu plus clair sur fond rouge */
+  color: #fff;
+}
+.combat-card.bleu .type-badge.FullContact {
+  background-color: #5f0f0f; /* foncé sur fond bleu */
+  color: #fff;
+}
+
+/* Bouton filter */
+.combat-type-filter button.FullContact {
+  background-color: #8b0000;
+  color: #fff;
+}
 
 .combat-card.rouge .type-badge.K1Light {
   background-color: #ffb08c;
