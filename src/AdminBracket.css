@@ -1,0 +1,48 @@
+.combat-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: "Arial", sans-serif;
+  font-size: 14px;
+  background: #fff;
+}
+
+.combat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.combat-type-badge {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background-color: #4caf50; /* ou couleur selon type */
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.combat-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid #333;
+}
+
+.combat-color.rouge {
+  background-color: #ff4d4f;
+}
+
+.combat-color.bleu {
+  background-color: #1890ff;
+}
+
+.admin-input {
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}

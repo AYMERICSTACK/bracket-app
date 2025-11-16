@@ -8,7 +8,8 @@ import {
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "./firebase"; // ton init firebase
+import { db } from "./firebase";
+import "./AdminBracket.css";
 
 export default function AdminBracket() {
   const [brackets, setBrackets] = useState({});
@@ -17,7 +18,21 @@ export default function AdminBracket() {
   const [combats, setCombats] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔹 Charger les brackets existants
+  const DISCIPLINES = ["LightContact", "KickLight", "K1Light", "FullContact"];
+  const COULEURS = ["rouge", "bleu"];
+  const COACHS = [
+    "Chris",
+    "Benoit",
+    "Guillaume",
+    "Nadège",
+    "Julien",
+    "Mélanie",
+  ];
+
+  useEffect(() => {
+    fetchBrackets();
+  }, []);
+
   const fetchBrackets = async () => {
     const snapshot = await getDocs(collection(db, "brackets"));
     const data = {};
@@ -27,11 +42,6 @@ export default function AdminBracket() {
     setBrackets(data);
   };
 
-  useEffect(() => {
-    fetchBrackets();
-  }, []);
-
-  // 🔹 Ajouter un combat vide (avec participant et discipline)
   const addCombat = () => {
     if (!participant || !discipline) {
       alert(
@@ -53,19 +63,18 @@ export default function AdminBracket() {
         categorie: "",
         date: "",
         time: "",
-        participant, // <- important !
+        participant,
+        discipline,
       },
     ]);
   };
 
-  // 🔹 Modifier un champ d’un combat
-  const handleCombatChange = (index, field, value) => {
+  const handleCombatChange = (idx, field, value) => {
     const newCombats = [...combats];
-    newCombats[index][field] = value;
+    newCombats[idx][field] = value;
     setCombats(newCombats);
   };
 
-  // 🔹 Sauvegarder un participant dans Firestore
   const saveParticipant = async () => {
     if (!discipline || !participant) {
       alert("Discipline et participant requis !");
@@ -88,7 +97,7 @@ export default function AdminBracket() {
         `✅ ${participant} importé dans ${discipline} (${combats.length} combats)`
       );
       fetchBrackets();
-      setCombats([]); // vider les combats après sauvegarde
+      setCombats([]);
     } catch (err) {
       console.error(err);
       alert("❌ Erreur lors de la sauvegarde");
@@ -96,16 +105,13 @@ export default function AdminBracket() {
     setLoading(false);
   };
 
-  // 🔹 Supprimer tous les brackets
   const clearAll = async () => {
     if (!window.confirm("Voulez-vous vraiment supprimer tous les brackets ?"))
       return;
     setLoading(true);
     try {
       const snapshot = await getDocs(collection(db, "brackets"));
-      for (const docSnap of snapshot.docs) {
-        await deleteDoc(docSnap.ref);
-      }
+      for (const docSnap of snapshot.docs) await deleteDoc(docSnap.ref);
       setBrackets({});
       alert("✅ Tous les documents supprimés");
     } catch (err) {
@@ -115,7 +121,6 @@ export default function AdminBracket() {
     setLoading(false);
   };
 
-  // 🔹 Supprimer un participant spécifique
   const deleteParticipant = async (docId) => {
     if (!window.confirm("Voulez-vous vraiment supprimer ce participant ?"))
       return;
@@ -135,7 +140,6 @@ export default function AdminBracket() {
     setLoading(false);
   };
 
-  // 🔹 Importer un fichier JSON
   const importJSON = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -149,15 +153,10 @@ export default function AdminBracket() {
           )
         )
           return;
-
         setLoading(true);
-        // Supprimer tous les documents existants
         const snapshot = await getDocs(collection(db, "brackets"));
-        for (const docSnap of snapshot.docs) {
-          await deleteDoc(docSnap.ref);
-        }
+        for (const docSnap of snapshot.docs) await deleteDoc(docSnap.ref);
 
-        // Importer le JSON
         for (const disciplineName in json) {
           const participants = json[disciplineName];
           for (const participantName in participants) {
@@ -192,54 +191,122 @@ export default function AdminBracket() {
     <div style={{ padding: "20px" }}>
       <h2>⚡ Admin Bracket</h2>
 
-      {/* 🔹 Formulaire ajout/modification */}
+      {/* Formulaire discipline/participant */}
       <div style={{ marginBottom: "30px" }}>
-        <input
-          type="text"
-          placeholder="Discipline"
+        <select
+          className="admin-input"
           value={discipline}
           onChange={(e) => setDiscipline(e.target.value)}
           style={{ marginRight: "10px" }}
-        />
+        >
+          <option value="">Discipline</option>
+          {DISCIPLINES.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
+        </select>
+
         <input
+          className="admin-input"
           type="text"
           placeholder="Participant"
           value={participant}
           onChange={(e) => setParticipant(e.target.value)}
           style={{ marginRight: "10px" }}
         />
+
         <button onClick={addCombat}>➕ Ajouter un combat</button>
 
         {combats.map((combat, idx) => (
           <div
             key={idx}
-            style={{
-              marginTop: "10px",
-              border: "1px solid #ccc",
-              padding: "10px",
-            }}
+            className="combat-card"
+            style={{ marginTop: "10px", padding: "10px" }}
           >
-            <strong>Combat {idx + 1}</strong>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "10px",
-                marginTop: "5px",
-              }}
-            >
-              {Object.keys(combat).map((field) => (
-                <input
-                  key={field}
-                  type="text"
-                  placeholder={field}
-                  value={combat[field]}
-                  onChange={(e) =>
-                    handleCombatChange(idx, field, e.target.value)
-                  }
-                  style={{ flex: "1 0 120px" }}
-                />
-              ))}
+            <div className="combat-header">
+              <span className="combat-type-badge">
+                {combat.typeCombat || "Type"}
+              </span>
+              <span className={`combat-color ${combat.couleur || ""}`}></span>
+            </div>
+            <div className="combat-info">
+              <input
+                className="admin-input"
+                type="text"
+                placeholder="Adversaire"
+                value={combat.adversaire}
+                onChange={(e) =>
+                  handleCombatChange(idx, "adversaire", e.target.value)
+                }
+              />
+              <select
+                className="admin-input"
+                value={combat.typeCombat}
+                onChange={(e) =>
+                  handleCombatChange(idx, "typeCombat", e.target.value)
+                }
+              >
+                <option value="">Type</option>
+                {DISCIPLINES.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="admin-input"
+                value={combat.couleur}
+                onChange={(e) =>
+                  handleCombatChange(idx, "couleur", e.target.value)
+                }
+              >
+                <option value="">Couleur</option>
+                {COULEURS.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+              <input
+                className="admin-input"
+                type="text"
+                placeholder="Aire"
+                value={combat.aire}
+                onChange={(e) =>
+                  handleCombatChange(idx, "aire", e.target.value)
+                }
+              />
+              <select
+                className="admin-input"
+                value={combat.coach}
+                onChange={(e) =>
+                  handleCombatChange(idx, "coach", e.target.value)
+                }
+              >
+                <option value="">Coach</option>
+                {COACHS.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+              <input
+                className="admin-input"
+                type="date"
+                value={combat.date}
+                onChange={(e) =>
+                  handleCombatChange(idx, "date", e.target.value)
+                }
+              />
+              <input
+                className="admin-input"
+                type="time"
+                value={combat.time}
+                onChange={(e) =>
+                  handleCombatChange(idx, "time", e.target.value)
+                }
+              />
             </div>
           </div>
         ))}
@@ -267,7 +334,6 @@ export default function AdminBracket() {
         </div>
       </div>
 
-      {/* 🔹 Liste des brackets existants avec bouton supprimer par participant */}
       <div>
         <h3>📋 Brackets existants</h3>
         {Object.keys(brackets).map((docId) => (

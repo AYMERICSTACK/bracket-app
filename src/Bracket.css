@@ -385,6 +385,13 @@
   background-color: #8b0000; /* rouge foncé pour FullContact */
   color: #fff;
 }
+.admin-input {
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
 
 /* Optionnel : adapter si couleur de la carte rouge/bleue */
 .combat-card.rouge .type-badge.FullContact {
