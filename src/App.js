@@ -1,8 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
+
 import Login from "./Login";
 import Bracket from "./Bracket";
-import { CSSTransition, SwitchTransition } from "react-transition-group";
+import AdminBracket from "./AdminBracket";
 import "./App.css";
 
 const ALLOWED_UIDS = [
@@ -11,27 +19,31 @@ const ALLOWED_UIDS = [
 ];
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined); // undefined = pas encore chargé
   const [showLogin, setShowLogin] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const nodeRef = useRef(null);
 
   const auth = getAuth();
-  const nodeRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      setUser(currentUser || null); // null si pas connecté
     });
     return () => unsubscribe();
   }, [auth]);
 
-  // Gestion du scroll pour le bouton "Back to Top"
+  const isAuthorized = user && ALLOWED_UIDS.includes(user.uid);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setUser(null);
+    setShowLogin(false);
+  };
+
   const handleScroll = () => {
-    if (window.scrollY > 300) {
-      setShowScrollTop(true);
-    } else {
-      setShowScrollTop(false);
-    }
+    if (window.scrollY > 300) setShowScrollTop(true);
+    else setShowScrollTop(false);
   };
 
   const scrollToTop = () => {
@@ -43,16 +55,13 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    setUser(null);
-    setShowLogin(false);
-  };
-
-  const isAuthorized = user && ALLOWED_UIDS.includes(user.uid);
+  // ⚠️ Attente du chargement de l'utilisateur avant d'afficher les routes
+  if (user === undefined) {
+    return <div>Chargement...</div>;
+  }
 
   return (
-    <div>
+    <Router>
       {/* Bandeau connexion */}
       <div className="top-banner-modern">
         <div className="banner-left">
@@ -66,11 +75,9 @@ export default function App() {
             <span className="status guest">👋 Bienvenue</span>
           )}
         </div>
-
         <div className="banner-center">
           <span>🏆 Tableau des combats</span>
         </div>
-
         <div className="banner-right">
           {user ? (
             <button className="btn-logout" onClick={handleLogout}>
@@ -83,33 +90,6 @@ export default function App() {
           )}
         </div>
       </div>
-
-      {/* Lien Retour */}
-      {!user && showLogin && (
-        <div style={{ textAlign: "center", marginBottom: "10px" }}>
-          🔙{" "}
-          <span
-            style={{ color: "#007bff", cursor: "pointer" }}
-            onClick={() => setShowLogin(false)}
-          >
-            Retour au Bracket
-          </span>
-        </div>
-      )}
-
-      {/* Transition principale */}
-      <SwitchTransition mode="out-in">
-        <CSSTransition
-          key={"bracket"}
-          timeout={300}
-          classNames="fade"
-          nodeRef={nodeRef}
-        >
-          <div ref={nodeRef}>
-            <Bracket user={user} />
-          </div>
-        </CSSTransition>
-      </SwitchTransition>
 
       {/* Pop-up connexion */}
       {showLogin && !user && (
@@ -165,23 +145,45 @@ export default function App() {
         </div>
       )}
 
-      {/* Bouton "Back to Top" animé */}
+      {/* Transition principale */}
+      <SwitchTransition mode="out-in">
+        <CSSTransition
+          key="bracket-router"
+          timeout={300}
+          classNames="fade"
+          nodeRef={nodeRef}
+        >
+          <div ref={nodeRef}>
+            <Routes>
+              <Route path="/" element={<Bracket user={user} />} />
+              <Route
+                path="/admin"
+                element={
+                  isAuthorized ? <AdminBracket /> : <Navigate to="/" replace />
+                }
+              />
+            </Routes>
+          </div>
+        </CSSTransition>
+      </SwitchTransition>
+
+      {/* Bouton "Back to Top" */}
       {showScrollTop && (
-<button className="scroll-to-top" onClick={scrollToTop}>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="scroll-icon"
-  >
-    <polyline points="18 15 12 9 6 15" />
-  </svg>
-</button>
+        <button className="scroll-to-top" onClick={scrollToTop}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="scroll-icon"
+          >
+            <polyline points="18 15 12 9 6 15" />
+          </svg>
+        </button>
       )}
-    </div>
+    </Router>
   );
 }

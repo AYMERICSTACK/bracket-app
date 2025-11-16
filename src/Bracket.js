@@ -198,7 +198,10 @@ export default function Bracket({ user }) {
         const [h, m] = c.time.split(":").map(Number); // Conversion de l'heure en minutes
         if (isNaN(h) || isNaN(m)) return false; // Si l'heure est invalide, ignorer ce combat
         const combatMinutes = h * 60 + m;
-        return combatMinutes >= nowMinutes && combatMinutes <= nowMinutes + 60; // Combats dans l'heure à venir
+        // Afficher les combats dans l'heure à venir OU en retard depuis moins de 2h
+        return (
+          combatMinutes >= nowMinutes - 120 && combatMinutes <= nowMinutes + 60
+        );
       })
       .sort((a, b) => {
         const [ah, am] = a.time.split(":").map(Number);
