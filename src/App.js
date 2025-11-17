@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
@@ -28,7 +29,7 @@ export default function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser || null); // null si pas connecté
+      setUser(currentUser || null);
     });
     return () => unsubscribe();
   }, [auth]);
@@ -75,10 +76,28 @@ export default function App() {
             <span className="status guest">👋 Bienvenue</span>
           )}
         </div>
+
         <div className="banner-center">
           <span>🏆 Tableau des combats</span>
         </div>
-        <div className="banner-right">
+
+        <div className="banner-right" style={{ display: "flex", gap: "10px" }}>
+          {user && isAuthorized && (
+            <button
+              onClick={() => (window.location.href = "/admin")}
+              style={{
+                backgroundColor: "#fff",
+                color: "#2575fc",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              ⚡ Admin
+            </button>
+          )}
+
           {user ? (
             <button className="btn-logout" onClick={handleLogout}>
               🔒 Déconnexion
