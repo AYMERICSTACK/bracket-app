@@ -233,7 +233,7 @@ export default function AdminBracket() {
       {/* HEADER */}
       <header className="admin-header">
         <div>
-          <h1>⚙️ Admin Dashboard</h1>
+          <h1>⚙️ Tableau de bord administrateur</h1>
           <p className="subtitle">
             Gestion rapide des brackets — création / import / suppression
           </p>
@@ -252,7 +252,7 @@ export default function AdminBracket() {
         {/* FORM */}
         <section className="card card--form">
           <div className="card-title">
-            <h2>➕ Ajouter / Modifier un participant</h2>
+            <h2>➕ Ajouter / Modifier un compétiteur</h2>
           </div>
 
           <div className="form-row">
