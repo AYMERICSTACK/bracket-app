@@ -22,8 +22,17 @@ export default function AdminBracket() {
   const [combats, setCombats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [importBusy, setImportBusy] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [toDeleteId, setToDeleteId] = useState(null);
+
+  // Confirm Modal réutilisable
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => {});
+
+  const openConfirm = (message, callback) => {
+    setConfirmMessage(message || "Êtes-vous sûr ?");
+    setOnConfirmCallback(() => callback || (() => {}));
+    setConfirmOpen(true);
+  };
 
   const DISCIPLINES = ["LightContact", "KickLight", "K1Light", "FullContact"];
   const COULEURS = ["Rouge", "Bleu"];
@@ -50,29 +59,32 @@ export default function AdminBracket() {
     setBrackets(data);
   }
 
-  function createEmptyCombat() {
-    return {
-      etape: "",
-      num: "",
-      typeCombat: "",
-      adversaire: "",
-      couleur: "",
-      coach: "",
-      date: "",
-      time: "",
-      participant: participant || "",
-      discipline: discipline || "",
-      poids: "", // optionnel si tu veux garder "poids" séparé
-      categorie: "", // <-- nouveau champ
-      aire: "", // <-- nouveau champ
-      statut: "En attente", // pour suivre gagné/perdu/en attente
-    };
-  }
-
   const addCombat = () => {
-    if (!discipline || !participant)
+    if (!discipline || !participant) {
       return alert("Discipline et Participant requis !");
-    setCombats((s) => [...s, createEmptyCombat()]);
+    }
+
+    // Si un combat existe déjà, on reprend ses valeurs pour pré-remplir
+    const last = combats[combats.length - 1] || {};
+
+    setCombats((prev) => [
+      ...prev,
+      {
+        etape: "",
+        num: "",
+        typeCombat: last.typeCombat || discipline, // reprend le dernier typeCombat ou discipline
+        adversaire: "",
+        couleur: "",
+        coach: last.coach || "",
+        date: last.date || "",
+        time: "",
+        participant: participant,
+        discipline: last.discipline || discipline,
+        categorie: last.categorie || "",
+        aire: last.aire || "",
+        statut: "En attente",
+      },
+    ]);
   };
 
   const handleCombatChange = (index, field, value) => {
@@ -83,68 +95,60 @@ export default function AdminBracket() {
     });
   };
 
-  const saveParticipant = async () => {
+  const saveParticipant = () => {
     if (!discipline || !participant)
       return alert("Discipline et Participant requis !");
-    setLoading(true);
-    try {
-      const combatsWithMeta = combats.map((c) => ({
-        ...createEmptyCombat(),
-        ...c,
-        participant,
-        discipline,
-      }));
-      await setDoc(doc(db, "brackets", `${discipline}_${participant}`), {
-        discipline,
-        participant,
-        combats: combatsWithMeta,
-      });
-      await fetchBrackets();
-      setCombats([]);
-      setParticipant("");
-      setDiscipline("");
-      alert(`✅ ${participant} sauvegardé (${combatsWithMeta.length} combats)`);
-    } catch (err) {
-      console.error(err);
-      alert("❌ Erreur lors de la sauvegarde");
-    } finally {
-      setLoading(false);
-    }
+
+    openConfirm(
+      `💾 Confirmer la sauvegarde de ${participant} (${combats.length} combats) ?`,
+      async () => {
+        setLoading(true);
+        try {
+          const combatsWithMeta = combats.map((c) => ({
+            ...c,
+            participant,
+            discipline,
+          }));
+          await setDoc(doc(db, "brackets", `${discipline}_${participant}`), {
+            discipline,
+            participant,
+            combats: combatsWithMeta,
+          });
+          await fetchBrackets();
+          setCombats([]);
+          setParticipant("");
+          setDiscipline("");
+          alert(
+            `✅ ${participant} sauvegardé (${combatsWithMeta.length} combats)`
+          );
+        } catch (err) {
+          console.error(err);
+          alert("❌ Erreur lors de la sauvegarde");
+        } finally {
+          setLoading(false);
+        }
+      }
+    );
   };
 
   const clearAll = async () => {
-    if (!window.confirm("Voulez-vous vraiment supprimer tous les brackets ?"))
-      return;
-    setLoading(true);
-    try {
-      const snapshot = await getDocs(collection(db, "brackets"));
-      for (const s of snapshot.docs) await deleteDoc(s.ref);
-      setBrackets({});
-      alert("✅ Tous les documents supprimés");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Erreur lors de la suppression");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteParticipant = async (docId) => {
-    setLoading(true);
-    try {
-      await deleteDoc(doc(db, "brackets", docId));
-      setBrackets((prev) => {
-        const copy = { ...prev };
-        delete copy[docId];
-        return copy;
-      });
-      alert("✅ Participant supprimé");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Erreur lors de la suppression");
-    } finally {
-      setLoading(false);
-    }
+    openConfirm(
+      "Voulez-vous vraiment supprimer tous les brackets ?",
+      async () => {
+        setLoading(true);
+        try {
+          const snapshot = await getDocs(collection(db, "brackets"));
+          for (const s of snapshot.docs) await deleteDoc(s.ref);
+          setBrackets({});
+          alert("✅ Tous les documents supprimés");
+        } catch (err) {
+          console.error(err);
+          alert("❌ Erreur lors de la suppression");
+        } finally {
+          setLoading(false);
+        }
+      }
+    );
   };
 
   const importJSON = async (e) => {
@@ -154,13 +158,22 @@ export default function AdminBracket() {
     reader.onload = async (event) => {
       try {
         const json = JSON.parse(event.target.result);
-        if (
-          !window.confirm(
-            "⚠️ Cette action va écraser toute la base actuelle. Continuer ?"
-          )
-        )
+        let proceed = false;
+        await new Promise((resolve) => {
+          openConfirm(
+            "⚠️ Cette action va écraser toute la base actuelle. Continuer ?",
+            () => {
+              proceed = true;
+              resolve();
+            }
+          );
+        });
+        if (!proceed) {
+          setImportBusy(false);
           return;
+        }
         setImportBusy(true);
+
         const snapshot = await getDocs(collection(db, "brackets"));
         for (const s of snapshot.docs) await deleteDoc(s.ref);
 
@@ -241,6 +254,7 @@ export default function AdminBracket() {
           <div className="card-title">
             <h2>➕ Ajouter / Modifier un participant</h2>
           </div>
+
           <div className="form-row">
             <label>
               Discipline
@@ -318,7 +332,7 @@ export default function AdminBracket() {
                       ))}
                     </select>
                     <input
-                      placeholder="Num (ex: combat 1)"
+                      placeholder="Num"
                       value={c.num}
                       onChange={(e) =>
                         handleCombatChange(i, "num", e.target.value)
@@ -347,7 +361,7 @@ export default function AdminBracket() {
                       ))}
                     </select>
                     <input
-                      placeholder="Catégorie (ex: -42kg)"
+                      placeholder="Catégorie"
                       value={c.categorie}
                       onChange={(e) =>
                         handleCombatChange(i, "categorie", e.target.value)
@@ -461,10 +475,28 @@ export default function AdminBracket() {
                         </button>
                         <button
                           className="btn btn-sm btn-delete"
-                          onClick={() => {
-                            setToDeleteId(docId);
-                            setModalOpen(true);
-                          }}
+                          onClick={() =>
+                            openConfirm(
+                              "Voulez-vous vraiment supprimer ce participant ?",
+                              async () => {
+                                setLoading(true);
+                                try {
+                                  await deleteDoc(doc(db, "brackets", docId));
+                                  setBrackets((prev) => {
+                                    const copy = { ...prev };
+                                    delete copy[docId];
+                                    return copy;
+                                  });
+                                  alert("✅ Participant supprimé");
+                                } catch (err) {
+                                  console.error(err);
+                                  alert("❌ Erreur lors de la suppression");
+                                } finally {
+                                  setLoading(false);
+                                }
+                              }
+                            )
+                          }
                           disabled={loading}
                         >
                           🗑 Supprimer
@@ -493,31 +525,41 @@ export default function AdminBracket() {
         identique.
       </footer>
 
-      {/* MODAL SUPPRESSION */}
-      {modalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <h3>❗ Confirmer la suppression</h3>
-            <p>Voulez-vous vraiment supprimer ce participant ?</p>
+      {/* Confirm Modal */}
+      {confirmOpen && (
+        <div
+          className="modal-overlay"
+          onMouseDown={() => setConfirmOpen(false)}
+        >
+          <div
+            className="modal-box"
+            role="dialog"
+            aria-modal="true"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ marginTop: 0 }}>❗ Confirmer</h3>
+            <p style={{ marginBottom: 12 }}>{confirmMessage}</p>
             <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "8px",
-                marginTop: "12px",
-              }}
+              style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}
             >
-              <button className="btn-gray" onClick={() => setModalOpen(false)}>
+              <button
+                className="btn btn-gray"
+                onClick={() => setConfirmOpen(false)}
+              >
                 Annuler
               </button>
               <button
                 className="btn-red"
-                onClick={() => {
-                  deleteParticipant(toDeleteId);
-                  setModalOpen(false);
+                onClick={async () => {
+                  try {
+                    await onConfirmCallback();
+                  } catch (err) {
+                    console.error("Erreur dans onConfirm callback:", err);
+                  }
+                  setConfirmOpen(false);
                 }}
               >
-                Supprimer
+                Confirmer
               </button>
             </div>
           </div>
