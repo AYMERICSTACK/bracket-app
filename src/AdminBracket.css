@@ -1,48 +1,433 @@
-.combat-card {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 10px;
-  font-family: "Arial", sans-serif;
-  font-size: 14px;
-  background: #fff;
+/* src/AdminBracket.css - Dashboard Admin Pro avancé */
+
+:root {
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --muted: #667085;
+  --accent: #2575fc;
+  --danger: #ff4d4f;
+  --glass: rgba(255, 255, 255, 0.85);
+  --radius: 12px;
+  --shadow: 0 6px 20px rgba(20, 30, 60, 0.08);
+  --hover-shadow: 0 12px 28px rgba(20, 30, 60, 0.12);
 }
 
-.combat-header {
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: #0b1226;
+}
+
+/* WRAPPER */
+.admin-wrap {
+  padding: 22px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+.admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.admin-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+.admin-header .subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.admin-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.combat-type-badge {
+/* BUTTONS */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--glass);
+  border: 1px solid rgba(16, 24, 40, 0.04);
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent), #1d63d9);
+  color: #fff;
+  border: none;
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+  border: none;
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+}
+.btn-outline {
+  background: transparent;
+  border: 1px dashed rgba(16, 24, 40, 0.06);
+  padding: 8px 12px;
+}
+.btn-sm {
+  padding: 6px 8px;
+  font-size: 13px;
+}
+.btn-delete {
+  background: #e53935;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.btn-delete:hover {
+  background: #c62828;
+  transform: scale(1.06);
+}
+
+/* MAIN LAYOUT */
+.admin-main {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* CARD */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  border: 1px solid rgba(16, 24, 40, 0.04);
+  transition: 0.2s;
+}
+.card:hover {
+  box-shadow: var(--hover-shadow);
+}
+.card--form {
+  padding: 18px;
+}
+.card-title h2,
+.card--list h3,
+.card--actions h3 {
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+
+/* FORM */
+.form-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.form-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 180px;
+  font-size: 13px;
+}
+.form-row input[type="text"],
+.form-row input[type="date"],
+.form-row input[type="time"],
+.form-row select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  font-size: 14px;
+  background: #fff;
+}
+.form-actions-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* COMBATS */
+.combats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+.combat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fbfcff;
+  border: 1px solid rgba(16, 24, 40, 0.02);
+  transition: 0.2s;
+}
+.combat-row:hover {
+  box-shadow: var(--shadow);
+}
+.combat-row-left,
+.combat-row-right {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.combat-row input,
+.combat-row select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+}
+
+/* BADGES */
+.badge {
   padding: 2px 6px;
   border-radius: 6px;
-  background-color: #4caf50; /* ou couleur selon type */
-  color: #fff;
-  font-weight: bold;
   font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+.badge.etape {
+  background: #2575fc;
+}
+.badge.rouge {
+  background: #ff4d4f;
+}
+.badge.bleu {
+  background: #1890ff;
 }
 
-.combat-color {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 1px solid #333;
+/* SIDE PANEL */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.card--actions {
+  padding: 14px;
+}
+.actions-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
 }
 
-.combat-color.rouge {
+/* LIST PARTICIPANTS */
+.card--list {
+  padding: 14px;
+}
+.list-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 6px;
+}
+.participant-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid rgba(16, 24, 40, 0.03);
+  box-shadow: 0 4px 12px rgba(10, 14, 30, 0.04);
+  transition: 0.2s;
+}
+.participant-card:hover {
+  box-shadow: 0 8px 20px rgba(10, 14, 30, 0.08);
+}
+.participant-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.participant-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+.participant-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.participant-actions {
+  display: flex;
+  gap: 8px;
+}
+.participant-body {
+  margin-top: 8px;
+}
+.small-muted {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.json-preview {
+  max-height: 120px;
+  overflow: auto;
+  background: #f6f7fb;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #111;
+}
+
+/* ============================= */
+/*  Cartes admin uniformes front */
+/* ============================= */
+.admin-participant-card,
+.admin-combat-card {
+  background-color: #fff; /* même fond que participant-card */
+  border-radius: 10px; /* identique combat-card */
+  padding: 12px; /* même padding */
+  min-width: 180px; /* dimension uniforme */
+  max-width: 220px; /* optionnel pour uniformité */
+  box-shadow: 0 4px 12px rgba(10, 14, 30, 0.04); /* même que participant-card */
+  transition: 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover identique */
+.admin-participant-card:hover,
+.admin-combat-card:hover {
+  box-shadow: 0 8px 20px rgba(10, 14, 30, 0.08);
+  transform: translateY(-3px) scale(1.03);
+}
+
+/* Texte principal */
+.admin-participant-name,
+.admin-combat-participant {
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+/* Infos combats */
+.admin-combat-info,
+.admin-participant-info {
+  font-size: 12px;
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+/* Badges */
+.admin-etape-badge,
+.admin-couleur-badge,
+.admin-categorie-badge,
+.admin-coach-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin: 2px 0;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Badge couleurs Rouge / Bleu */
+.admin-couleur-badge.rouge {
   background-color: #ff4d4f;
 }
-
-.combat-color.bleu {
+.admin-couleur-badge.bleu {
   background-color: #1890ff;
 }
 
-.admin-input {
-  font-size: 14px;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+/* Badge étape */
+.admin-etape-badge {
+  background-color: #2575fc;
+}
+
+/* Badge catégorie / coach */
+.admin-categorie-badge {
+  background-color: #555;
+}
+.admin-coach-badge {
+  background-color: #888;
+}
+
+/* FOOTER */
+.admin-footer {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.modal-box {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 320px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+  animation: fadeIn 0.2s ease-out;
+}
+.btn-gray {
+  background: #eee;
+  color: #333;
+}
+.btn-red {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 980px) {
+  .admin-main {
+    grid-template-columns: 1fr;
+  }
+  .side-panel {
+    order: 2;
+  }
 }
