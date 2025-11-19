@@ -15,17 +15,39 @@ import autoTable from "jspdf-autotable";
 const mobileQuery = window.matchMedia("(max-width: 768px)");
 const ETAPES = ["Tour2", "Tour1", "16ème", "8ème", "Quart", "Demi", "Finale"];
 const COLOR_ALL = "Tous";
-const TYPE_COMBATS = [
-  "Tous",
-  "LightContact",
-  "KickLight",
-  "K1Light",
-  "FullContact",
-];
 const ALLOWED_UIDS = [
   "2VqoJdZpE6NOtSWx3ko7OtzXBFk1",
   "BLqmftqFsgSKtceNI3c76jrdE0p1",
 ];
+
+// Groupes de disciplines
+const LIGHT_TYPES = ["LightContact", "KickLight", "K1Light"];
+const FULL_TYPES = ["FullContact", "LowKick", "K1"];
+const ALL_TYPES = ["Tous", ...LIGHT_TYPES, ...FULL_TYPES];
+const typeColors = {
+  LightContact: "#ffd700",
+  KickLight: "#1e90ff",
+  K1Light: "#ff7f50",
+  FullContact: "#8b0000",
+  LowKick: "#32cd32",
+  K1: "#535353",
+};
+
+// Icônes des types
+const TYPE_ICONS = {
+  LightContact: "⚡ LightContact",
+  KickLight: "🥷 KickLight",
+  K1Light: "🔥 K1Light",
+  FullContact: "💥 FullContact",
+  LowKick: "🥊 LowKick",
+  K1: "⚡ K1",
+};
+
+// Icônes des casques
+const HELMET_ICONS = {
+  Rouge: "/images/casque_rouge.png",
+  Bleu: "/images/casque_bleu.png",
+};
 
 export default function Bracket({ user }) {
   const [columns, setColumns] = useState({});
@@ -35,6 +57,7 @@ export default function Bracket({ user }) {
   const [colorFilter, setColorFilter] = useState(COLOR_ALL);
   const [combatTypeFilter, setCombatTypeFilter] = useState("Tous");
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchUpcoming, setSearchUpcoming] = useState("");
   const [loadingReset, setLoadingReset] = useState(false);
   const [isVertical, setIsVertical] = useState(mobileQuery.matches);
   const [userForcedOrientation, setUserForcedOrientation] = useState(false);
@@ -49,7 +72,7 @@ export default function Bracket({ user }) {
   ]);
   const [showSidebar, setShowSidebar] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(mobileQuery.matches);
-  const [searchUpcoming, setSearchUpcoming] = useState("");
+  const [combatTypeOpen, setCombatTypeOpen] = useState(false);
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
 
@@ -99,7 +122,6 @@ export default function Bracket({ user }) {
     return () => window.removeEventListener("resize", handleResize);
   }, [userForcedOrientation]);
 
-  // 🔹 useCallback pour hasLostBefore
   const hasLostBefore = useCallback(
     (participant, currentEtape) => {
       const currentIndex = ETAPES.indexOf(currentEtape);
@@ -126,18 +148,21 @@ export default function Bracket({ user }) {
     setUserForcedOrientation(true);
   };
 
-  // 🔹 Tous les combats aplatis
+  const timeToMinutes = (time = "00:00") => {
+    const [h, m] = time.split(":").map(Number);
+    return h * 60 + m;
+  };
+
+  // 🔹 Tous les combats aplatis et filtrés par type
   const allCombats = useMemo(() => {
-    let arr = [];
-    Object.values(columns).forEach((fighterCombats) => {
-      arr = arr.concat(fighterCombats);
-    });
+    let arr = Object.values(columns).flatMap(
+      (fighterCombats) => fighterCombats
+    );
+
     if (combatTypeFilter !== "Tous") {
-      arr = arr.filter(
-        (c) =>
-          (c.typeCombat || "").toLowerCase() === combatTypeFilter.toLowerCase()
-      );
+      arr = arr.filter((c) => c.typeCombat === combatTypeFilter);
     }
+
     return arr;
   }, [columns, combatTypeFilter]);
 
@@ -149,83 +174,51 @@ export default function Bracket({ user }) {
         const participant = normalizeText(c.participant);
         const adversaire = normalizeText(c.adversaire);
 
-        // Filtre par étape
         if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
-
-        // Filtre par couleur
         if (
           colorFilter !== COLOR_ALL &&
           (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()
         )
           return false;
-
-        // Filtre par recherche de terme
         if (term && !(participant.includes(term) || adversaire.includes(term)))
           return false;
-
-        // Filtrer les combats perdus
-        if (c.statut === "perdu") return false;
-
-        // Filtrer les combats déjà perdus avant cette étape (fonction personnalisée)
+        if ((c.statut || "").toLowerCase() === "perdu") return false;
         if (hasLostBefore(c.participant, etape)) return false;
-
-        // Combats cachés après une défaite
         if (c.hiddenAfterLoss) return false;
 
         return c.etape === etape;
       });
 
-      // Tri par date puis par heure
       filtered.sort((a, b) => {
         if (a.date !== b.date) return a.date.localeCompare(b.date);
-        const [ah, am] = (a.time || "00:00").split(":").map(Number);
-        const [bh, bm] = (b.time || "00:00").split(":").map(Number);
-        return ah * 60 + am - (bh * 60 + bm);
+        return timeToMinutes(a.time) - timeToMinutes(b.time);
       });
 
       return filtered;
     });
   }, [allCombats, stepFilter, colorFilter, searchTerm, hasLostBefore]);
 
-  // Combats visibles dans un tableau plat
   const visibleFlat = visibleColumns.flat();
 
-  // 🔹 Combats à venir
+  // 🔹 Combats en retard pour la sidebar
   const upcomingCombats = useMemo(() => {
     const now = new Date();
-    const todayStr = now.toISOString().slice(0, 10); // yyyy-mm-dd
-    const nowMinutes = now.getHours() * 60 + now.getMinutes(); // temps actuel en minutes
+    const todayStr = now.toISOString().slice(0, 10);
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     return visibleFlat
-      .filter((c) => c.date >= todayStr) // Combats à venir (y compris aujourd'hui)
-      .filter((c) => c.time) // Les combats doivent avoir une heure définie
-      .filter((c) => !["gagné", "perdu"].includes(c.status)) // Exclure les combats gagnés ou perdus
-      .filter((c) => {
-        const [h, m] = c.time.split(":").map(Number); // Conversion de l'heure en minutes
-        if (isNaN(h) || isNaN(m)) return false; // Si l'heure est invalide, ignorer ce combat
-        const combatMinutes = h * 60 + m;
-        // Afficher les combats dans l'heure à venir OU en retard depuis moins de 2h
-        return (
-          combatMinutes >= nowMinutes - 120 && combatMinutes <= nowMinutes + 60
-        );
-      })
-      .sort((a, b) => {
-        const [ah, am] = a.time.split(":").map(Number);
-        const [bh, bm] = b.time.split(":").map(Number);
-        return ah * 60 + am - (bh * 60 + bm); // Tri par heure
-      })
-      .map((combat) => {
-        const [h, m] = combat.time.split(":").map(Number);
-        const combatMinutes = h * 60 + m;
+      .filter((c) => !["gagné", "perdu"].includes(c.statut))
+      .filter((c) => c.date <= todayStr)
+      .filter((c) => c.time)
+      .map((c) => {
+        const [h, m] = c.time.split(":").map(Number);
+        const combatMinutes = timeToMinutes(c.time);
+        const isLate = c.date < todayStr || combatMinutes < nowMinutes;
 
-        // Détection du retard
-        const isLate = combatMinutes < nowMinutes; // Combat en retard si l'heure est déjà passée
-
-        return {
-          ...combat,
-          isLate, // Ajout de la propriété "isLate"
-        };
-      });
+        return { ...c, isLate };
+      })
+      .filter(Boolean)
+      .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
   }, [visibleFlat]);
 
   const countVisibleColor = (color) =>
@@ -259,15 +252,15 @@ export default function Bracket({ user }) {
     const currentEtapeIndex = ETAPES.indexOf(combat.etape);
     const combats = newColumns[combat.docId] || [];
     newColumns[combat.docId] = combats.map((c) => {
-      if (c.num === combat.num) c = { ...c, statut: statutValue };
+      let updated = { ...c };
+      if (c.num === combat.num) updated.statut = statutValue;
       if (c.participant === combat.participant && statutValue === "perdu") {
         const etapeIndex = ETAPES.indexOf(c.etape);
-        if (etapeIndex > currentEtapeIndex)
-          return { ...c, hiddenAfterLoss: true };
+        if (etapeIndex > currentEtapeIndex) updated.hiddenAfterLoss = true;
       }
-      if (c.hiddenAfterLoss && statutValue !== "perdu")
-        c = { ...c, hiddenAfterLoss: false };
-      return c;
+      if (updated.hiddenAfterLoss && statutValue !== "perdu")
+        updated.hiddenAfterLoss = false;
+      return updated;
     });
     setColumns(newColumns);
     try {
@@ -279,7 +272,6 @@ export default function Bracket({ user }) {
     }
   };
 
-  // 🔹 Reset statuts
   const handleResetStatuses = async () => {
     if (!canEdit) return;
     if (!window.confirm("Réinitialiser tous les statuts ?")) return;
@@ -312,7 +304,6 @@ export default function Bracket({ user }) {
     }
   };
 
-  // 🔹 Export PDF
   const handleExportPDF = () => {
     const doc = new jsPDF("p", "pt");
     const dateNow = new Date().toLocaleDateString("fr-FR");
@@ -321,22 +312,12 @@ export default function Bracket({ user }) {
     doc.setFontSize(10);
     doc.text(`Exporté le ${dateNow}`, 40, 55);
 
-    // 🔹 Trier les combats par date, puis typeCombat, puis heure
     const sortedCombats = [...visibleFlat].sort((a, b) => {
-      // 1️⃣ Par date (plus ancien au plus récent)
-      if (a.date && b.date && a.date !== b.date) {
+      if (a.date && b.date && a.date !== b.date)
         return new Date(a.date) - new Date(b.date);
-      }
-
-      // 2️⃣ Par typeCombat
-      if (a.typeCombat && b.typeCombat && a.typeCombat !== b.typeCombat) {
+      if (a.typeCombat && b.typeCombat && a.typeCombat !== b.typeCombat)
         return a.typeCombat.localeCompare(b.typeCombat);
-      }
-
-      // 3️⃣ Par heure
-      const [ah, am] = (a.time || "00:00").split(":").map(Number);
-      const [bh, bm] = (b.time || "00:00").split(":").map(Number);
-      return ah * 60 + am - (bh * 60 + bm);
+      return timeToMinutes(a.time) - timeToMinutes(b.time);
     });
 
     const rows = sortedCombats.map((c) => [
@@ -393,65 +374,55 @@ export default function Bracket({ user }) {
 
       {/* Controls */}
       <div className="controls">
-        <div className="controls-left">
-          <div className="combat-type-filter">
-            {TYPE_COMBATS.map((type) => (
-              <button
-                key={type}
-                className={`${type} ${
-                  combatTypeFilter === type ? "active" : ""
-                }`}
-                onClick={() => setCombatTypeFilter(type)}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
+        {/* Left controls */}
+        <div className="combat-type-wrapper">
+          <label htmlFor="combat-type" className="combat-type-label">
+            Type de combat
+          </label>
+          <select
+            id="combat-type"
+            value={combatTypeFilter}
+            onChange={(e) => setCombatTypeFilter(e.target.value)}
+            className="combat-type-select"
+          >
+            <option value="Tous">Tous</option>
+            <optgroup label="Light Contact">
+              {LIGHT_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Plein Contact">
+              {FULL_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </optgroup>
+          </select>
         </div>
 
+        {/* Right controls */}
         <div className="controls-right">
-          {/* Wrapper pour filtres couleur + toggle */}
-          <div className="color-toggle-wrapper">
-            <div className="color-filters">
+          {/* Color filters */}
+          <div className="color-filters">
+            {["Rouge", "Bleu", COLOR_ALL].map((color) => (
               <div
-                className={`color-box rouge ${
-                  colorFilter === "Rouge" ? "active" : ""
+                key={color}
+                className={`color-box ${color.toLowerCase()} ${
+                  colorFilter === color ? "active" : ""
                 }`}
                 onClick={() =>
-                  setColorFilter(colorFilter === "Rouge" ? COLOR_ALL : "Rouge")
+                  setColorFilter(color === colorFilter ? COLOR_ALL : color)
                 }
               >
-                🔴 {countVisibleColor("Rouge")}
+                {color} {color !== COLOR_ALL && countVisibleColor(color)}
               </div>
-              <div
-                className={`color-box bleu ${
-                  colorFilter === "Bleu" ? "active" : ""
-                }`}
-                onClick={() =>
-                  setColorFilter(colorFilter === "Bleu" ? COLOR_ALL : "Bleu")
-                }
-              >
-                🔵 {countVisibleColor("Bleu")}
-              </div>
-              <div
-                className={`color-box tous ${
-                  colorFilter === COLOR_ALL ? "active" : ""
-                }`}
-                onClick={() => setColorFilter(COLOR_ALL)}
-              >
-                ⚪ Tous
-              </div>
-            </div>
-
-            {isMobile && (
-              <div className="toggle-orientation">
-                <button onClick={handleToggleOrientation}>
-                  {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
-                </button>
-              </div>
-            )}
+            ))}
           </div>
 
+          {/* Step + Search */}
           <div className="controls-row">
             <div className="filter-wrapper">
               <FaFilter className="icon" />
@@ -474,34 +445,42 @@ export default function Bracket({ user }) {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Rechercher un participant ou adversaire"
+                placeholder="Rechercher participant ou adversaire"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="search-reset-wrapper">
+          {/* Reset + Export */}
+          <div className="controls-actions">
             <button
               className="reset-btn"
               onClick={handleResetStatuses}
               disabled={!canEdit || loadingReset}
             >
               <FaRedo style={{ marginRight: 6 }} />
-              {loadingReset
-                ? "Réinitialisation..."
-                : "Réinitialiser les statuts"}
+              {loadingReset ? "Réinitialisation..." : "Réinitialiser"}
             </button>
+
+            {canEdit && (
+              <button
+                className="export-btn"
+                onClick={handleExportPDF}
+                disabled={!visibleFlat.length}
+              >
+                Exporter PDF
+              </button>
+            )}
           </div>
 
-          {canEdit && (
-            <button
-              className="export-btn"
-              onClick={handleExportPDF}
-              disabled={!visibleFlat.length}
-            >
-              📄 Exporter en PDF
-            </button>
+          {/* Mobile orientation toggle */}
+          {isMobile && (
+            <div className="toggle-orientation">
+              <button onClick={handleToggleOrientation}>
+                {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -511,7 +490,7 @@ export default function Bracket({ user }) {
         className="main-bracket-container"
         style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}
       >
-        {/* Sidebar toggle pour mobile */}
+        {/* Sidebar toggle mobile */}
         {isVertical && (
           <button
             onClick={() => setShowSidebar((prev) => !prev)}
@@ -530,11 +509,11 @@ export default function Bracket({ user }) {
               : "Afficher les combats à venir"}
           </button>
         )}
+
         {/* Sidebar */}
         {showSidebar && (
           <div className="sidebar" style={{ width: "225px", flexShrink: 0 }}>
-            <h3>Combats à venir</h3>
-
+            <h3>Combats en retard</h3>
             <div className="sidebar-search">
               <input
                 type="text"
@@ -544,42 +523,33 @@ export default function Bracket({ user }) {
               />
             </div>
 
-            {/* Combats filtrés */}
             {upcomingCombats
               .filter((c) => {
-                // Exclure les combats terminés (gagné ou perdu)
-                return !["gagné", "perdu"].includes(c.statut);
+                const term = normalizeText(searchUpcoming.trim());
+                if (!term) return true;
+                const participant = normalizeText(c.participant);
+                const adversaire = normalizeText(c.adversaire);
+                return participant.includes(term) || adversaire.includes(term);
               })
-              .map((c) => {
-                // Application de la classe "late-combat" si le combat est en retard
-                const combatClass = c.isLate
-                  ? "sidebar-combat late-combat"
-                  : "sidebar-combat";
-
-                return (
-                  <div
-                    key={`${c.participant}-${c.num}`}
-                    className={combatClass}
-                  >
-                    <div>
-                      <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
-                      <img
-                        src={
-                          c.couleur === "Rouge"
-                            ? "/images/casque_rouge.png"
-                            : "/images/casque_bleu.png"
-                        }
-                        alt={c.couleur}
-                        className="helmet-icon"
-                      />
-                      {c.participant} vs {c.adversaire}
-                    </div>
-                    <div>
-                      Catégorie: {c.categorie} | Aire {c.aire}
-                    </div>
+              .map((c) => (
+                <div
+                  key={`${c.participant}-${c.num}`}
+                  className={`sidebar-combat ${c.isLate ? "late-combat" : ""}`}
+                >
+                  <div>
+                    <strong>{c.time}</strong> - {formatDate(c.date)}{" "}
+                    <img
+                      src={HELMET_ICONS[c.couleur] || ""}
+                      alt={c.couleur}
+                      className="helmet-icon"
+                    />
+                    {c.participant} vs {c.adversaire}
                   </div>
-                );
-              })}
+                  <div>
+                    Catégorie: {c.categorie} | Aire {c.aire}
+                  </div>
+                </div>
+              ))}
           </div>
         )}
 
@@ -600,7 +570,6 @@ export default function Bracket({ user }) {
                     editingCard &&
                     editingCard.docId === combat.docId &&
                     editingCard.num === combat.num;
-
                   const statutLower = (combat.statut || "").toLowerCase();
 
                   return (
@@ -631,19 +600,11 @@ export default function Bracket({ user }) {
                             : ""}
                         </div>
                         <div className="etape-badge">{combat.etape}</div>
-
-                        {/* Badge type combat */}
                         <div
                           className={`type-badge ${combat.typeCombat || ""}`}
                         >
-                          {combat.typeCombat === "LightContact" &&
-                            "⚡ LightContact"}
-                          {combat.typeCombat === "KickLight" && "🥷 KickLight"}
-                          {combat.typeCombat === "K1Light" && "🔥 K1Light"}
-                          {combat.typeCombat === "FullContact" &&
-                            "💥 FullContact"}
+                          {TYPE_ICONS[combat.typeCombat]}
                         </div>
-
                         <div className="coach-badge">
                           🎯 Coach : {combat.coach}
                         </div>
@@ -651,11 +612,9 @@ export default function Bracket({ user }) {
                           🏷 {combat.categorie}
                         </div>
 
-                        {/* Edition */}
                         {isEditing && canEdit ? (
                           <div className="editing-fields">
                             <input defaultValue={combat.participant} disabled />
-
                             <input
                               defaultValue={combat.adversaire}
                               onChange={(e) =>
@@ -665,7 +624,6 @@ export default function Bracket({ user }) {
                                 }))
                               }
                             />
-
                             <input
                               defaultValue={combat.num}
                               onChange={(e) =>
@@ -675,8 +633,6 @@ export default function Bracket({ user }) {
                                 }))
                               }
                             />
-
-                            {/* Date input */}
                             <input
                               type="date"
                               defaultValue={combat.date || ""}
@@ -687,8 +643,6 @@ export default function Bracket({ user }) {
                                 }))
                               }
                             />
-
-                            {/* Time input */}
                             <input
                               type="time"
                               defaultValue={combat.time || ""}
@@ -699,7 +653,6 @@ export default function Bracket({ user }) {
                                 }))
                               }
                             />
-
                             <input
                               defaultValue={combat.aire}
                               onChange={(e) =>
@@ -709,7 +662,6 @@ export default function Bracket({ user }) {
                                 }))
                               }
                             />
-
                             <select
                               defaultValue={combat.couleur}
                               onChange={(e) =>
@@ -722,7 +674,6 @@ export default function Bracket({ user }) {
                               <option value="Rouge">Rouge</option>
                               <option value="Bleu">Bleu</option>
                             </select>
-
                             <select
                               defaultValue={combat.coach}
                               onChange={(e) =>
@@ -743,7 +694,6 @@ export default function Bracket({ user }) {
                                 </option>
                               ))}
                             </select>
-
                             <input
                               list="categories"
                               defaultValue={combat.categorie}
@@ -759,7 +709,6 @@ export default function Bracket({ user }) {
                                 <option key={cat} value={cat} />
                               ))}
                             </datalist>
-
                             <div className="edit-buttons">
                               <button
                                 onClick={() =>

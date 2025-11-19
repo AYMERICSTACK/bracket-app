@@ -34,7 +34,26 @@ export default function AdminBracket() {
     setConfirmOpen(true);
   };
 
-  const DISCIPLINES = ["LightContact", "KickLight", "K1Light", "FullContact"];
+  // const DISCIPLINES
+  const DISCIPLINES = [
+    {
+      label: "Light Contact",
+      options: [
+        { value: "LightContact", label: "Light Contact" },
+        { value: "KickLight", label: "Kick Light" },
+        { value: "K1Light", label: "K1 Light" },
+      ],
+    },
+    {
+      label: "Full Contact",
+      options: [
+        { value: "LowKick", label: "Low Kick" },
+        { value: "FullContact", label: "Full Contact" },
+        { value: "K1", label: "K1" },
+      ],
+    },
+  ];
+
   const COULEURS = ["Rouge", "Bleu"];
   const COACHS = [
     "Chris",
@@ -263,11 +282,16 @@ export default function AdminBracket() {
                 onChange={(e) => setDiscipline(e.target.value)}
               >
                 <option value="">— Choisir —</option>
-                {DISCIPLINES.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
+                <optgroup label="Light Contact">
+                  <option value="LightContact">Light Contact</option>
+                  <option value="KickLight">Kick Light</option>
+                  <option value="K1Light">K1 Light</option>
+                </optgroup>
+                <optgroup label="Full Contact">
+                  <option value="LowKick">Low Kick</option>
+                  <option value="FullContact">Full Contact</option>
+                  <option value="K1">K1</option>
+                </optgroup>
               </select>
             </label>
 
