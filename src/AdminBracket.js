@@ -336,12 +336,18 @@ export default function AdminBracket() {
                       }
                     >
                       <option value="">Type</option>
-                      {DISCIPLINES.map((d) => (
-                        <option key={d} value={d}>
-                          {d}
-                        </option>
+
+                      {DISCIPLINES.map((group) => (
+                        <optgroup key={group.label} label={group.label}>
+                          {group.options.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </optgroup>
                       ))}
                     </select>
+
                     <select
                       value={c.etape}
                       onChange={(e) =>
