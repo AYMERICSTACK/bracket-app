@@ -215,53 +215,185 @@ body {
   align-items: center;
 }
 
-/* ---------- Combats list (interactive rows) ---------- */
+/* ---------- Combats list (Apple Premium ++) ---------- */
 .combats-list {
-  margin-top: 12px;
+  margin-top: 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 18px;
 }
 
+/* Combat row avec glass + glow + hover dynamique */
 .combat-row {
   display: flex;
   justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 10px 30px rgba(37, 117, 252, 0.06);
+  transition: all 0.22s ease;
+}
+
+.combat-row:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 40px rgba(37, 117, 252, 0.18);
+}
+
+/* Left / right blocks */
+.combat-row-left,
+.combat-row-right {
+  display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  padding: 12px;
+  align-items: center;
+}
+
+.combat-row-left {
+  flex: 1 1 50%;
+}
+
+.combat-row-right {
+  flex: 1 1 50%;
+  justify-content: flex-end;
+}
+
+/* Inputs et selects premium */
+.combat-row input,
+.combat-row select {
+  min-width: 110px;
+  flex: 1 1 auto;
+  padding: 10px 14px;
   border-radius: 12px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.84),
-    rgba(250, 250, 252, 0.86)
-  );
-  border: 1px solid rgba(16, 24, 40, 0.02);
-  transition: box-shadow 0.15s ease, transform 0.12s ease;
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.combat-row input:focus,
+.combat-row select:focus {
+  border-color: rgba(37, 117, 252, 0.65);
+  box-shadow: 0 6px 20px rgba(37, 117, 252, 0.22);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+/* Badges pour étapes et couleurs */
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  display: inline-block;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.badge.etape {
+  background: rgba(37, 117, 252, 0.95);
+}
+
+.badge.rouge {
+  background: #ff4d4f;
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.35);
+}
+
+.badge.bleu {
+  background: #1890ff;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.35);
+}
+
+/* Hover badge effect */
+.badge:hover {
+  transform: scale(1.08) translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 117, 252, 0.28);
+}
+
+/* Bouton supprimer premium */
+.btn-delete {
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ff6b6b, #ff4d4f);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 4px 14px rgba(255, 77, 79, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn-delete:hover {
+  transform: scale(1.08) translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 77, 79, 0.45);
+  background: linear-gradient(180deg, #ff7b7b, #ff5656);
+}
+/* ---------- Toast premium ---------- */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 100000;
+  animation: toastIn 0.25s ease, toastOut 0.25s ease 2.75s forwards;
+}
+
+.toast.success {
+  background: linear-gradient(90deg, #34d399, #10b981); /* vert Apple style */
+}
+
+.toast.error {
+  background: linear-gradient(90deg, #f87171, #ef4444); /* rouge Apple style */
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes toastOut {
+  to {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 640px) {
+  .combat-row-left,
+  .combat-row-right {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+  .combat-row-right {
+    justify-content: flex-start;
+    gap: 8px;
+  }
 }
 
 .combat-row:hover {
   box-shadow: var(--shadow-soft);
   transform: translateY(-3px);
-}
-
-.combat-row-left,
-.combat-row-right {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.combat-row input,
-.combat-row select {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(16, 24, 40, 0.06);
-  background: white;
-  font-size: 13px;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 /* ---------- Select typeCombat avec optgroup ---------- */

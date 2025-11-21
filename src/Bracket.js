@@ -82,6 +82,12 @@ export default function Bracket({ user }) {
     const [, month, day] = dateStr.split("-");
     return `${day}/${month}`;
   };
+  const [editingCombat, setEditingCombat] = useState(null);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const openEditModal = (combat, index) => {
+    setEditingCombat({ ...combat });
+    setEditingIndex(index);
+  };
 
   // 🔹 Fetch data
   useEffect(() => {
@@ -279,6 +285,7 @@ export default function Bracket({ user }) {
     );
     setColumns(newColumns);
     setEditingCard(null);
+    setEditingCombat(null);
     setEditValues({});
     try {
       await updateDoc(doc(db, "brackets", docId), {
@@ -405,6 +412,7 @@ export default function Bracket({ user }) {
   // -------------------------
   return (
     <div className="bracket-wrapper">
+      {/* Prochain combat */}
       {nextCombat && (
         <div className="next-combat-popup">
           <h2>Prochain combat !</h2>
@@ -437,7 +445,8 @@ export default function Bracket({ user }) {
           <p>🏟 Aire : {nextCombat.aire || "-"}</p>
         </div>
       )}
-      {/* Status Banner */}
+
+      {/* Status banner */}
       <div
         className={`status-banner ${
           user ? (canEdit ? "authorized" : "readonly") : "non-connected"
@@ -484,10 +493,11 @@ export default function Bracket({ user }) {
             </optgroup>
           </select>
         </div>
-        {/* 🔹 Bouton Prochain combat */}
+
         <button className="next-combat-btn" onClick={showNextCombat}>
           Prochain combat
         </button>
+
         {/* Right controls */}
         <div className="controls-right">
           {/* Color filters */}
@@ -677,7 +687,7 @@ export default function Bracket({ user }) {
                             : statutLower === "perdu"
                             ? "perdu"
                             : ""
-                        }`}
+                        } ${isEditing ? "editing" : ""}`}
                       >
                         <div className="status-badge">
                           {statutLower === "gagné"
@@ -703,6 +713,7 @@ export default function Bracket({ user }) {
                           <div className="editing-fields">
                             <input defaultValue={combat.participant} disabled />
                             <input
+                              placeholder="nom de l'adversaire"
                               defaultValue={combat.adversaire}
                               onChange={(e) =>
                                 setEditValues((s) => ({
@@ -712,11 +723,13 @@ export default function Bracket({ user }) {
                               }
                             />
                             <input
+                              placeholder="numéro du combat"
+                              type="number"
                               defaultValue={combat.num}
                               onChange={(e) =>
                                 setEditValues((s) => ({
                                   ...s,
-                                  num: e.target.value,
+                                  num: Number(e.target.value),
                                 }))
                               }
                             />
@@ -741,6 +754,7 @@ export default function Bracket({ user }) {
                               }
                             />
                             <input
+                              placeholder="numéro de l'aire"
                               defaultValue={combat.aire}
                               onChange={(e) =>
                                 setEditValues((s) => ({
@@ -760,27 +774,6 @@ export default function Bracket({ user }) {
                             >
                               <option value="Rouge">Rouge</option>
                               <option value="Bleu">Bleu</option>
-                            </select>
-                            <select
-                              defaultValue={combat.coach}
-                              onChange={(e) =>
-                                setEditValues((s) => ({
-                                  ...s,
-                                  coach: e.target.value,
-                                }))
-                              }
-                            >
-                              {[
-                                "Julien",
-                                "Nadège",
-                                "Christophe",
-                                "Mélanie",
-                                "Guillaume",
-                              ].map((c) => (
-                                <option key={c} value={c}>
-                                  {c}
-                                </option>
-                              ))}
                             </select>
                             <input
                               list="categories"
@@ -808,6 +801,7 @@ export default function Bracket({ user }) {
                               <button
                                 onClick={() => {
                                   setEditingCard(null);
+                                  setEditingCombat(null);
                                   setEditValues({});
                                 }}
                               >
@@ -851,14 +845,12 @@ export default function Bracket({ user }) {
                               <button
                                 className="edit-btn"
                                 onClick={() => {
-                                  setEditingCard({
-                                    docId: combat.docId,
-                                    num: combat.num,
-                                  });
-                                  setEditValues({ ...combat });
+                                  setEditingCard({ ...combat }); // <-- important
+                                  setEditingCombat({ ...combat });
+                                  setEditingIndex(idx);
                                 }}
                               >
-                                Modifier
+                                ✏️ Modifier
                               </button>
                             )}
                           </>

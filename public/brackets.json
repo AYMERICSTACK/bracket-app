@@ -1,150 +1,150 @@
 {
-  "K1Light": {
-    "Alban": [
+  "LightContact": {
+    "Zakaria": [
       {
         "etape": "Demi",
         "num": "29",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Szemendera Willy",
         "couleur": "Rouge",
         "aire": "9",
-        "participant": "Alban",
+        "participant": "Zakaria",
         "coach": "Guillaume",
         "statut": "En attente",
-        "categorie": "-74kg",
+        "categorie": "-69kg",
         "date": "2025-11-09",
         "time": "13:36"
       },
       {
         "etape": "Finale",
         "num": "39",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Vainqueur combat 28",
         "couleur": "Bleu",
         "aire": "9",
-        "participant": "Alban",
+        "participant": "Zakaria",
         "coach": "Guillaume",
         "statut": "En attente",
-        "categorie": "-74kg",
+        "categorie": "-69kg",
         "date": "2025-11-09",
         "time": "15:17"
       }
     ],
-    "Gabriel": [
+    "Arthur": [
       {
         "etape": "Finale",
         "num": "30",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Zeghoual Mouhamed",
         "couleur": "Bleu",
         "aire": "7",
-        "participant": "Gabriel",
+        "participant": "Arthur",
         "coach": "Guillaume",
         "statut": "En attente",
-        "categorie": "-42kg",
+        "categorie": "-57kg",
         "date": "2025-11-09",
         "time": "14:09"
       }
     ],
-    "Joris": [
+    "Mathis": [
       {
         "etape": "Demi",
         "num": "27",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Blanchard Solal",
         "couleur": "Rouge",
         "aire": "9",
-        "participant": "Joris",
+        "participant": "Mathis",
         "coach": "Julien",
         "statut": "En attente",
-        "categorie": "-69kg",
+        "categorie": "-74kg",
         "date": "2025-11-09",
         "time": "13:11"
       },
       {
         "etape": "Finale",
         "num": "38",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Vainqueur combat 26",
         "couleur": "Bleu",
         "aire": "9",
-        "participant": "Joris",
+        "participant": "Mathis",
         "coach": "Julien",
         "statut": "En attente",
-        "categorie": "-69kg",
+        "categorie": "-74kg",
         "date": "2025-11-09",
         "time": "15:04"
       }
     ],
-    "Léony": [
+    "Gabriel": [
       {
         "etape": "Demi",
         "num": "22",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Bouriala Hind",
         "couleur": "Bleu",
         "aire": "9",
-        "participant": "Léony",
+        "participant": "Gabriel",
         "coach": "Christophe",
         "statut": "En attente",
-        "categorie": "-37kg",
+        "categorie": "-57kg",
         "date": "2025-11-09",
         "time": "12:23"
       },
       {
         "etape": "Finale",
         "num": "36",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Vainqueur combat 23",
         "couleur": "Rouge",
         "aire": "9",
-        "participant": "Léony",
+        "participant": "Gabriel",
         "coach": "Christophe",
         "statut": "En attente",
-        "categorie": "-37kg",
+        "categorie": "-57kg",
         "date": "2025-11-09",
         "time": "14:46"
       }
     ],
-    "Nadège": [
+    "Julien": [
       {
         "etape": "Demi",
         "num": "15",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Barathay Laetitia",
         "couleur": "Rouge",
         "aire": "6",
-        "participant": "Nadège",
+        "participant": "Julien",
         "coach": "Nadège",
         "statut": "En attente",
-        "categorie": "-60kg",
+        "categorie": "-84kg",
         "date": "2025-11-09",
         "time": "11:09"
       },
       {
         "etape": "Finale",
         "num": "34",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Palladino Emilie",
         "couleur": "Rouge",
         "aire": "6",
-        "participant": "Nadège",
+        "participant": "Julien",
         "coach": "Nadège",
         "statut": "En attente",
-        "categorie": "-60kg",
+        "categorie": "-84kg",
         "date": "2025-11-09",
         "time": "14:11"
       }
     ],
-    "Valentin": [
+    "Rémy": [
       {
         "etape": "Demi",
         "num": "14",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Bouraghda Younes",
         "couleur": "Bleu",
         "aire": "6",
-        "participant": "Valentin",
+        "participant": "Rémy",
         "coach": "Julien",
         "statut": "En attente",
         "categorie": "-63kg",
@@ -154,11 +154,11 @@
       {
         "etape": "Finale",
         "num": "33",
-        "typeCombat": "K1Light",
+        "typeCombat": "LightContact",
         "adversaire": "Jury Julien",
         "couleur": "Rouge",
         "aire": "6",
-        "participant": "Valentin",
+        "participant": "Rémy",
         "coach": "Julien",
         "statut": "En attente",
         "categorie": "-63kg",

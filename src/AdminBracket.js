@@ -7,6 +7,7 @@ import {
   doc,
   setDoc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +25,10 @@ export default function AdminBracket() {
   const [loading, setLoading] = useState(false);
   const [importBusy, setImportBusy] = useState(false);
 
-  // Confirm Modal réutilisable
+  // quel document (docId) est en train d'être édité (si on a cliqué "Éditer")
+  const [editingDocId, setEditingDocId] = useState(null);
+
+  // Confirm modal réutilisable
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
   const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => {});
@@ -35,7 +39,12 @@ export default function AdminBracket() {
     setConfirmOpen(true);
   };
 
-  // Pour utiliser await avec le modal si nécessaire
+  const [toast, setToast] = useState({ message: "", type: "" });
+  const showToast = (message, type = "success", duration = 3000) => {
+    setToast({ message, type });
+    setTimeout(() => setToast({ message: "", type: "" }), duration);
+  };
+
   const awaitConfirm = (message) => {
     return new Promise((resolve) => {
       openConfirm(message, () => resolve(true));
@@ -65,18 +74,19 @@ export default function AdminBracket() {
     });
     setBrackets(data);
   }
-  // 🔹 Helper pour récupérer la première valeur normalisée d'un label de discipline
+
   function getDefaultValueForDiscipline(label) {
     const group = DISCIPLINES.find((d) => d.label === label);
     return group ? group.options[0].value : "";
   }
 
   const addCombat = () => {
-    if (!discipline || !participant)
-      return alert("Discipline et Participant requis !");
+    if (!discipline || !participant) {
+      showToast("Discipline et Participant requis !", "error");
+      return;
+    }
 
     const last = combats[combats.length - 1] || {};
-
     setCombats((prev) => [
       ...prev,
       {
@@ -106,16 +116,18 @@ export default function AdminBracket() {
   };
 
   const saveParticipant = () => {
-    if (!discipline || !participant)
-      return alert("Discipline et Participant requis !");
+    if (!discipline || !participant) {
+      showToast("Discipline et Participant requis !", "error");
+      return;
+    }
 
     openConfirm(
       `💾 Confirmer la sauvegarde de ${participant} (${combats.length} combats) ?`,
       async () => {
         setLoading(true);
         try {
-          // On garde exactement les combats tels quels
-          await setDoc(doc(db, "brackets", `${discipline}_${participant}`), {
+          const docId = `${discipline}_${participant}`;
+          await setDoc(doc(db, "brackets", docId), {
             discipline,
             participant,
             combats,
@@ -124,10 +136,14 @@ export default function AdminBracket() {
           setCombats([]);
           setParticipant("");
           setDiscipline("");
-          alert(`✅ ${participant} sauvegardé (${combats.length} combats)`);
+          setEditingDocId(null);
+          showToast(
+            `✅ ${participant} sauvegardé (${combats.length} combats)`,
+            "success"
+          );
         } catch (err) {
           console.error(err);
-          alert("❌ Erreur lors de la sauvegarde");
+          showToast("❌ Erreur lors de la sauvegarde", "error");
         } finally {
           setLoading(false);
         }
@@ -144,10 +160,10 @@ export default function AdminBracket() {
           const snapshot = await getDocs(collection(db, "brackets"));
           for (const s of snapshot.docs) await deleteDoc(s.ref);
           setBrackets({});
-          alert("✅ Tous les documents supprimés");
+          showToast("✅ Tous les documents supprimés", "success");
         } catch (err) {
           console.error(err);
-          alert("❌ Erreur lors de la suppression");
+          showToast("❌ Erreur lors de la suppression", "error");
         } finally {
           setLoading(false);
         }
@@ -179,7 +195,7 @@ export default function AdminBracket() {
             const rawCombats = Array.isArray(participantData)
               ? participantData
               : participantData.combats || participantData;
-            const combats = (rawCombats || []).map((c) => ({
+            const newCombats = (rawCombats || []).map((c) => ({
               ...c,
               participant: c.participant || participantName,
               discipline: c.discipline || disciplineName,
@@ -189,17 +205,17 @@ export default function AdminBracket() {
               {
                 discipline: disciplineName,
                 participant: participantName,
-                combats,
+                combats: newCombats,
               }
             );
           }
         }
 
-        alert("✅ Import JSON terminé !");
+        showToast("✅ Import JSON terminé !", "success");
         await fetchBrackets();
       } catch (err) {
         console.error(err);
-        alert("❌ Erreur lors de l'import JSON");
+        showToast("❌ Erreur lors de l'import JSON", "error");
       } finally {
         setImportBusy(false);
       }
@@ -213,7 +229,7 @@ export default function AdminBracket() {
       navigate("/");
     } catch (err) {
       console.error(err);
-      alert("Erreur déconnexion");
+      showToast("❌ Erreur déconnexion", "error");
     }
   };
 
@@ -221,6 +237,69 @@ export default function AdminBracket() {
     setDiscipline("");
     setParticipant("");
     setCombats([]);
+    setEditingDocId(null);
+  };
+
+  // Supprimer un combat : si on édite un participant existant on update DB immédiatement,
+  // sinon (création) on supprime juste du state local.
+  const handleDeleteCombat = (index) => {
+    // si on n'est pas sur un doc existant -> suppression locale
+    if (!editingDocId) {
+      setCombats((prev) => prev.filter((_, idx) => idx !== index));
+      showToast("✅ Combat supprimé (local)", "success");
+      return;
+    }
+
+    // sinon confirmation + updateDoc
+    openConfirm("Voulez-vous vraiment supprimer ce combat ?", async () => {
+      setLoading(true);
+      try {
+        const newCombats = combats.filter((_, idx) => idx !== index);
+        await updateDoc(doc(db, "brackets", editingDocId), {
+          combats: newCombats,
+        });
+        // mettre à jour l'état local et la liste de brackets
+        setCombats(newCombats);
+        setBrackets((prev) => {
+          if (!prev) return prev;
+          const copy = { ...prev };
+          if (copy[editingDocId])
+            copy[editingDocId] = { ...copy[editingDocId], combats: newCombats };
+          return copy;
+        });
+        showToast("✅ Combat supprimé", "success");
+      } catch (err) {
+        console.error(err);
+        showToast("❌ Erreur lors de la suppression du combat", "error");
+      } finally {
+        setLoading(false);
+      }
+    });
+  };
+
+  // Supprimer un participant (depuis la liste) : modal via openConfirm + toast
+  const handleDeleteParticipant = (docId) => {
+    openConfirm("Voulez-vous vraiment supprimer ce participant ?", async () => {
+      setLoading(true);
+      try {
+        await deleteDoc(doc(db, "brackets", docId));
+        setBrackets((prev) => {
+          const copy = { ...prev };
+          delete copy[docId];
+          return copy;
+        });
+        // si on venait d'éditer ce doc, clear form
+        if (editingDocId === docId) {
+          resetForm();
+        }
+        showToast("✅ Participant supprimé", "success");
+      } catch (err) {
+        console.error(err);
+        showToast("❌ Erreur lors de la suppression", "error");
+      } finally {
+        setLoading(false);
+      }
+    });
   };
 
   return (
@@ -249,7 +328,6 @@ export default function AdminBracket() {
           <div className="card-title">
             <h2>➕ Ajouter / Modifier un compétiteur</h2>
           </div>
-
           <div className="form-row">
             <label>
               Discipline
@@ -335,13 +413,14 @@ export default function AdminBracket() {
                       ))}
                     </select>
                     <input
-                      placeholder="Num"
+                      placeholder="Numéro du combat"
                       value={c.num}
                       onChange={(e) =>
                         handleCombatChange(i, "num", e.target.value)
                       }
                     />
                   </div>
+
                   <div className="combat-row-right">
                     <input
                       placeholder="Adversaire"
@@ -364,7 +443,7 @@ export default function AdminBracket() {
                       ))}
                     </select>
                     <input
-                      placeholder="Catégorie"
+                      placeholder="Catégorie (ex -60kg)"
                       value={c.categorie}
                       onChange={(e) =>
                         handleCombatChange(i, "categorie", e.target.value)
@@ -404,6 +483,15 @@ export default function AdminBracket() {
                         handleCombatChange(i, "time", e.target.value)
                       }
                     />
+
+                    {/* Supprimer combat (maintenant supprime en base si on édite un doc existant) */}
+                    <button
+                      className="btn btn-sm btn-delete"
+                      onClick={() => handleDeleteCombat(i)}
+                      disabled={loading}
+                    >
+                      ❌
+                    </button>
                   </div>
                 </div>
               ))
@@ -463,6 +551,7 @@ export default function AdminBracket() {
                         </div>
                       </div>
                       <div className="participant-actions">
+                        {/* Éditer */}
                         <button
                           className="btn btn-sm"
                           onClick={() => {
@@ -471,41 +560,24 @@ export default function AdminBracket() {
                             setCombats(
                               (entry.combats || []).map((c) => ({ ...c }))
                             );
+                            setEditingDocId(docId);
                             window.scrollTo({ top: 0, behavior: "smooth" });
                           }}
                         >
                           ✏️ Éditer
                         </button>
+
+                        {/* Supprimer participant via modal + toast */}
                         <button
                           className="btn btn-sm btn-delete"
-                          onClick={() =>
-                            openConfirm(
-                              "Voulez-vous vraiment supprimer ce participant ?",
-                              async () => {
-                                setLoading(true);
-                                try {
-                                  await deleteDoc(doc(db, "brackets", docId));
-                                  setBrackets((prev) => {
-                                    const copy = { ...prev };
-                                    delete copy[docId];
-                                    return copy;
-                                  });
-                                  alert("✅ Participant supprimé");
-                                } catch (err) {
-                                  console.error(err);
-                                  alert("❌ Erreur lors de la suppression");
-                                } finally {
-                                  setLoading(false);
-                                }
-                              }
-                            )
-                          }
+                          onClick={() => handleDeleteParticipant(docId)}
                           disabled={loading}
                         >
                           🗑 Supprimer
                         </button>
                       </div>
                     </div>
+
                     <div className="participant-body">
                       <div className="small-muted">
                         Combats: {(entry.combats || []).length}
@@ -567,6 +639,11 @@ export default function AdminBracket() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Toast */}
+      {toast.message && (
+        <div className={`toast ${toast.type}`}>{toast.message}</div>
       )}
     </div>
   );
