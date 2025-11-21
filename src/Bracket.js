@@ -1,3 +1,4 @@
+// src/Bracket.js
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
@@ -11,7 +12,6 @@ import {
 import "./Bracket.css";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-// Bracket.js
 import {
   DISCIPLINES,
   ALL_TYPES,
@@ -22,6 +22,11 @@ import {
 
 const mobileQuery = window.matchMedia("(max-width: 768px)");
 const ETAPES = ["Tour2", "Tour1", "16ème", "8ème", "Quart", "Demi", "Finale"];
+// Precompute index map for ETAPES to avoid repeated indexOf
+const ETAPES_INDEX = ETAPES.reduce((m, e, i) => {
+  m[e] = i;
+  return m;
+}, {});
 const COLOR_ALL = "Tous";
 const ALLOWED_UIDS = [
   "2VqoJdZpE6NOtSWx3ko7OtzXBFk1",
@@ -49,6 +54,15 @@ export default function Bracket({ user }) {
   ]);
 
   const [combatTypeOpen, setCombatTypeOpen] = useState(false);
+  const [nextCombat, setNextCombat] = useState(null);
+  const showNextCombat = () => {
+    if (!upcomingCombats || upcomingCombats.length === 0) return;
+    const next = upcomingCombats[0];
+    setNextCombat(next); // afficher le combat
+
+    // cacher après 5 secondes
+    setTimeout(() => setNextCombat(null), 5000);
+  };
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
   const [layout, setLayout] = useState({
@@ -106,27 +120,6 @@ export default function Bracket({ user }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const hasLostBefore = useCallback(
-    (participant, currentEtape) => {
-      const currentIndex = ETAPES.indexOf(currentEtape);
-      if (currentIndex <= 0) return false;
-      const combats = columns[participant] || [];
-      for (let i = 0; i < currentIndex; i++) {
-        if (
-          combats.some(
-            (c) =>
-              c.etape === ETAPES[i] &&
-              (c.statut || "").toLowerCase() === "perdu"
-          )
-        ) {
-          return true;
-        }
-      }
-      return false;
-    },
-    [columns]
-  );
-
   const handleToggleOrientation = () => {
     setLayout((prev) => ({
       ...prev,
@@ -136,40 +129,101 @@ export default function Bracket({ user }) {
   };
 
   const timeToMinutes = (time = "00:00") => {
-    const [h, m] = time.split(":").map(Number);
-    return h * 60 + m;
+    // guard if time is empty or invalid
+    if (!time) return 0;
+    const [h = "0", m = "0"] = time.split(":");
+    const hh = Number(h) || 0;
+    const mm = Number(m) || 0;
+    return hh * 60 + mm;
   };
 
-  // 🔹 Tous les combats aplatis et filtrés par type
-  const allCombats = useMemo(() => {
-    let arr = Object.values(columns).flatMap(
-      (fighterCombats) => fighterCombats
-    );
+  // -------------------------
+  // Performance optimizations
+  // -------------------------
 
-    if (combatTypeFilter !== "Tous") {
-      arr = arr.filter((c) => c.typeCombat === combatTypeFilter);
-    }
-
+  // 1) Flattened list of combats with precomputed normalized/search fields.
+  const normalizedCombats = useMemo(() => {
+    // columns is map docId -> combats[]
+    // produce a flat array of combats each with derived fields used repeatedly
+    const arr = [];
+    Object.values(columns).forEach((combatsArray) => {
+      (combatsArray || []).forEach((c) => {
+        const participantNorm = normalizeText(c.participant || "");
+        const adversaireNorm = normalizeText(c.adversaire || "");
+        const statutLower = (c.statut || "").toLowerCase();
+        const timeMinutes = timeToMinutes(c.time || "00:00");
+        arr.push({
+          ...c,
+          participantNorm,
+          adversaireNorm,
+          statutLower,
+          timeMinutes,
+        });
+      });
+    });
     return arr;
-  }, [columns, combatTypeFilter]);
+  }, [columns]); // only when columns change
 
-  // 🔹 Colonnes visibles par étape avec tri par date + heure
+  // 2) Map participant -> combats (for fast lookup in hasLostBefore)
+  const participantMap = useMemo(() => {
+    const map = new Map();
+    normalizedCombats.forEach((c) => {
+      const p = c.participant || "";
+      const arr = map.get(p) || [];
+      arr.push(c);
+      map.set(p, arr);
+    });
+    return map;
+  }, [normalizedCombats]);
+
+  // hasLostBefore uses precomputed map + ETAPES_INDEX
+  const hasLostBefore = useCallback(
+    (participant, currentEtape) => {
+      if (!participant) return false;
+      const combats = participantMap.get(participant) || [];
+      const currentIndex = ETAPES_INDEX[currentEtape] ?? -1;
+      if (currentIndex <= 0) return false;
+      for (let i = 0; i < currentIndex; i++) {
+        const et = ETAPES[i];
+        if (
+          combats.some(
+            (c) =>
+              c.etape === et &&
+              (c.statutLower || c.statut || "").toLowerCase() === "perdu"
+          )
+        ) {
+          return true;
+        }
+      }
+      return false;
+    },
+    [participantMap]
+  );
+
+  // 3) allCombats: filtered by combatTypeFilter (reuse normalizedCombats)
+  const allCombats = useMemo(() => {
+    if (combatTypeFilter === "Tous") return normalizedCombats;
+    return normalizedCombats.filter((c) => c.typeCombat === combatTypeFilter);
+  }, [normalizedCombats, combatTypeFilter]);
+
+  // 4) visibleColumns uses precomputed fields and avoids repeated normalization
   const visibleColumns = useMemo(() => {
     const term = normalizeText(searchTerm.trim());
     return ETAPES.map((etape) => {
       const filtered = allCombats.filter((c) => {
-        const participant = normalizeText(c.participant);
-        const adversaire = normalizeText(c.adversaire);
-
+        // filters:
         if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
         if (
           colorFilter !== COLOR_ALL &&
           (c.couleur || "").toLowerCase() !== colorFilter.toLowerCase()
         )
           return false;
-        if (term && !(participant.includes(term) || adversaire.includes(term)))
+        if (
+          term &&
+          !(c.participantNorm.includes(term) || c.adversaireNorm.includes(term))
+        )
           return false;
-        if ((c.statut || "").toLowerCase() === "perdu") return false;
+        if ((c.statutLower || "").toLowerCase() === "perdu") return false;
         if (hasLostBefore(c.participant, etape)) return false;
         if (c.hiddenAfterLoss) return false;
 
@@ -177,35 +231,35 @@ export default function Bracket({ user }) {
       });
 
       filtered.sort((a, b) => {
-        if (a.date !== b.date) return a.date.localeCompare(b.date);
-        return timeToMinutes(a.time) - timeToMinutes(b.time);
+        if (a.date !== b.date)
+          return (a.date || "").localeCompare(b.date || "");
+        return (a.timeMinutes || 0) - (b.timeMinutes || 0);
       });
 
       return filtered;
     });
   }, [allCombats, stepFilter, colorFilter, searchTerm, hasLostBefore]);
 
-  const visibleFlat = visibleColumns.flat();
+  const visibleFlat = useMemo(() => visibleColumns.flat(), [visibleColumns]);
 
-  // 🔹 Combats en retard pour la sidebar
+  // 5) upcomingCombats: operate on visibleFlat (already normalized)
   const upcomingCombats = useMemo(() => {
     const now = new Date();
     const todayStr = now.toISOString().slice(0, 10);
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     return visibleFlat
-      .filter((c) => !["gagné", "perdu"].includes(c.statut))
-      .filter((c) => c.date <= todayStr)
+      .filter(
+        (c) => !["gagné", "perdu"].includes((c.statutLower || "").toLowerCase())
+      )
+      .filter((c) => c.date && c.date <= todayStr)
       .filter((c) => c.time)
       .map((c) => {
-        const [h, m] = c.time.split(":").map(Number);
-        const combatMinutes = timeToMinutes(c.time);
+        const combatMinutes = c.timeMinutes || 0;
         const isLate = c.date < todayStr || combatMinutes < nowMinutes;
-
         return { ...c, isLate };
       })
-      .filter(Boolean)
-      .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+      .sort((a, b) => (a.timeMinutes || 0) - (b.timeMinutes || 0));
   }, [visibleFlat]);
 
   const countVisibleColor = (color) =>
@@ -213,7 +267,9 @@ export default function Bracket({ user }) {
       (c) => (c.couleur || "").toLowerCase() === color.toLowerCase()
     ).length;
 
-  // 🔹 Sauvegarde après édition
+  // -------------------------
+  // Save / status functions (unchanged logic)
+  // -------------------------
   const handleSave = async (docId, num) => {
     if (!canEdit) return;
     const newColumns = { ...columns };
@@ -304,7 +360,7 @@ export default function Bracket({ user }) {
         return new Date(a.date) - new Date(b.date);
       if (a.typeCombat && b.typeCombat && a.typeCombat !== b.typeCombat)
         return a.typeCombat.localeCompare(b.typeCombat);
-      return timeToMinutes(a.time) - timeToMinutes(b.time);
+      return (a.timeMinutes || 0) - (b.timeMinutes || 0);
     });
 
     const rows = sortedCombats.map((c) => [
@@ -344,8 +400,43 @@ export default function Bracket({ user }) {
     doc.save(`bracket_${dateNow}.pdf`);
   };
 
+  // -------------------------
+  // Render (unchanged structure)
+  // -------------------------
   return (
     <div className="bracket-wrapper">
+      {nextCombat && (
+        <div className="next-combat-popup">
+          <h2>Prochain combat !</h2>
+          <div className="next-combat-info">
+            <div className="participant-info">
+              <img
+                src={HELMET_ICONS[nextCombat.couleur] || ""}
+                alt={nextCombat.couleur}
+                className="helmet-icon"
+              />
+              <span>{nextCombat.participant}</span>
+            </div>
+            <div className="versus">vs</div>
+            <div className="participant-info">
+              <img
+                src={
+                  HELMET_ICONS[
+                    nextCombat.couleur === "Rouge" ? "Bleu" : "Rouge"
+                  ] || ""
+                }
+                alt={nextCombat.couleur === "Rouge" ? "Bleu" : "Rouge"}
+                className="helmet-icon"
+              />
+              <span>{nextCombat.adversaire}</span>
+            </div>
+          </div>
+          <p>
+            {formatDate(nextCombat.date)} {nextCombat.time || "-"}
+          </p>
+          <p>🏟 Aire : {nextCombat.aire || "-"}</p>
+        </div>
+      )}
       {/* Status Banner */}
       <div
         className={`status-banner ${
@@ -393,7 +484,10 @@ export default function Bracket({ user }) {
             </optgroup>
           </select>
         </div>
-
+        {/* 🔹 Bouton Prochain combat */}
+        <button className="next-combat-btn" onClick={showNextCombat}>
+          Prochain combat
+        </button>
         {/* Right controls */}
         <div className="controls-right">
           {/* Color filters */}
@@ -520,8 +614,8 @@ export default function Bracket({ user }) {
               .filter((c) => {
                 const term = normalizeText(searchUpcoming.trim());
                 if (!term) return true;
-                const participant = normalizeText(c.participant);
-                const adversaire = normalizeText(c.adversaire);
+                const participant = c.participantNorm;
+                const adversaire = c.adversaireNorm;
                 return participant.includes(term) || adversaire.includes(term);
               })
               .map((c) => (
@@ -680,6 +774,7 @@ export default function Bracket({ user }) {
                                 "Julien",
                                 "Nadège",
                                 "Christophe",
+                                "Mélanie",
                                 "Guillaume",
                               ].map((c) => (
                                 <option key={c} value={c}>

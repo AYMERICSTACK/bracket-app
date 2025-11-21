@@ -11,8 +11,7 @@ import {
 import { db } from "./firebase";
 import { useNavigate } from "react-router-dom";
 import "./AdminBracket.css";
-// AdminBracket.js
-import { DISCIPLINES, ALL_TYPES, TYPE_ICONS, TYPE_COLORS } from "./disciplines";
+import { DISCIPLINES } from "./disciplines";
 
 export default function AdminBracket() {
   const navigate = useNavigate();
@@ -34,6 +33,13 @@ export default function AdminBracket() {
     setConfirmMessage(message || "Êtes-vous sûr ?");
     setOnConfirmCallback(() => callback || (() => {}));
     setConfirmOpen(true);
+  };
+
+  // Pour utiliser await avec le modal si nécessaire
+  const awaitConfirm = (message) => {
+    return new Promise((resolve) => {
+      openConfirm(message, () => resolve(true));
+    });
   };
 
   const COULEURS = ["Rouge", "Bleu"];
@@ -59,13 +65,16 @@ export default function AdminBracket() {
     });
     setBrackets(data);
   }
+  // 🔹 Helper pour récupérer la première valeur normalisée d'un label de discipline
+  function getDefaultValueForDiscipline(label) {
+    const group = DISCIPLINES.find((d) => d.label === label);
+    return group ? group.options[0].value : "";
+  }
 
   const addCombat = () => {
-    if (!discipline || !participant) {
+    if (!discipline || !participant)
       return alert("Discipline et Participant requis !");
-    }
 
-    // Si un combat existe déjà, on reprend ses valeurs pour pré-remplir
     const last = combats[combats.length - 1] || {};
 
     setCombats((prev) => [
@@ -73,14 +82,14 @@ export default function AdminBracket() {
       {
         etape: "",
         num: "",
-        typeCombat: last.typeCombat || discipline, // reprend le dernier typeCombat ou discipline
+        typeCombat: last.typeCombat || discipline,
         adversaire: "",
         couleur: "",
         coach: last.coach || "",
         date: last.date || "",
         time: "",
-        participant: participant,
-        discipline: last.discipline || discipline,
+        participant,
+        discipline,
         categorie: last.categorie || "",
         aire: last.aire || "",
         statut: "En attente",
@@ -105,23 +114,17 @@ export default function AdminBracket() {
       async () => {
         setLoading(true);
         try {
-          const combatsWithMeta = combats.map((c) => ({
-            ...c,
-            participant,
-            discipline,
-          }));
+          // On garde exactement les combats tels quels
           await setDoc(doc(db, "brackets", `${discipline}_${participant}`), {
             discipline,
             participant,
-            combats: combatsWithMeta,
+            combats,
           });
           await fetchBrackets();
           setCombats([]);
           setParticipant("");
           setDiscipline("");
-          alert(
-            `✅ ${participant} sauvegardé (${combatsWithMeta.length} combats)`
-          );
+          alert(`✅ ${participant} sauvegardé (${combats.length} combats)`);
         } catch (err) {
           console.error(err);
           alert("❌ Erreur lors de la sauvegarde");
@@ -160,19 +163,10 @@ export default function AdminBracket() {
       try {
         const json = JSON.parse(event.target.result);
         let proceed = false;
-        await new Promise((resolve) => {
-          openConfirm(
-            "⚠️ Cette action va écraser toute la base actuelle. Continuer ?",
-            () => {
-              proceed = true;
-              resolve();
-            }
-          );
-        });
-        if (!proceed) {
-          setImportBusy(false);
-          return;
-        }
+        await awaitConfirm(
+          "⚠️ Cette action va écraser toute la base actuelle. Continuer ?"
+        ).then(() => (proceed = true));
+        if (!proceed) return setImportBusy(false);
         setImportBusy(true);
 
         const snapshot = await getDocs(collection(db, "brackets"));
@@ -264,16 +258,15 @@ export default function AdminBracket() {
                 onChange={(e) => setDiscipline(e.target.value)}
               >
                 <option value="">— Choisir —</option>
-                <optgroup label="Light Contact">
-                  <option value="LightContact">Light Contact</option>
-                  <option value="KickLight">Kick Light</option>
-                  <option value="K1Light">K1 Light</option>
-                </optgroup>
-                <optgroup label="Full Contact">
-                  <option value="LowKick">Low Kick</option>
-                  <option value="FullContact">Full Contact</option>
-                  <option value="K1">K1</option>
-                </optgroup>
+                {DISCIPLINES.map((d) => (
+                  <optgroup key={d.label} label={d.label}>
+                    {d.options.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
               </select>
             </label>
 
@@ -318,7 +311,6 @@ export default function AdminBracket() {
                       }
                     >
                       <option value="">Type</option>
-
                       {DISCIPLINES.map((d) => (
                         <optgroup key={d.label} label={d.label}>
                           {d.options.map((o) => (
@@ -329,7 +321,6 @@ export default function AdminBracket() {
                         </optgroup>
                       ))}
                     </select>
-
                     <select
                       value={c.etape}
                       onChange={(e) =>

@@ -272,9 +272,9 @@ body {
   border: 1px solid rgba(16, 24, 40, 0.1);
   background: white;
   font-size: 13px;
-  appearance: auto;          /* pour optgroup */
-  -webkit-appearance: auto;  /* Safari / Chrome */
-  -moz-appearance: auto;     /* Firefox */
+  appearance: auto; /* pour optgroup */
+  -webkit-appearance: auto; /* Safari / Chrome */
+  -moz-appearance: auto; /* Firefox */
   cursor: pointer;
 }
 
@@ -284,20 +284,20 @@ body {
 }
 /* Style pro pour les selects */
 .form-row select {
-  width: 200px;           /* largeur fixe */
-  padding: 8px 12px;      /* padding confortable */
-  border-radius: 8px;     /* bords arrondis */
+  width: 200px; /* largeur fixe */
+  padding: 8px 12px; /* padding confortable */
+  border-radius: 8px; /* bords arrondis */
   border: 1px solid #ccc; /* bord léger */
   background-color: #fff;
   font-size: 14px;
   font-weight: 500;
-  appearance: none;       /* on supprime l'apparence native sur Chrome/Edge */
+  appearance: none; /* on supprime l'apparence native sur Chrome/Edge */
   cursor: pointer;
   transition: border 0.2s, box-shadow 0.2s;
 }
 
 .form-row select:focus {
-  border-color: #007bff;   /* couleur focus */
+  border-color: #007bff; /* couleur focus */
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   outline: none;
 }
@@ -312,7 +312,6 @@ body {
 .form-row option {
   padding: 4px 8px;
 }
-
 
 /* compact inputs on small screens */
 @media (max-width: 480px) {

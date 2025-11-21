@@ -742,6 +742,11 @@
     width: 100%;
     text-align: center;
   }
+  .banner-right {
+    display: inline-flex !important; /* override inline */
+    justify-content: center !important;
+    gap: 12px !important;
+  }
   .color-filters {
     justify-content: center;
     align-items: center;
@@ -950,4 +955,65 @@
 .combat-type-label {
   padding: 10px;
   font-weight: 500;
+}
+/* 🔹 Bouton Prochain combat */
+.next-combat-btn {
+  background-color: #2575fc;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.next-combat-btn:hover {
+  background-color: #1a5edb;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.next-combat-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 🔹 Popup Prochain combat */
+.next-combat-popup {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 24px 32px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 9999;
+  animation: popup-fade 0.4s ease-in-out;
+  border-left: 6px solid #2575fc;
+}
+
+.next-combat-popup h2 {
+  margin: 0 0 8px 0;
+  color: #2575fc;
+}
+
+.next-combat-popup p {
+  margin: 4px 0;
+  font-weight: 500;
+}
+
+/* 🔹 Animation pour le popup */
+@keyframes popup-fade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20%) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
 }
