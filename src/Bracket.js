@@ -11,6 +11,14 @@ import {
 import "./Bracket.css";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+// Bracket.js
+import {
+  DISCIPLINES,
+  ALL_TYPES,
+  TYPE_ICONS,
+  TYPE_COLORS,
+  HELMET_ICONS,
+} from "./disciplines";
 
 const mobileQuery = window.matchMedia("(max-width: 768px)");
 const ETAPES = ["Tour2", "Tour1", "16ème", "8ème", "Quart", "Demi", "Finale"];
@@ -19,35 +27,6 @@ const ALLOWED_UIDS = [
   "2VqoJdZpE6NOtSWx3ko7OtzXBFk1",
   "BLqmftqFsgSKtceNI3c76jrdE0p1",
 ];
-
-// Groupes de disciplines
-const LIGHT_TYPES = ["LightContact", "KickLight", "K1Light"];
-const FULL_TYPES = ["FullContact", "LowKick", "K1"];
-const ALL_TYPES = ["Tous", ...LIGHT_TYPES, ...FULL_TYPES];
-const typeColors = {
-  LightContact: "#ffd700",
-  KickLight: "#1e90ff",
-  K1Light: "#ff7f50",
-  FullContact: "#8b0000",
-  LowKick: "#32cd32",
-  K1: "#535353",
-};
-
-// Icônes des types
-const TYPE_ICONS = {
-  LightContact: "⚡ LightContact",
-  KickLight: "🥷 KickLight",
-  K1Light: "🔥 K1Light",
-  FullContact: "💥 FullContact",
-  LowKick: "🥊 LowKick",
-  K1: "⚡ K1",
-};
-
-// Icônes des casques
-const HELMET_ICONS = {
-  Rouge: "/images/casque_rouge.png",
-  Bleu: "/images/casque_bleu.png",
-};
 
 export default function Bracket({ user }) {
   const [columns, setColumns] = useState({});
@@ -59,8 +38,6 @@ export default function Bracket({ user }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchUpcoming, setSearchUpcoming] = useState("");
   const [loadingReset, setLoadingReset] = useState(false);
-  const [isVertical, setIsVertical] = useState(mobileQuery.matches);
-  const [userForcedOrientation, setUserForcedOrientation] = useState(false);
   const [categories] = useState([
     "-37kg",
     "-50kg",
@@ -70,11 +47,15 @@ export default function Bracket({ user }) {
     "-70kg",
     "-75kg",
   ]);
-  const [showSidebar, setShowSidebar] = useState(window.innerWidth >= 768);
-  const [isMobile, setIsMobile] = useState(mobileQuery.matches);
+
   const [combatTypeOpen, setCombatTypeOpen] = useState(false);
 
   const canEdit = user && ALLOWED_UIDS.includes(user.uid);
+  const [layout, setLayout] = useState({
+    isVertical: mobileQuery.matches,
+    showSidebar: window.innerWidth >= 768,
+    userForced: false,
+  });
 
   const normalizeText = (str) =>
     (str || "")
@@ -109,18 +90,21 @@ export default function Bracket({ user }) {
   // 🔹 Responsive
   useEffect(() => {
     const handleResize = () => {
-      if (userForcedOrientation) return;
-      const mobile = window.innerWidth < 768;
-      setIsVertical(mobile);
-      setIsMobile(mobile);
-      setShowSidebar(!mobile);
+      setLayout((prev) => {
+        if (prev.userForced) return prev;
+        const mobile = window.innerWidth < 768;
+        return {
+          ...prev,
+          isVertical: mobile,
+          showSidebar: !mobile,
+        };
+      });
     };
-    if (!userForcedOrientation) {
-      window.addEventListener("resize", handleResize);
-      handleResize();
-    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, [userForcedOrientation]);
+  }, []);
 
   const hasLostBefore = useCallback(
     (participant, currentEtape) => {
@@ -144,8 +128,11 @@ export default function Bracket({ user }) {
   );
 
   const handleToggleOrientation = () => {
-    setIsVertical((prev) => !prev);
-    setUserForcedOrientation(true);
+    setLayout((prev) => ({
+      ...prev,
+      isVertical: !prev.isVertical,
+      userForced: true,
+    }));
   };
 
   const timeToMinutes = (time = "00:00") => {
@@ -387,18 +374,22 @@ export default function Bracket({ user }) {
           >
             <option value="Tous">Tous</option>
             <optgroup label="Light Contact">
-              {LIGHT_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
+              {DISCIPLINES.find((d) => d.label === "Light Contact").options.map(
+                (o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                )
+              )}
             </optgroup>
             <optgroup label="Plein Contact">
-              {FULL_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
+              {DISCIPLINES.find((d) => d.label === "Full Contact").options.map(
+                (o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                )
+              )}
             </optgroup>
           </select>
         </div>
@@ -475,10 +466,10 @@ export default function Bracket({ user }) {
           </div>
 
           {/* Mobile orientation toggle */}
-          {isMobile && (
+          {layout.isVertical && (
             <div className="toggle-orientation">
               <button onClick={handleToggleOrientation}>
-                {isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
+                {layout.isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
               </button>
             </div>
           )}
@@ -491,9 +482,11 @@ export default function Bracket({ user }) {
         style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}
       >
         {/* Sidebar toggle mobile */}
-        {isVertical && (
+        {layout.isVertical && (
           <button
-            onClick={() => setShowSidebar((prev) => !prev)}
+            onClick={() =>
+              setLayout((prev) => ({ ...prev, showSidebar: !prev.showSidebar }))
+            }
             style={{
               marginBottom: "10px",
               padding: "6px 12px",
@@ -504,14 +497,14 @@ export default function Bracket({ user }) {
               cursor: "pointer",
             }}
           >
-            {showSidebar
+            {layout.showSidebar
               ? "Masquer les combats à venir"
               : "Afficher les combats à venir"}
           </button>
         )}
 
         {/* Sidebar */}
-        {showSidebar && (
+        {layout.showSidebar && (
           <div className="sidebar" style={{ width: "225px", flexShrink: 0 }}>
             <h3>Combats en retard</h3>
             <div className="sidebar-search">
@@ -556,7 +549,7 @@ export default function Bracket({ user }) {
         {/* Bracket */}
         <div
           className={`bracket-container ${
-            isVertical ? "vertical" : "horizontal"
+            layout.isVertical ? "vertical" : "horizontal"
           }`}
           style={{ flex: 1 }}
         >

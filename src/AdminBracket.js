@@ -11,6 +11,8 @@ import {
 import { db } from "./firebase";
 import { useNavigate } from "react-router-dom";
 import "./AdminBracket.css";
+// AdminBracket.js
+import { DISCIPLINES, ALL_TYPES, TYPE_ICONS, TYPE_COLORS } from "./disciplines";
 
 export default function AdminBracket() {
   const navigate = useNavigate();
@@ -33,26 +35,6 @@ export default function AdminBracket() {
     setOnConfirmCallback(() => callback || (() => {}));
     setConfirmOpen(true);
   };
-
-  // const DISCIPLINES
-  const DISCIPLINES = [
-    {
-      label: "Light Contact",
-      options: [
-        { value: "LightContact", label: "Light Contact" },
-        { value: "KickLight", label: "Kick Light" },
-        { value: "K1Light", label: "K1 Light" },
-      ],
-    },
-    {
-      label: "Full Contact",
-      options: [
-        { value: "LowKick", label: "Low Kick" },
-        { value: "FullContact", label: "Full Contact" },
-        { value: "K1", label: "K1" },
-      ],
-    },
-  ];
 
   const COULEURS = ["Rouge", "Bleu"];
   const COACHS = [
@@ -337,11 +319,11 @@ export default function AdminBracket() {
                     >
                       <option value="">Type</option>
 
-                      {DISCIPLINES.map((group) => (
-                        <optgroup key={group.label} label={group.label}>
-                          {group.options.map((opt) => (
-                            <option key={opt.value} value={opt.value}>
-                              {opt.label}
+                      {DISCIPLINES.map((d) => (
+                        <optgroup key={d.label} label={d.label}>
+                          {d.options.map((o) => (
+                            <option key={o.value} value={o.value}>
+                              {o.label}
                             </option>
                           ))}
                         </optgroup>
