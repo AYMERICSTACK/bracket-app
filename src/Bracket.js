@@ -618,7 +618,7 @@ export default function Bracket({ user }) {
         {/* Sidebar */}
         {layout.showSidebar && (
           <div className="sidebar" style={{ width: "225px", flexShrink: 0 }}>
-            <h3>Combats en retard</h3>
+            <h3>Combats à venir (fond blanc) en retard (fond rouge)</h3>
             <div className="sidebar-search">
               <input
                 type="text"
