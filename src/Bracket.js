@@ -258,13 +258,21 @@ export default function Bracket({ user }) {
       .filter(
         (c) => !["gagné", "perdu"].includes((c.statutLower || "").toLowerCase())
       )
-      .filter((c) => c.date && c.date <= todayStr)
+      .filter((c) => c.date === todayStr) // on reste sur les combats du jour
       .filter((c) => c.time)
       .map((c) => {
         const combatMinutes = c.timeMinutes || 0;
-        const isLate = c.date < todayStr || combatMinutes < nowMinutes;
-        return { ...c, isLate };
+
+        // 🟥 En retard = l’heure est passée
+        const isLate = combatMinutes < nowMinutes;
+
+        // 🟦 Dans l’heure qui vient = entre maintenant et +60 min
+        const isComingSoon =
+          combatMinutes >= nowMinutes && combatMinutes <= nowMinutes + 60;
+
+        return { ...c, isLate, isComingSoon };
       })
+      .filter((c) => c.isLate || c.isComingSoon) // 👉 On garde uniquement 2 cas
       .sort((a, b) => (a.timeMinutes || 0) - (b.timeMinutes || 0));
   }, [visibleFlat]);
 
