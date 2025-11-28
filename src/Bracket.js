@@ -21,6 +21,16 @@ import {
 } from "./disciplines";
 
 const mobileQuery = window.matchMedia("(max-width: 768px)");
+// src/Bracket.js
+const COACHS = [
+  "Chris",
+  "Benoit",
+  "Guillaume",
+  "Dimitri",
+  "Nadège",
+  "Julien",
+  "Mélanie",
+];
 const ETAPES = ["Tour2", "Tour1", "16ème", "8ème", "Quart", "Demi", "Finale"];
 // Precompute index map for ETAPES to avoid repeated indexOf
 const ETAPES_INDEX = ETAPES.reduce((m, e, i) => {
@@ -88,6 +98,7 @@ export default function Bracket({ user }) {
     setEditingCombat({ ...combat });
     setEditingIndex(index);
   };
+  const [selectedDate, setSelectedDate] = useState(""); // "" = toutes les dates
 
   // 🔹 Fetch data
   useEffect(() => {
@@ -217,7 +228,7 @@ export default function Bracket({ user }) {
     const term = normalizeText(searchTerm.trim());
     return ETAPES.map((etape) => {
       const filtered = allCombats.filter((c) => {
-        // filters:
+        // -- EXISTING FILTERS --
         if (stepFilter !== "Tous" && c.etape !== stepFilter) return false;
         if (
           colorFilter !== COLOR_ALL &&
@@ -233,6 +244,9 @@ export default function Bracket({ user }) {
         if (hasLostBefore(c.participant, etape)) return false;
         if (c.hiddenAfterLoss) return false;
 
+        // -- NEW DATE FILTER --
+        if (selectedDate && c.date !== selectedDate) return false;
+
         return c.etape === etape;
       });
 
@@ -244,7 +258,14 @@ export default function Bracket({ user }) {
 
       return filtered;
     });
-  }, [allCombats, stepFilter, colorFilter, searchTerm, hasLostBefore]);
+  }, [
+    allCombats,
+    stepFilter,
+    colorFilter,
+    searchTerm,
+    hasLostBefore,
+    selectedDate,
+  ]);
 
   const visibleFlat = useMemo(() => visibleColumns.flat(), [visibleColumns]);
 
@@ -505,6 +526,26 @@ export default function Bracket({ user }) {
         <button className="next-combat-btn" onClick={showNextCombat}>
           Prochain combat
         </button>
+        <div className="date-selector">
+          <button
+            className={selectedDate === "2025-11-29" ? "active" : ""}
+            onClick={() => setSelectedDate("2025-11-29")}
+          >
+            29/11
+          </button>
+          <button
+            className={selectedDate === "2025-11-30" ? "active" : ""}
+            onClick={() => setSelectedDate("2025-11-30")}
+          >
+            30/11
+          </button>
+          <button
+            className={selectedDate === "" ? "active" : ""}
+            onClick={() => setSelectedDate("")}
+          >
+            Toutes
+          </button>
+        </div>
 
         {/* Right controls */}
         <div className="controls-right">
@@ -783,6 +824,23 @@ export default function Bracket({ user }) {
                               <option value="Rouge">Rouge</option>
                               <option value="Bleu">Bleu</option>
                             </select>
+                            <select
+                              defaultValue={combat.coach || ""}
+                              onChange={(e) =>
+                                setEditValues((s) => ({
+                                  ...s,
+                                  coach: e.target.value,
+                                }))
+                              }
+                            >
+                              <option value="">Sélectionner un coach</option>
+                              {COACHS.map((c) => (
+                                <option key={c} value={c}>
+                                  {c}
+                                </option>
+                              ))}
+                            </select>
+
                             <input
                               list="categories"
                               defaultValue={combat.categorie}

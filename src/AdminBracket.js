@@ -56,6 +56,7 @@ export default function AdminBracket() {
     "Chris",
     "Benoit",
     "Guillaume",
+    "Dimitri",
     "Nadège",
     "Julien",
     "Mélanie",
