@@ -79,6 +79,7 @@ export default function Bracket({ user }) {
     isVertical: mobileQuery.matches,
     showSidebar: window.innerWidth >= 768,
     userForced: false,
+    isMobile: mobileQuery.matches,
   });
 
   const normalizeText = (str) =>
@@ -98,7 +99,8 @@ export default function Bracket({ user }) {
     setEditingCombat({ ...combat });
     setEditingIndex(index);
   };
-  const [selectedDate, setSelectedDate] = useState(""); // "" = toutes les dates
+  const today = new Date().toISOString().slice(0, 10);
+  const [selectedDate, setSelectedDate] = useState(today);
 
   // 🔹 Fetch data
   useEffect(() => {
@@ -121,17 +123,20 @@ export default function Bracket({ user }) {
   // 🔹 Responsive
   useEffect(() => {
     const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+
       setLayout((prev) => {
-        if (prev.userForced) return prev;
-        const mobile = window.innerWidth < 768;
+        if (prev.userForced) {
+          return { ...prev, isMobile: mobile }; // on met juste à jour isMobile
+        }
         return {
           ...prev,
           isVertical: mobile,
           showSidebar: !mobile,
+          isMobile: mobile,
         };
       });
     };
-
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
@@ -619,7 +624,8 @@ export default function Bracket({ user }) {
           </div>
 
           {/* Mobile orientation toggle */}
-          {layout.isVertical && (
+          {/* Mobile orientation toggle (always visible on mobile) */}
+          {layout.isMobile && (
             <div className="toggle-orientation">
               <button onClick={handleToggleOrientation}>
                 {layout.isVertical ? <FaArrowsAltV /> : <FaArrowsAltH />}
