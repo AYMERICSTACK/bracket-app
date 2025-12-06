@@ -249,6 +249,9 @@ export default function Bracket({ user }) {
         if (hasLostBefore(c.participant, etape)) return false;
         if (c.hiddenAfterLoss) return false;
 
+        // -- NEW DATE FILTER --
+        if (selectedDate && c.date !== selectedDate) return false;
+
         return c.etape === etape;
       });
 
@@ -274,23 +277,28 @@ export default function Bracket({ user }) {
   // 5) upcomingCombats: operate on visibleFlat (already normalized)
   const upcomingCombats = useMemo(() => {
     const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     return visibleFlat
       .filter(
         (c) => !["gagné", "perdu"].includes((c.statutLower || "").toLowerCase())
       )
-      .filter((c) => c.time) // garder combats avec horaire
+      .filter((c) => c.date === todayStr) // on reste sur les combats du jour
+      .filter((c) => c.time)
       .map((c) => {
         const combatMinutes = c.timeMinutes || 0;
 
+        // 🟥 En retard = l’heure est passée
         const isLate = combatMinutes < nowMinutes;
+
+        // 🟦 Dans l’heure qui vient = entre maintenant et +60 min
         const isComingSoon =
           combatMinutes >= nowMinutes && combatMinutes <= nowMinutes + 60;
 
         return { ...c, isLate, isComingSoon };
       })
-      .filter((c) => c.isLate || c.isComingSoon)
+      .filter((c) => c.isLate || c.isComingSoon) // 👉 On garde uniquement 2 cas
       .sort((a, b) => (a.timeMinutes || 0) - (b.timeMinutes || 0));
   }, [visibleFlat]);
 
@@ -523,6 +531,26 @@ export default function Bracket({ user }) {
         <button className="next-combat-btn" onClick={showNextCombat}>
           Prochain combat
         </button>
+        <div className="date-selector">
+          <button
+            className={selectedDate === "2025-11-29" ? "active" : ""}
+            onClick={() => setSelectedDate("2025-11-29")}
+          >
+            29/11
+          </button>
+          <button
+            className={selectedDate === "2025-11-30" ? "active" : ""}
+            onClick={() => setSelectedDate("2025-11-30")}
+          >
+            30/11
+          </button>
+          <button
+            className={selectedDate === "" ? "active" : ""}
+            onClick={() => setSelectedDate("")}
+          >
+            Toutes
+          </button>
+        </div>
 
         {/* Right controls */}
         <div className="controls-right">
