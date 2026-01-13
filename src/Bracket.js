@@ -41,6 +41,7 @@ const COLOR_ALL = "Tous";
 const ALLOWED_UIDS = [
   "2VqoJdZpE6NOtSWx3ko7OtzXBFk1",
   "BLqmftqFsgSKtceNI3c76jrdE0p1",
+  "OzrTOIXHQHTL60ij0ZUrA4Xo26S2",
 ];
 
 export default function Bracket({ user }) {
